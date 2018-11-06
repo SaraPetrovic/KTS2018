@@ -1,25 +1,21 @@
 package ftn.kts.transport.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 import ftn.kts.transport.enums.VehicleType;
 
+import javax.persistence.*;
+
 @Entity
+@Table(name="VEHICLES")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Vehicle {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column
 	@Enumerated(EnumType.ORDINAL)
 	private VehicleType vehicleType;
-	@Column(nullable = false, unique = true)
+	@Column
 	private String vehicleName;
 	
 	public Vehicle() {

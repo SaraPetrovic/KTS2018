@@ -1,18 +1,14 @@
 package ftn.kts.transport.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(name="TICKETS")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Ticket {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 //	@OneToOne
 //	private Ticketable ticketable;

@@ -1,34 +1,30 @@
 package ftn.kts.transport.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import ftn.kts.transport.enums.UserType;
 
 @Entity
-public class User {
+@Table(
+        name = "USERS"
+
+)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class User implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String username;
-	@Column(nullable = false)
+	@Column
 	private String password;
-	@Column(nullable = false)
+	@Column
 	private String firstName;
-	@Column(nullable = false)
+	@Column
 	private String lastName;
 	@Column
-	@Enumerated(EnumType.ORDINAL)
 	private UserType userType;
 	@Column
 	private String document;
@@ -41,13 +37,16 @@ public class User {
     	
     }
 
+    public User(String username, String password, String firstName, String lastName){
+    	this.username = username;
+    	this.password = password;
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+	}
+
 	public User(String username, String password, String firstName, String lastName, UserType userType, String document,
 			boolean documentVerified) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this(username, password, firstName, lastName);
 		this.userType = userType;
 		this.document = document;
 		this.documentVerified = documentVerified;
@@ -55,12 +54,8 @@ public class User {
 	
 	public User(Long id, String username, String password, String firstName, String lastName, UserType userType,
 			String document, boolean documentVerified, Set<Ticket> tickets) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this(username, password, firstName, lastName);
+    	this.id = id;
 		this.userType = userType;
 		this.document = document;
 		this.documentVerified = documentVerified;
@@ -69,11 +64,7 @@ public class User {
 
 	public User(String username, String password, String firstName, String lastName, UserType userType, String document,
 			boolean documentVerified, Set<Ticket> tickets) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this(username, password, firstName, lastName);
 		this.userType = userType;
 		this.document = document;
 		this.documentVerified = documentVerified;
@@ -144,13 +135,9 @@ public class User {
 		this.id = id;
 	}
 
-	public Set<Ticket> getTickets() {
-		return tickets;
-	}
+	public Set<Ticket> getTickets() { return tickets; }
 
-	public void setTickets(Set<Ticket> tickets) {
-		this.tickets = tickets;
-	}
+	public void setTickets(Set<Ticket> tickets) { this.tickets = tickets; }
     
 	
     

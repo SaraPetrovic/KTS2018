@@ -1,22 +1,17 @@
 package ftn.kts.transport.model;
 
+import javax.persistence.*;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
 @Entity
+@Table(name="KTS_LINES")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Line implements Ticketable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false, unique = true)
+	@Column
 	private String name;
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Station> stations;
