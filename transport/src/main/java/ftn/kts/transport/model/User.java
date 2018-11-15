@@ -2,6 +2,8 @@ package ftn.kts.transport.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import ftn.kts.transport.enums.UserType;
 
@@ -25,7 +27,7 @@ public class User implements Serializable {
 	@Column
 	private String lastName;
 	@Column
-	private UserType userType;
+	private Role roles;
 	@Column
 	private String document;
 	@Column
@@ -44,28 +46,28 @@ public class User implements Serializable {
     	this.lastName = lastName;
 	}
 
-	public User(String username, String password, String firstName, String lastName, UserType userType, String document,
+	public User(String username, String password, String firstName, String lastName, Role roles, String document,
 			boolean documentVerified) {
 		this(username, password, firstName, lastName);
-		this.userType = userType;
+		this.roles = roles;
 		this.document = document;
 		this.documentVerified = documentVerified;
 	}
 	
-	public User(Long id, String username, String password, String firstName, String lastName, UserType userType,
+	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
 			String document, boolean documentVerified, Set<Ticket> tickets) {
 		this(username, password, firstName, lastName);
     	this.id = id;
-		this.userType = userType;
+		this.roles = roles;
 		this.document = document;
 		this.documentVerified = documentVerified;
 		this.tickets = tickets;
 	}
 
-	public User(String username, String password, String firstName, String lastName, UserType userType, String document,
+	public User(String username, String password, String firstName, String lastName, Role roles, String document,
 			boolean documentVerified, Set<Ticket> tickets) {
 		this(username, password, firstName, lastName);
-		this.userType = userType;
+		this.roles = roles;
 		this.document = document;
 		this.documentVerified = documentVerified;
 		this.tickets = tickets;
@@ -103,12 +105,14 @@ public class User implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public UserType getUserType() {
-		return userType;
+	public List<Role> getRoles() {
+    	List<Role> roles = new ArrayList<>();
+    	roles.add(this.roles);
+		return roles;
 	}
 
-	public void setUserType(UserType userType) {
-		this.userType = userType;
+	public void setRoles(Role roles) {
+		this.roles = roles;
 	}
 
 	public String getDocument() {

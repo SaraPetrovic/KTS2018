@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import ftn.kts.transport.model.Role;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(new User(username, password, first_name, last_name));
     }
 
-    public String login(String username, String password) throws Exception{
+    public User login(String username, String password) throws Exception{
         User user = userRepository.findByUsername(username);
         if(user.getPassword().equals(password)){
             //TO DO
-            return "123";
+            user.setRoles(Role.ROLE_CLIENT);
+            userRepository.save(user);
+            return user;
         }else{
             throw new Exception();
         }
