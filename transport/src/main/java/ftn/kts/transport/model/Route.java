@@ -1,13 +1,31 @@
 package ftn.kts.transport.model;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="ROUTES")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Route implements Ticketable {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Route implements Ticketable, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -19,13 +37,15 @@ public class Route implements Ticketable {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Vehicle vehicle;
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Line line;
+	@Column
+	private boolean active;
 	
 	public Route() {
-		
+		this.active = true;
 	}
 
 	public Route(String name, Date startTime, Date endTime, Vehicle vehicle, Line line) {
@@ -35,6 +55,7 @@ public class Route implements Ticketable {
 		this.endTime = endTime;
 		this.vehicle = vehicle;
 		this.line = line;
+		this.active = true;
 	}
 
 	public Route(Long id, String name, Date startTime, Date endTime, Vehicle vehicle, Line line) {
@@ -45,6 +66,7 @@ public class Route implements Ticketable {
 		this.endTime = endTime;
 		this.vehicle = vehicle;
 		this.line = line;
+		this.active = true;
 	}
 
 	public Long getId() {
@@ -94,6 +116,15 @@ public class Route implements Ticketable {
 	public void setLine(Line line) {
 		this.line = line;
 	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
 	
 	
 }
