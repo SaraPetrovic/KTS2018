@@ -33,8 +33,9 @@ public class StationServiceImpl implements StationService{
 
 	@Override
 	public Station findById(Long id) {
-		if(stationRepository.findById(id).get().isActive()) {
-			return stationRepository.findById(id).get();
+		Station s = stationRepository.findById(id).get();
+		if(s.isActive()) {
+			return s;
 		}
 		return null;
 	}

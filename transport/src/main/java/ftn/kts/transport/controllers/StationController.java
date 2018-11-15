@@ -45,11 +45,8 @@ public class StationController {
 	public ResponseEntity<Void> addStation(@RequestBody StationDTO stationDTO) {
 		
 		try {
-			if(stationDTO.getLines() == null) {
-				stationService.save(new Station(stationDTO.getName(), stationDTO.getAddress(), new HashSet<Line>(), true));
-			}else {
-				stationService.save(new Station(stationDTO.getName(), stationDTO.getAddress(), new HashSet<Line>(stationDTO.getLines()), true));
-			}
+			stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<Line>(), true));
+			
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -59,8 +56,8 @@ public class StationController {
 	
 	@DeleteMapping(path="delete/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		
-		if(stationService.findById(id) != null){
+		Station s = stationService.findById(id);
+		if(s != null){
 			stationService.delete(id);
 		}else{
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

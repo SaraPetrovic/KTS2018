@@ -45,7 +45,7 @@ public class ZoneServiceImpl implements ZoneService{
 
 	@Override
 	public void addStations(Zone zone, List<Station> stations) {
-		zone.setStations(new HashSet(stations));
+		zone.setStations(new HashSet<Station>(stations));
 		zoneRepository.save(zone);
 
 	}
