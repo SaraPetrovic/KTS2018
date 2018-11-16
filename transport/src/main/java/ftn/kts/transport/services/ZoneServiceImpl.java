@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.ZoneRepository;
@@ -48,6 +50,17 @@ public class ZoneServiceImpl implements ZoneService{
 		zone.setStations(new HashSet<Station>(stations));
 		zoneRepository.save(zone);
 
+	}
+
+	@Override
+	public Zone update(ZoneDTO z, Long id) {
+		Zone zone = zoneRepository.findById(id).get();
+		zone.setName(z.getName());
+		
+		//+ STANICE
+		
+		zoneRepository.save(zone);
+		return zone;
 	}
 	
 }

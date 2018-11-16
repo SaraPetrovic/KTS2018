@@ -15,4 +15,5 @@ public interface StationService {
 	List<Station> findAll();
 	void delete(Long id);
 	void save(Station station);
+	Station update(StationDTO s, Long id);
 }

@@ -93,4 +93,21 @@ public class ZoneController {
 			
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@PostMapping(path="/update/{id}")
+	@Consumes("applications/json")
+	@Produces("applications/json")
+	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone, @PathVariable Long id){
+		
+		Zone z = null;
+		try {
+			z = zoneService.update(dtoZone, id);
+		}catch(Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<>(new ZoneDTO(z), HttpStatus.OK);
+	}
+	
+	
 }

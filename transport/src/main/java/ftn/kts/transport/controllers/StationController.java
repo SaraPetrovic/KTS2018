@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Station;
+import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.services.StationService;
 
 @RestController
@@ -64,5 +66,19 @@ public class StationController {
 		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping(path="/update/{id}")
+	@Consumes("applications/json")
+	@Produces("applications/json")
+	public ResponseEntity<StationDTO> updateZone(@RequestBody StationDTO dtoStation, @PathVariable Long id){
+		
+		Station s = null;
+		try {
+			s = stationService.update(dtoStation, id);
+		}catch(Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new StationDTO(s), HttpStatus.OK);
 	}
 }

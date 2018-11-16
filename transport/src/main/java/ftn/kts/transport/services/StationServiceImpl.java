@@ -65,5 +65,16 @@ public class StationServiceImpl implements StationService{
 	public void save(Station station) {
 		stationRepository.save(station);
 	}
+
+	@Override
+	public Station update(StationDTO dtoStation, Long id) {
+		Station s = stationRepository.findById(id).get();
+		s.setAddress(dtoStation.getAddress());
+		s.setName(dtoStation.getName());
+		
+		//LINIJE
+		stationRepository.save(s);
+		return s;
+	}
 	
 }
