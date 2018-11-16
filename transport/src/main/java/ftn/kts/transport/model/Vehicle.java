@@ -17,7 +17,8 @@ public class Vehicle {
 	private VehicleType vehicleType;
 	@Column
 	private String vehicleName;
-	
+	@Column
+	private boolean active;
 	public Vehicle() {
 		
 	}
@@ -27,12 +28,14 @@ public class Vehicle {
 		this.id = id;
 		this.vehicleType = vehicleType;
 		this.vehicleName = vehicleName;
+		this.active = true;
 	}
 
 	public Vehicle(VehicleType vehicleType, String vehicleName) {
 		super();
 		this.vehicleType = vehicleType;
 		this.vehicleName = vehicleName;
+		this.active = true;
 	}
 
 	public Long getId() {
@@ -57,6 +60,14 @@ public class Vehicle {
 
 	public void setVehicleName(String vehicleName) {
 		this.vehicleName = vehicleName;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	
