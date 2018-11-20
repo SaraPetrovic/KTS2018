@@ -1,12 +1,14 @@
 package ftn.kts.transport.model;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name="ZONES")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Zone implements Ticketable {
+public class Zone implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

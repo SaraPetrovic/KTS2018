@@ -9,17 +9,15 @@ import org.springframework.stereotype.Service;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.dtos.RouteDTO;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.Route;
 import ftn.kts.transport.repositories.LineRepository;
-import ftn.kts.transport.repositories.RouteRepository;
 
 @Service
 public class TransportNetworkServiceImpl implements TransportNetworkService {
 
 	@Autowired
 	private LineRepository lineRepository;
-	@Autowired
-	private RouteRepository routeRepository;
+//	@Autowired
+//	private RouteRepository routeRepository;
 	
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
@@ -64,66 +62,66 @@ public class TransportNetworkServiceImpl implements TransportNetworkService {
 		return found;
 	}
 	
-	@Override
-	public Route addRoute(RouteDTO route) {
-		
-		//  dodas sva ogranicenja i sve atribute koji fale
-		//  za datume obavezno (start < end itd)
-		
-		
-		if (routeRepository.findByName(route.getName()) != null) {
-			return null;
-		}
-
-		Route newRoute = new Route();
-		newRoute.setName(route.getName());
-		try {
-			newRoute.setStartTime(formatter.parse(route.getStartTime()));
-			newRoute.setEndTime(formatter.parse(route.getEndTime()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		newRoute.setLine(lineRepository.findByName(route.getLine()));
-		//newRoute.setVehicle(lineRepository.findByName(route.getVehicle()));
-		routeRepository.save(newRoute);
-		return newRoute;
-	}
-	
-	@Override
-	public Route updateRoute(RouteDTO route, long id) {
-		
-			//  dodas sva ogranicenja i sve atribute koji fale
-			//  za datume obavezno (start < end itd)
-		
-		Route found = routeRepository.getOne(id);
-		if (found == null) {
-			return null;
-		}
-		found.setName(route.getName());
-		found.setLine(lineRepository.findByName(route.getLine()));
-		try {
-			found.setStartTime(formatter.parse(route.getStartTime()));
-			found.setEndTime(formatter.parse(route.getEndTime()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		// found.setVehicle()......................
-		
-		routeRepository.save(found);
-		return found;
-	}
-	
-	@Override
-	public Route deleteRoute(RouteDTO route) {
-		// proveri da li sme da se brise 
-		Route found = routeRepository.findByName(route.getName());
-		if (found == null) {
-			return null;
-		}
-		found.setActive(false);
-		routeRepository.save(found);
-		return found;
-	}
+//	@Override
+//	public Route addRoute(RouteDTO route) {
+//		
+//		//  dodas sva ogranicenja i sve atribute koji fale
+//		//  za datume obavezno (start < end itd)
+//		
+//		
+//		if (routeRepository.findByName(route.getName()) != null) {
+//			return null;
+//		}
+//
+//		Route newRoute = new Route();
+//		newRoute.setName(route.getName());
+//		try {
+//			newRoute.setStartTime(formatter.parse(route.getStartTime()));
+//			newRoute.setEndTime(formatter.parse(route.getEndTime()));
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		newRoute.setLine(lineRepository.findByName(route.getLine()));
+//		//newRoute.setVehicle(lineRepository.findByName(route.getVehicle()));
+//		routeRepository.save(newRoute);
+//		return newRoute;
+//	}
+//	
+//	@Override
+//	public Route updateRoute(RouteDTO route, long id) {
+//		
+//			//  dodas sva ogranicenja i sve atribute koji fale
+//			//  za datume obavezno (start < end itd)
+//		
+//		Route found = routeRepository.getOne(id);
+//		if (found == null) {
+//			return null;
+//		}
+//		found.setName(route.getName());
+//		found.setLine(lineRepository.findByName(route.getLine()));
+//		try {
+//			found.setStartTime(formatter.parse(route.getStartTime()));
+//			found.setEndTime(formatter.parse(route.getEndTime()));
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		// found.setVehicle()......................
+//		
+//		routeRepository.save(found);
+//		return found;
+//	}
+//	
+//	@Override
+//	public Route deleteRoute(RouteDTO route) {
+//		// proveri da li sme da se brise 
+//		Route found = routeRepository.findByName(route.getName());
+//		if (found == null) {
+//			return null;
+//		}
+//		found.setActive(false);
+//		routeRepository.save(found);
+//		return found;
+//	}
 	
 	
 	

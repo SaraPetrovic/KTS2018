@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.dtos.RouteDTO;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.Route;
 import ftn.kts.transport.services.TransportNetworkService;
 
 @RestController
@@ -64,45 +63,45 @@ public class TransportNetworkController {
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
 	}
 	
-	@RequestMapping(
-			value = "/route",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE
-			)
-	public ResponseEntity<Route> addRoute(@RequestBody RouteDTO newRoute) {
-		Route ret = tnService.addRoute(newRoute);
-		if (ret == null) {
-			return new ResponseEntity<Route>(ret, HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<Route>(ret, HttpStatus.CREATED);
-	}
-	
-	@RequestMapping(
-			value = "/route/{id}/update",
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE
-			)
-	public ResponseEntity<Route> updateRoute(@RequestBody RouteDTO updatedRoute, @PathVariable("id") long id) {
-		Route ret = tnService.updateRoute(updatedRoute, id);
-		if (ret == null) {
-			return new ResponseEntity<Route>(ret, HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<Route>(ret, HttpStatus.OK);
-	}
-	
-	@RequestMapping(
-			value = "/route/delete",
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE
-			)
-	public ResponseEntity<Route> deleteRoute(@RequestBody RouteDTO toDeleteRoute) {
-		Route ret = tnService.deleteRoute(toDeleteRoute);
-		if (ret == null) {
-			return new ResponseEntity<Route>(ret, HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<Route>(ret, HttpStatus.OK);
-	}
+//	@RequestMapping(
+//			value = "/route",
+//			method = RequestMethod.POST,
+//			produces = MediaType.APPLICATION_JSON_VALUE,
+//			consumes = MediaType.APPLICATION_JSON_VALUE
+//			)
+//	public ResponseEntity<Route> addRoute(@RequestBody RouteDTO newRoute) {
+//		Route ret = tnService.addRoute(newRoute);
+//		if (ret == null) {
+//			return new ResponseEntity<Route>(ret, HttpStatus.CONFLICT);
+//		}
+//		return new ResponseEntity<Route>(ret, HttpStatus.CREATED);
+//	}
+//	
+//	@RequestMapping(
+//			value = "/route/{id}/update",
+//			method = RequestMethod.POST,
+//			consumes = MediaType.APPLICATION_JSON_VALUE,
+//			produces = MediaType.APPLICATION_JSON_VALUE
+//			)
+//	public ResponseEntity<Route> updateRoute(@RequestBody RouteDTO updatedRoute, @PathVariable("id") long id) {
+//		Route ret = tnService.updateRoute(updatedRoute, id);
+//		if (ret == null) {
+//			return new ResponseEntity<Route>(ret, HttpStatus.BAD_REQUEST);
+//		}
+//		return new ResponseEntity<Route>(ret, HttpStatus.OK);
+//	}
+//	
+//	@RequestMapping(
+//			value = "/route/delete",
+//			method = RequestMethod.POST,
+//			consumes = MediaType.APPLICATION_JSON_VALUE,
+//			produces = MediaType.APPLICATION_JSON_VALUE
+//			)
+//	public ResponseEntity<Route> deleteRoute(@RequestBody RouteDTO toDeleteRoute) {
+//		Route ret = tnService.deleteRoute(toDeleteRoute);
+//		if (ret == null) {
+//			return new ResponseEntity<Route>(ret, HttpStatus.BAD_REQUEST);
+//		}
+//		return new ResponseEntity<Route>(ret, HttpStatus.OK);
+//	}
 }

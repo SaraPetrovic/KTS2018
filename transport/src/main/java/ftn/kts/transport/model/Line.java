@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="KTS_LINES")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Line implements Ticketable, Serializable {
+public class Line implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
