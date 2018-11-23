@@ -1,5 +1,6 @@
 package ftn.kts.transport.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -8,16 +9,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name="STATIONS")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Station {
+public class Station implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

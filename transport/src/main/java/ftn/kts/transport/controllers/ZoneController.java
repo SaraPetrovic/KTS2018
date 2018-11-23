@@ -50,7 +50,7 @@ public class ZoneController {
 	public ResponseEntity<Void> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
 		try{
-			zoneService.save(new Zone(zoneDTO.getName(), new HashSet<Station>(), true));
+			//zoneService.save(new Zone(zoneDTO.getName(), new HashSet<Station>(), true));
 		
 		}catch(Exception ex){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

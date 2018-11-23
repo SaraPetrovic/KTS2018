@@ -1,20 +1,29 @@
 package ftn.kts.transport.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import ftn.kts.transport.enums.UserType;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import ftn.kts.transport.enums.UserTypeDemographic;
 
 @Entity
-@Table(
-        name = "USERS"
+@Table(name = "USERS")
 
-)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -28,6 +37,8 @@ public class User implements Serializable {
 	private String lastName;
 	@Column
 	private Role roles;
+	@Enumerated
+	private UserTypeDemographic userTypeDemo;
 	@Column
 	private String document;
 	@Column
@@ -39,38 +50,28 @@ public class User implements Serializable {
     	
     }
 
-    public User(String username, String password, String firstName, String lastName){
-    	this.username = username;
-    	this.password = password;
-    	this.firstName = firstName;
-    	this.lastName = lastName;
-	}
-
-	public User(String username, String password, String firstName, String lastName, Role roles, String document,
-			boolean documentVerified) {
-		this(username, password, firstName, lastName);
+	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
+			UserTypeDemographic userTypeDemo, String document, boolean documentVerified, Set<Ticket> tickets) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.roles = roles;
+		this.userTypeDemo = userTypeDemo;
 		this.document = document;
 		this.documentVerified = documentVerified;
+		this.tickets = tickets;
 	}
 	
-	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
-			String document, boolean documentVerified, Set<Ticket> tickets) {
-		this(username, password, firstName, lastName);
-    	this.id = id;
-		this.roles = roles;
-		this.document = document;
-		this.documentVerified = documentVerified;
-		this.tickets = tickets;
-	}
 
-	public User(String username, String password, String firstName, String lastName, Role roles, String document,
-			boolean documentVerified, Set<Ticket> tickets) {
-		this(username, password, firstName, lastName);
-		this.roles = roles;
-		this.document = document;
-		this.documentVerified = documentVerified;
-		this.tickets = tickets;
+	public User(String username, String password, String firstName, String lastName) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String getUsername() {

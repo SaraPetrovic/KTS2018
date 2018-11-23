@@ -7,9 +7,13 @@ import java.util.Set;
 
 @Entity
 @Table(name="ZONES")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Zone implements Serializable{
+public class Zone implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -17,6 +21,8 @@ public class Zone implements Serializable{
 	private String name;
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Station> stations;
+	@OneToOne
+	private Zone subZone;
 	@Column
 	private boolean active;
 	
@@ -24,26 +30,12 @@ public class Zone implements Serializable{
 		
 	}
 
-	public Zone(String name, Set<Station> stations, boolean active) {
-		super();
-		this.name = name;
-		this.stations = stations;
-		this.active = active;
-	}
-
-	public Zone(Long id, String name, Set<Station> stations, boolean active) {
+	public Zone(Long id, String name, Set<Station> stations, Zone subZone, boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.stations = stations;
-		this.active = active;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
+		this.subZone = subZone;
 		this.active = active;
 	}
 
@@ -70,7 +62,23 @@ public class Zone implements Serializable{
 	public void setStations(Set<Station> stations) {
 		this.stations = stations;
 	}
-	
+
+	public Zone getSubZone() {
+		return subZone;
+	}
+
+	public void setSubZone(Zone subZone) {
+		this.subZone = subZone;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	
 	
 	

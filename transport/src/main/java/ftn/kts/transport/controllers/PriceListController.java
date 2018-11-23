@@ -2,7 +2,7 @@ package ftn.kts.transport.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import ftn.kts.transport.enums.TicketTypeDemographic;
+import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.model.Ticket;
 
 @RestController
