@@ -5,11 +5,10 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,32 +25,33 @@ public class Line implements Serializable {
 	private Long id;
 	@Column
 	private String name;
-	@ManyToMany(fetch = FetchType.LAZY)
-	private Set<Station> stations;
+	@OneToMany(mappedBy = "line")
+	private Set<LineAndStation> stationSet;
 	@Column
 	private boolean active;
+
+	
 	
 	public Line() {
 		this.active = true;
 	}
 
-	public Line(Long id, String name, Set<Station> stations) {
+	public Line(Long id, String name, Set<LineAndStation> stationSet, boolean active) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.stations = stations;
-		this.active = true;
+		this.stationSet = stationSet;
+		this.active = active;
 	}
 
 
-	public Line(String name, Set<Station> stations) {
-		super();
-		this.name = name;
-		this.stations = stations;
-		this.active = true;
+	public Set<LineAndStation> getStationSet() {
+		return stationSet;
 	}
 
-
+	public void setStationSet(Set<LineAndStation> stationSet) {
+		this.stationSet = stationSet;
+	}
 
 	public Long getId() {
 		return id;
@@ -69,17 +69,6 @@ public class Line implements Serializable {
 		this.name = name;
 	}
 
-	public Set<Station> getStations() {
-		return stations;
-	}
-
-	public void setStations(Set<Station> stations) {
-		this.stations = stations;
-	}
-	
-	public void addStation(Station station) {
-		this.stations.add(station);
-	}
 
 	public boolean isActive() {
 		return active;
@@ -87,6 +76,11 @@ public class Line implements Serializable {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public void addStation(Station station) { 
+		LineAndStation las = new LineAndStation();
+		las.addStation(this, station, getStationSet().size());
 	}
 	
 	

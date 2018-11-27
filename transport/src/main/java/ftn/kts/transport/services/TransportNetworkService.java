@@ -3,6 +3,7 @@ package ftn.kts.transport.services;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.dtos.RouteDTO;
 import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.Route;
 
 public interface TransportNetworkService {
 

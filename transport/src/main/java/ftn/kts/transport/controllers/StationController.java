@@ -47,7 +47,7 @@ public class StationController {
 	public ResponseEntity<Void> addStation(@RequestBody StationDTO stationDTO) {
 		
 		try {
-			stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<Line>(), true));
+			//stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<Line>(), true));
 			
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

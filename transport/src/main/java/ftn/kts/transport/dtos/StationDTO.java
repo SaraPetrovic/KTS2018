@@ -24,7 +24,7 @@ public class StationDTO {
 	}
 	
 	public StationDTO(Station station) {
-		this(station.getId(), station.getAddress(), station.getName(), station.getLines());
+	//	this(station.getId(), station.getAddress(), station.getName(), station.getLines());
 	}
 	
 	public String getAddress() {

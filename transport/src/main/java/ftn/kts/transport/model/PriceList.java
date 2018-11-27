@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import ftn.kts.transport.enums.UserTypeDemographic;
+
 @Entity
 public class PriceList implements Serializable {
 
@@ -53,6 +55,8 @@ public class PriceList implements Serializable {
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 	}
+	
+	
 
 	public Long getId() {
 		return id;
