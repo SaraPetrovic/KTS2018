@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.LineDTO;
-import ftn.kts.transport.dtos.RouteDTO;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.services.TransportNetworkService;
 
@@ -28,10 +27,13 @@ public class TransportNetworkController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO newLine) {
-		Line ret = tnService.addLine(newLine);
-		if (ret == null) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
+		
+		Line ret = null;
+
+		ret = tnService.addLine(newLine);
+
+		ret = tnService.addStationsToLine(ret.getId(), newLine);
+		
 		return new ResponseEntity<Line>(ret, HttpStatus.CREATED);
 	}
 	
@@ -43,9 +45,6 @@ public class TransportNetworkController {
 			)
 	public ResponseEntity<Line> updateLine(@RequestBody LineDTO updatedLine, @PathVariable("id") long id) {
 		Line ret = tnService.updateLine(updatedLine, id);
-		if (ret == null) {
-			return new ResponseEntity<Line>(ret, HttpStatus.BAD_REQUEST);
-		}
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
 	}
 	
@@ -57,9 +56,6 @@ public class TransportNetworkController {
 			)
 	public ResponseEntity<Line> deleteLine(@RequestBody LineDTO toDeleteLine) {
 		Line ret = tnService.deleteLine(toDeleteLine);
-		if (ret == null) {
-			return new ResponseEntity<Line>(ret, HttpStatus.BAD_REQUEST);
-		}
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
 	}
 	
