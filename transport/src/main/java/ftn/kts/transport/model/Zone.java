@@ -39,6 +39,13 @@ public class Zone implements Serializable {
 		this.active = active;
 	}
 
+	public Zone(String name, Set<Station> stations, Zone subZone, boolean active) {
+		super();
+		this.name = name;
+		this.stations = stations;
+		this.subZone = subZone;
+		this.active = active;
+	}
 	public Long getId() {
 		return id;
 	}

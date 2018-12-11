@@ -57,16 +57,16 @@ public class StationController {
 	}
 	
 	@DeleteMapping(path="delete/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		Station s = stationService.findById(id);
-		if(s != null){
+	public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+		try {
+			Station s = stationService.findById(id);
 			stationService.delete(id);
-		}else{
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}	//NotFoundStationException
+		catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+	}		
 	
 	@PostMapping(path="/update/{id}")
 	@Consumes("applications/json")

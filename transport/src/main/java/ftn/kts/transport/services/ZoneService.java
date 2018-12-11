@@ -7,10 +7,8 @@ import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 
 public interface ZoneService {
-	void save(Zone zone);
-	void deleteZone(Long id);
+	Zone save(Zone zone);
+	boolean deleteZone(Long id);
 	Zone findById(Long id);
 	List<Zone> findAll();
-	void addStations(Zone zone, List<Station> stations);
-	Zone update(ZoneDTO z, Long id);
 }

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
@@ -20,21 +19,26 @@ public class ZoneServiceImpl implements ZoneService{
 	private ZoneRepository zoneRepository;
 
 	@Override
-	public void save(Zone zone) {
-		zoneRepository.save(zone);
+	public Zone save(Zone zone) {
+		return zoneRepository.save(zone);
 	}
 
 	@Override
-	public void deleteZone(Long id) {
+	public boolean deleteZone(Long id) {
 		Zone z = zoneRepository.findById(id).get();
+		if(z == null) {
+			return false;
+		}
 		z.setActive(false);
 		zoneRepository.save(z);
+		return true;
 	}
 
 	@Override
 	public Zone findById(Long id) {
-		if(zoneRepository.findById(id).get().isActive()) {
-			return zoneRepository.findById(id).get();
+		Zone zone = zoneRepository.findById(id).get();
+		if(zone != null && zone.isActive()) {
+			return zone;
 		}
 		return null;
 	}
@@ -43,24 +47,6 @@ public class ZoneServiceImpl implements ZoneService{
 	public List<Zone> findAll() {
 		List<Zone> zones = zoneRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
 		return zones;
-	}
-
-	@Override
-	public void addStations(Zone zone, List<Station> stations) {
-		zone.setStations(new HashSet<Station>(stations));
-		zoneRepository.save(zone);
-
-	}
-
-	@Override
-	public Zone update(ZoneDTO z, Long id) {
-		Zone zone = zoneRepository.findById(id).get();
-		zone.setName(z.getName());
-		
-		//+ STANICE
-		
-		zoneRepository.save(zone);
-		return zone;
 	}
 	
 }

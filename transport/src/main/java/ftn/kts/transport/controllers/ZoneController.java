@@ -3,6 +3,7 @@ package ftn.kts.transport.controllers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.exception.StationNotFoundException;
+import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.services.StationService;
@@ -47,67 +50,78 @@ public class ZoneController {
 	
 	@PostMapping(path="/add")
 	@Consumes("application/json")
-	public ResponseEntity<Void> addZone(@RequestBody ZoneDTO zoneDTO) {
+	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		try{
-			//zoneService.save(new Zone(zoneDTO.getName(), new HashSet<Station>(), true));
+		if(zoneDTO.getSubZone() == null || zoneDTO.getStations().size() == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Zone subZone = zoneService.findById(zoneDTO.getSubZone().getId());	
+		if(subZone == null) {
+			throw new ZoneNotFoundException(zoneDTO.getSubZone().getId());
+		}
+		Set<Station> stations = new HashSet<Station>();
+		for(StationDTO s : zoneDTO.getStations()) {
+			Station station = stationService.findById(s.getId());
+			if(station == null) {
+				throw new StationNotFoundException(s.getId());
+			}
+			stations.add(station);
+		}
+		Zone zone = zoneService.save(new Zone(zoneDTO.getName(), stations, subZone, true));
 		
-		}catch(Exception ex){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-		
-		return new ResponseEntity<>(HttpStatus.OK);	
+		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
 	@DeleteMapping(path="/delete/{id}")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
-		
-		Zone z = zoneService.findById(id);
-		
-		if(z == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			zoneService.deleteZone(id);	
+		boolean rez = zoneService.deleteZone(id);	
+		if(!rez) {
+			throw new ZoneNotFoundException(id);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 	
-	//id zone
-	@PostMapping(path="/addStations/{id}")
+	@PostMapping(path="/addStations/{id}") //id zone
 	@Consumes("applications/json")
 	@Produces("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
-		try {
-			List<Station> stations = new ArrayList<Station>();
-			//dtoStations -> stations
-			for(StationDTO dtoStation : dtoStations) {
-				stations.add(stationService.fromDtoToStation(dtoStation));
-			}
-			
-			zoneService.addStations(zoneService.findById(id), stations);
-			
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-			
+		Set<Station> stations = checkStations(new HashSet<StationDTO>(dtoStations));
+				
+		Zone zone = zoneService.findById(id);
+		zone.setStations(stations);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/update/{id}")
+	@PostMapping(path="/update")
 	@Consumes("applications/json")
 	@Produces("applications/json")
-	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone, @PathVariable Long id){
+	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){
 		
-		Zone z = null;
-		try {
-			z = zoneService.update(dtoZone, id);
-		}catch(Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		Zone zone = zoneService.findById(dtoZone.getId());
+		if(zone == null) {
+			throw new ZoneNotFoundException(dtoZone.getId());
 		}
-		
-		return new ResponseEntity<>(new ZoneDTO(z), HttpStatus.OK);
+		zone.setName(dtoZone.getName());
+		Zone subZone = zoneService.findById(dtoZone.getSubZone().getId());
+		zone.setSubZone(subZone);
+		Set<Station> stations = checkStations(dtoZone.getStations());
+		zone.setStations(stations);
+		zoneService.save(zone);
+		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
+	public Set<Station> checkStations(Set<StationDTO> dtoStations){
+		Set<Station> stations = new HashSet<Station>();
+		
+		for(StationDTO dtoStation : dtoStations) {
+			Station station = stationService.fromDtoToStation(dtoStation);
+			if(station == null)
+				throw new StationNotFoundException(dtoStation.getId());
+			stations.add(station);
+		}
+		return stations;
+		
+	}
 	
 }

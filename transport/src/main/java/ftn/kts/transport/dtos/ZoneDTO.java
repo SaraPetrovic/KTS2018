@@ -9,25 +9,32 @@ public class ZoneDTO {
 
 	private Long id;
 	private String name;
-	private Set<Station> stations;
+	private Set<StationDTO> stations;
+	private ZoneDTO subZone;
 	
 	public ZoneDTO() {	}
 	
-	public ZoneDTO(Long id, String name, Set<Station> stations) {
+	public ZoneDTO(Long id, String name, Set<StationDTO> stations, ZoneDTO subZone) {
 		this.id = id;
 		this.name = name;
 		this.stations = stations;
+		this.subZone = subZone;
 	}
 	
 	public ZoneDTO(Zone zone) {
-		this(zone.getId(), zone.getName(), zone.getStations());
+		this.id = zone.getId();
+		this.name = zone.getName();
+		for(Station s : zone.getStations()) {
+			this.stations.add(new StationDTO(s));
+		}
+		this.subZone = new ZoneDTO(zone.getSubZone());
 	}
 	
-	public Set<Station> getStations() {
+	public Set<StationDTO> getStations() {
 		return stations;
 	}
 
-	public void setStations(Set<Station> stations) {
+	public void setStations(Set<StationDTO> stations) {
 		this.stations = stations;
 	}
 
@@ -45,4 +52,13 @@ public class ZoneDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public ZoneDTO getSubZone() {
+		return subZone;
+	}
+
+	public void setSubZone(ZoneDTO subZone) {
+		this.subZone = subZone;
+	}
+	
 }

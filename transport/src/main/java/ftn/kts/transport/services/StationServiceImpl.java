@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.StationRepository;
@@ -33,17 +34,18 @@ public class StationServiceImpl implements StationService{
 
 	@Override
 	public Station findById(Long id) {
-		Station s = stationRepository.findById(id).get();
-		if(s.isActive()) {
-			return s;
+		Station station = stationRepository.findById(id).get();
+		if(station != null && station.isActive()) {
+			return station;
 		}
-		return null;
+		return null;		
 	}
 
 	@Override
 	public Station findByName(String name) {
-		if(stationRepository.findByName(name).isActive()) {
-			return stationRepository.findByName(name);
+		Station station = stationRepository.findByName(name);
+		if(station != null && station.isActive()) {
+			return station;
 		}
 		return null;
 	}
@@ -55,10 +57,14 @@ public class StationServiceImpl implements StationService{
 	}
 
 	@Override
-	public void delete(Long id) {
-		Station s = stationRepository.findById(id).get();
-		s.setActive(false);
-		stationRepository.save(s);
+	public boolean delete(Long id) {
+		Station station = stationRepository.findById(id).get();
+		if(station == null) {
+			return false;
+		}
+		station.setActive(false);
+		stationRepository.save(station);
+		return true;
 	}
 
 	@Override
