@@ -1,6 +1,7 @@
 package ftn.kts.transport.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "LINE_AND_STATION")
@@ -31,9 +34,25 @@ public class LineAndStation {
 		
 	}
 	
-	
-	
-	
+
+	public LineAndStation(int stationOrder) {
+		super();
+		this.stationOrder = stationOrder;
+	}
+
+
+
+
+	public int getStationOrder() {
+		return stationOrder;
+	}
+
+	public void setStationOrder(int stationOrder) {
+		this.stationOrder = stationOrder;
+	}
+
+
+	@JsonIgnore
 	public Line getLine() {
 		return line;
 	}
@@ -42,6 +61,7 @@ public class LineAndStation {
 		this.line = line;
 	}
 
+	@JsonIgnore
 	public Station getStation() {
 		return station;
 	}
@@ -65,8 +85,26 @@ public class LineAndStation {
 		this.stationOrder = order;
 		
 		setLineAndStationPK(new LineAndStationPK(line.getId(), station.getId()));
+		
 	}
-	
+
+
+	@Override
+	public String toString() {
+		String ret = "";
+		ret += "\nLinija:\n";
+		ret += this.line.getId() +"  |" + this.line.getName()  + "\n";
+		ret += "Station:\n";
+		ret += this.station.getId() + "  |" + this.station.getName() + "\n";
+		ret += "PK:\n";
+		ret += this.lineAndStationPK.getLineId() + "  |" + this.lineAndStationPK.getStationId() + "\n";
+		ret += "ORDER: \n";
+		ret += this.stationOrder;
+		return ret;
+	}
+
+
+
 
 
 	@Embeddable
@@ -126,8 +164,12 @@ public class LineAndStation {
 			}
 			
 			return true;
-			
 		}
+		
+		@Override
+	    public int hashCode() {
+	        return Objects.hash(getLineId(), getStationId());
+	    }
 		
 	}
 	

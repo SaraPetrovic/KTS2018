@@ -1,6 +1,7 @@
 package ftn.kts.transport.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -41,6 +42,14 @@ public class Station implements Serializable {
 	public Station(Long id, String address, String name, Set<LineAndStation> lineSet, boolean active) {
 		super();
 		this.id = id;
+		this.address = address;
+		this.name = name;
+		this.lineSet = lineSet;
+		this.active = active;
+	}
+	
+	public Station(String address, String name, HashSet<LineAndStation> lineSet, boolean active) {
+		super();
 		this.address = address;
 		this.name = name;
 		this.lineSet = lineSet;

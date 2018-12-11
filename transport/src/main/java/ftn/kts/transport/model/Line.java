@@ -1,8 +1,11 @@
 package ftn.kts.transport.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -23,9 +27,9 @@ public class Line implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(unique = true)
 	private String name;
-	@OneToMany(mappedBy = "line")
+	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
 	private Set<LineAndStation> stationSet;
 	@Column
 	private boolean active;
@@ -34,6 +38,7 @@ public class Line implements Serializable {
 	
 	public Line() {
 		this.active = true;
+		this.stationSet = new HashSet<LineAndStation>();
 	}
 
 	public Line(Long id, String name, Set<LineAndStation> stationSet, boolean active) {
@@ -45,8 +50,18 @@ public class Line implements Serializable {
 	}
 
 
+	
 	public Set<LineAndStation> getStationSet() {
 		return stationSet;
+	}
+	
+	public HashMap<Integer, Station> getStationAndOrder() {
+		HashMap<Integer, Station> temp = new HashMap<Integer, Station>();
+		for (LineAndStation ls : stationSet) {
+			temp.put(ls.getStationOrder(), ls.getStation());
+		};
+		
+		return temp;
 	}
 
 	public void setStationSet(Set<LineAndStation> stationSet) {
@@ -78,9 +93,11 @@ public class Line implements Serializable {
 		this.active = active;
 	}
 	
-	public void addStation(Station station) { 
+	public void addStation(Station station, int order) { 
 		LineAndStation las = new LineAndStation();
-		las.addStation(this, station, getStationSet().size());
+		las.addStation(this, station, order);
+		this.stationSet.add(las);
+		
 	}
 	
 	

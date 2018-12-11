@@ -1,15 +1,15 @@
 package ftn.kts.transport.services;
 
+import ftn.kts.exception.DAOException;
 import ftn.kts.transport.dtos.LineDTO;
-import ftn.kts.transport.dtos.RouteDTO;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.Route;
 
 public interface TransportNetworkService {
 
-	Line addLine(LineDTO line);
-	Line updateLine(LineDTO line, long id);
-	Line deleteLine(LineDTO line);
+	Line addLine(LineDTO line) throws DAOException;
+	Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException;
+	Line updateLine(LineDTO line, long id) throws DAOException;
+	Line deleteLine(LineDTO line) throws DAOException;
 	
 //	Route addRoute(RouteDTO route);
 //	Route updateRoute(RouteDTO route, long id);

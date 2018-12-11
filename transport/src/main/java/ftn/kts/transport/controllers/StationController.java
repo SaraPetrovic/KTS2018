@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
-import ftn.kts.transport.dtos.ZoneDTO;
-import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
-import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.services.StationService;
 
 @RestController
@@ -47,7 +45,7 @@ public class StationController {
 	public ResponseEntity<Void> addStation(@RequestBody StationDTO stationDTO) {
 		
 		try {
-			//stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<Line>(), true));
+			stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
 			
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
