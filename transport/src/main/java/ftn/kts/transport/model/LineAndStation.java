@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "LINE_AND_STATION")
@@ -41,8 +41,6 @@ public class LineAndStation {
 	}
 
 
-
-
 	public int getStationOrder() {
 		return stationOrder;
 	}
@@ -52,7 +50,7 @@ public class LineAndStation {
 	}
 
 
-	@JsonIgnore
+	@JsonBackReference
 	public Line getLine() {
 		return line;
 	}
@@ -61,7 +59,7 @@ public class LineAndStation {
 		this.line = line;
 	}
 
-	@JsonIgnore
+	@JsonBackReference
 	public Station getStation() {
 		return station;
 	}
@@ -103,9 +101,7 @@ public class LineAndStation {
 		return ret;
 	}
 
-
-
-
+	
 
 	@Embeddable
 	public static class LineAndStationPK implements Serializable {

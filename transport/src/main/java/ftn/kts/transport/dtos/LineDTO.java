@@ -6,6 +6,7 @@ public class LineDTO {
 
 	private String name;
 	private HashMap<Integer, Long> stations;
+	private int vehicleType;
 	
 	public LineDTO() {
 		this.stations = new HashMap<Integer, Long>();
@@ -16,11 +17,18 @@ public class LineDTO {
 		this.name = name;
 	}
 	
-
 	public LineDTO(String name, HashMap<Integer, Long> stations) {
 		super();
 		this.name = name;
 		this.stations = stations;
+	}
+	
+
+	public LineDTO(String name, HashMap<Integer, Long> stations, int vehicleType) {
+		super();
+		this.name = name;
+		this.stations = stations;
+		this.vehicleType = vehicleType;
 	}
 
 	public String getName() {
@@ -37,6 +45,14 @@ public class LineDTO {
 
 	public void setStations(HashMap<Integer, Long> stations) {
 		this.stations = stations;
+	}
+
+	public int getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(int vehicleType) {
+		this.vehicleType = vehicleType;
 	}
 	
 	

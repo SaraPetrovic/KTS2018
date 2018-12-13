@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import ftn.kts.transport.enums.TicketTypeTemporal;
+import ftn.kts.transport.enums.VehicleType;
 
 
 
@@ -37,6 +41,10 @@ public abstract class Ticket implements Serializable {
 	private double price;
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private User user;
+	@Enumerated
+	private VehicleType transportType;
+	@Enumerated
+	private TicketTypeTemporal ticketTemporal;
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
@@ -98,6 +106,24 @@ public abstract class Ticket implements Serializable {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+	public VehicleType getTransportType() {
+		return transportType;
+	}
+
+	public void setTransportType(VehicleType transportType) {
+		this.transportType = transportType;
+	}
+
+	public TicketTypeTemporal getTicketTemporal() {
+		return ticketTemporal;
+	}
+
+	public void setTicketTemporal(TicketTypeTemporal ticketTemporal) {
+		this.ticketTemporal = ticketTemporal;
+	}
+	
+	
 	
 	
 }

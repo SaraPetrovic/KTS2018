@@ -4,7 +4,7 @@ import ftn.kts.exception.DAOException;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.model.Line;
 
-public interface TransportNetworkService {
+public interface LineService {
 
 	Line addLine(LineDTO line) throws DAOException;
 	Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException;
