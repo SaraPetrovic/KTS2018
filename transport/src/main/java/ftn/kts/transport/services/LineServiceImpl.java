@@ -2,8 +2,8 @@ package ftn.kts.transport.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,7 +18,7 @@ import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.StationRepository;
 
 @Service
-public class TransportNetworkServiceImpl implements TransportNetworkService {
+public class LineServiceImpl implements LineService {
 
 	@Autowired
 	private LineRepository lineRepository;
@@ -56,10 +56,12 @@ public class TransportNetworkServiceImpl implements TransportNetworkService {
 	
 	@Override
 	public Line updateLine(LineDTO line, long id) throws DAOException {
-			
-		Line found = lineRepository.findById(id);
-		if (found == null) {
+		Line found = null;	
+		Optional<Line> foundOpt = lineRepository.findById(id);
+		if (!foundOpt.isPresent()) {
 			throw new DAOException("Entity cannot be updated because it cannot be found.", HttpStatus.CONFLICT);
+		} else {
+			found = foundOpt.get();
 		}
 		found.setName(line.getName());
 		// dodaj jos za stanice kad se izmene
@@ -81,14 +83,18 @@ public class TransportNetworkServiceImpl implements TransportNetworkService {
 	}
 
 
+	// u lineDTO prosledjujem mapu (order, stationID)
+	// i onda iscupam sve stanice iz repo
 
 	@Override
 	public Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException {
-		Line found = lineRepository.findById(id);
-		if (found == null) {
+		Line found = null;
+		Optional<Line> foundOpt = lineRepository.findById(id);
+		if (!foundOpt.isPresent()) {
 			throw new DAOException("Stations cannot be added because line cannot be found.", HttpStatus.CONFLICT);
+		} else {
+			found = foundOpt.get();
 		}
-		// ovde dobijem listu iz lineDTO.getStations():
 		//order   stationID
 		//================
 		// 1   :  4
@@ -104,7 +110,6 @@ public class TransportNetworkServiceImpl implements TransportNetworkService {
 		stationIDs.clear();
 		stationIDs.addAll(temp);
 
-		//HashMap<Integer, Station> map = new HashMap<Integer, Station>();
 		
 		ArrayList<Station> foundStations = stationRepository.findByIdIn(stationIDs);
 		
@@ -116,14 +121,12 @@ public class TransportNetworkServiceImpl implements TransportNetworkService {
 			Long stID = lineDTO.getStations().get(key);
 			for (Station fs : foundStations) {
 				if (fs.getId().equals(stID)) {
-			//		map.put(key, fs);
 					found.addStation(fs, key);
 				}
 			}
 		}	
 		
 		return lineRepository.save(found);
-	//	return null;
 		
 	}
 	

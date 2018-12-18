@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="STATIONS")
@@ -56,7 +58,7 @@ public class Station implements Serializable {
 		this.active = active;
 	}
 
-
+	@JsonManagedReference
 	public Set<LineAndStation> getLineSet() {
 		return lineSet;
 	}

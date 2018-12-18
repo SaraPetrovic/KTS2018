@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.services.TransportNetworkService;
+import ftn.kts.transport.services.LineService;
 
 @RestController
-public class TransportNetworkController {
+public class LineController {
 
 	@Autowired
-	private TransportNetworkService tnService;
+	private LineService tnService;
 	
 	@RequestMapping(
 			value = "/line",

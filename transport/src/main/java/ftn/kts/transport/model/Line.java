@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,9 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import ftn.kts.transport.enums.VehicleType;
 
 @Entity
 @Table(name="KTS_LINES")
@@ -29,6 +33,8 @@ public class Line implements Serializable {
 	private Long id;
 	@Column(unique = true)
 	private String name;
+	@Enumerated
+	private VehicleType transportType;
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
 	private Set<LineAndStation> stationSet;
 	@Column
@@ -50,11 +56,12 @@ public class Line implements Serializable {
 	}
 
 
-	
+	@JsonManagedReference
 	public Set<LineAndStation> getStationSet() {
 		return stationSet;
 	}
 	
+	@JsonIgnore
 	public HashMap<Integer, Station> getStationAndOrder() {
 		HashMap<Integer, Station> temp = new HashMap<Integer, Station>();
 		for (LineAndStation ls : stationSet) {
