@@ -14,6 +14,5 @@ public interface StationService {
 	Station findByName(String name);
 	List<Station> findAll();
 	boolean delete(Long id);
-	void save(Station station);
-	Station update(StationDTO s, Long id);
+	Station save(Station station);
 }

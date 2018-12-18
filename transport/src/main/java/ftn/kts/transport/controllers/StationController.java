@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.services.StationService;
@@ -42,41 +43,35 @@ public class StationController {
 	
 	@PostMapping(path="/add")
 	@Consumes("application/json")
-	public ResponseEntity<Void> addStation(@RequestBody StationDTO stationDTO) {
+	public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
 		
-		try {
-			stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
-			
-		}catch(Exception e){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		Station station = stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
+		return new ResponseEntity<>(new StationDTO(station), HttpStatus.CREATED);	
 		
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path="delete/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
-		try {
-			Station s = stationService.findById(id);
-			stationService.delete(id);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}	//NotFoundStationException
-		catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		boolean rez = stationService.delete(id);
+		if(!rez) {
+			throw new StationNotFoundException(id);
 		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}		
 	
-	@PostMapping(path="/update/{id}")
+	@PostMapping(path="/update")
 	@Consumes("applications/json")
 	@Produces("applications/json")
-	public ResponseEntity<StationDTO> updateZone(@RequestBody StationDTO dtoStation, @PathVariable Long id){
+	public ResponseEntity<StationDTO> updateZone(@RequestBody StationDTO dtoStation){
 		
-		Station s = null;
-		try {
-			s = stationService.update(dtoStation, id);
-		}catch(Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		Station station = stationService.findById(dtoStation.getId());
+		if(station == null) {
+			throw new StationNotFoundException(dtoStation.getId());
 		}
-		return new ResponseEntity<>(new StationDTO(s), HttpStatus.OK);
+		station.setAddress(dtoStation.getAddress());
+		station.setName(dtoStation.getName());
+		
+		stationService.save(station);
+		return new ResponseEntity<>(new StationDTO(station), HttpStatus.OK);
 	}
 }

@@ -17,8 +17,4 @@ public class ZoneNotFoundException extends RuntimeException{
 		return zoneId;
 	}
 
-	public void setZoneId(Long zoneId) {
-		this.zoneId = zoneId;
-	}
-	
 }

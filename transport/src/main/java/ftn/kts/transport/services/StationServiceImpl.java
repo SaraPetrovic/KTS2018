@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,14 +32,19 @@ public class StationServiceImpl implements StationService{
 		
 		return null;
 	}
+	
+	@Override
+	public Station save(Station station) {
+		return stationRepository.save(station);
+	}
 
 	@Override
 	public Station findById(Long id) {
-		Station station = stationRepository.findById(id).get();
-		if(station != null && station.isActive()) {
-			return station;
+		Station station = stationRepository.findById(id).orElseThrow(() -> new StationNotFoundException(id));
+		if(!station.isActive()) {
+			throw new StationNotFoundException(id);
 		}
-		return null;		
+		return station;		
 	}
 
 	@Override
@@ -52,7 +58,12 @@ public class StationServiceImpl implements StationService{
 
 	@Override
 	public List<Station> findAll() {
-		List<Station> stations = stationRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		//List<Station> stations = stationRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		List<Station> stations = new ArrayList<Station>();
+		for(Station s : stationRepository.findAll()) {
+			if(s.isActive())
+				stations.add(s);
+		}
 		return stations;
 	}
 
@@ -67,20 +78,4 @@ public class StationServiceImpl implements StationService{
 		return true;
 	}
 
-	@Override
-	public void save(Station station) {
-		stationRepository.save(station);
-	}
-
-	@Override
-	public Station update(StationDTO dtoStation, Long id) {
-		Station s = stationRepository.findById(id).get();
-		s.setAddress(dtoStation.getAddress());
-		s.setName(dtoStation.getName());
-		
-		//LINIJE
-		stationRepository.save(s);
-		return s;
-	}
-	
 }

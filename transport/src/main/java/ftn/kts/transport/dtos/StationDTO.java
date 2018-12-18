@@ -25,7 +25,10 @@ public class StationDTO {
 	}
 	
 	public StationDTO(Station station) {
-	//	this(station.getId(), station.getAddress(), station.getName(), station.getLines());
+		this.id = station.getId();
+		this.address = station.getAddress();
+		this.name = station.getName();
+		this.lines = station.getLineSet();
 	}
 	
 	public String getAddress() {

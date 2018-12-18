@@ -9,9 +9,6 @@ public class StationNotFoundException extends RuntimeException{
 
 	private Long stationId;
 	
-	public StationNotFoundException() {
-
-	}
 	public StationNotFoundException(Long id) {
 		this.stationId = id;
 	}
@@ -20,8 +17,4 @@ public class StationNotFoundException extends RuntimeException{
 		return stationId;
 	}
 
-	public void setStationId(Long stationId) {
-		this.stationId = stationId;
-	}
-	
 }

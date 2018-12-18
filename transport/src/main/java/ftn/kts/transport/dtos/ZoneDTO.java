@@ -1,5 +1,6 @@
 package ftn.kts.transport.dtos;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import ftn.kts.transport.model.Station;
@@ -10,24 +11,30 @@ public class ZoneDTO {
 	private Long id;
 	private String name;
 	private Set<StationDTO> stations;
-	private ZoneDTO subZone;
+	private Long subZoneId;
 	
 	public ZoneDTO() {	}
 	
-	public ZoneDTO(Long id, String name, Set<StationDTO> stations, ZoneDTO subZone) {
+	public ZoneDTO(Long id, String name, Set<StationDTO> stations, Long subZoneId) {
 		this.id = id;
 		this.name = name;
 		this.stations = stations;
-		this.subZone = subZone;
+		this.subZoneId = subZoneId;
 	}
 	
 	public ZoneDTO(Zone zone) {
 		this.id = zone.getId();
 		this.name = zone.getName();
+		this.stations = new HashSet<StationDTO>();
 		for(Station s : zone.getStations()) {
-			this.stations.add(new StationDTO(s));
+			StationDTO dto = new StationDTO(s);
+			this.stations.add(dto);
 		}
-		this.subZone = new ZoneDTO(zone.getSubZone());
+		if(zone.getSubZone() != null) {
+			this.subZoneId = zone.getSubZone().getId();
+		}else {
+			this.subZoneId = (long) 0;
+		}
 	}
 	
 	public Set<StationDTO> getStations() {
@@ -53,12 +60,12 @@ public class ZoneDTO {
 		this.name = name;
 	}
 
-	public ZoneDTO getSubZone() {
-		return subZone;
+	public Long getSubZoneId() {
+		return subZoneId;
 	}
 
-	public void setSubZone(ZoneDTO subZone) {
-		this.subZone = subZone;
+	public void setSubZone(Long id) {
+		this.subZoneId = id;
 	}
 	
 }
