@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.StationRepository;
@@ -30,51 +32,50 @@ public class StationServiceImpl implements StationService{
 		
 		return null;
 	}
+	
+	@Override
+	public Station save(Station station) {
+		return stationRepository.save(station);
+	}
 
 	@Override
 	public Station findById(Long id) {
-		Station s = stationRepository.findById(id).get();
-		if(s.isActive()) {
-			return s;
+		Station station = stationRepository.findById(id).orElseThrow(() -> new StationNotFoundException(id));
+		if(!station.isActive()) {
+			throw new StationNotFoundException(id);
 		}
-		return null;
+		return station;		
 	}
 
 	@Override
 	public Station findByName(String name) {
-		if(stationRepository.findByName(name).isActive()) {
-			return stationRepository.findByName(name);
+		Station station = stationRepository.findByName(name);
+		if(station != null && station.isActive()) {
+			return station;
 		}
 		return null;
 	}
 
 	@Override
 	public List<Station> findAll() {
-		List<Station> stations = stationRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		//List<Station> stations = stationRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		List<Station> stations = new ArrayList<Station>();
+		for(Station s : stationRepository.findAll()) {
+			if(s.isActive())
+				stations.add(s);
+		}
 		return stations;
 	}
 
 	@Override
-	public void delete(Long id) {
-		Station s = stationRepository.findById(id).get();
-		s.setActive(false);
-		stationRepository.save(s);
-	}
-
-	@Override
-	public void save(Station station) {
+	public boolean delete(Long id) {
+		Station station = stationRepository.findById(id).get();
+		if(station == null) {
+			return false;
+		}
+		station.setActive(false);
 		stationRepository.save(station);
+		return true;
 	}
 
-	@Override
-	public Station update(StationDTO dtoStation, Long id) {
-		Station s = stationRepository.findById(id).get();
-		s.setAddress(dtoStation.getAddress());
-		s.setName(dtoStation.getName());
-		
-		//LINIJE
-		stationRepository.save(s);
-		return s;
-	}
-	
 }

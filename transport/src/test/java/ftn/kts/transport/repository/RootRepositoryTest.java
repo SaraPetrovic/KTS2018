@@ -1,4 +1,4 @@
-package ftn.kts.repository;
+package ftn.kts.transport.repository;
 
 public class RootRepositoryTest {
 

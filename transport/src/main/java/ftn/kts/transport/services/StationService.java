@@ -13,7 +13,6 @@ public interface StationService {
 	Station findById(Long id);
 	Station findByName(String name);
 	List<Station> findAll();
-	void delete(Long id);
-	void save(Station station);
-	Station update(StationDTO s, Long id);
+	boolean delete(Long id);
+	Station save(Station station);
 }

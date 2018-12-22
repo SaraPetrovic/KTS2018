@@ -75,6 +75,14 @@ public class Line implements Serializable {
 		this.stationSet = stationSet;
 	}
 
+	public VehicleType getTransportType() {
+		return transportType;
+	}
+
+	public void setTransportType(VehicleType transportType) {
+		this.transportType = transportType;
+	}
+
 	public Long getId() {
 		return id;
 	}

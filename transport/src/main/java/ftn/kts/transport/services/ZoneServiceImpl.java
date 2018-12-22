@@ -1,14 +1,17 @@
 package ftn.kts.transport.services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.ZoneRepository;
@@ -20,47 +23,38 @@ public class ZoneServiceImpl implements ZoneService{
 	private ZoneRepository zoneRepository;
 
 	@Override
-	public void save(Zone zone) {
-		zoneRepository.save(zone);
+	public Zone save(Zone zone) {
+		return zoneRepository.save(zone);
 	}
 
 	@Override
-	public void deleteZone(Long id) {
-		Zone z = zoneRepository.findById(id).get();
+	public boolean deleteZone(Long id) {
+		Zone z = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
+		
 		z.setActive(false);
 		zoneRepository.save(z);
+		return true;
 	}
 
 	@Override
-	public Zone findById(Long id) {
-		if(zoneRepository.findById(id).get().isActive()) {
-			return zoneRepository.findById(id).get();
+	public Zone findById(Long id) throws ZoneNotFoundException {
+		Zone zone = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
+		if(!zone.isActive()) {
+			 throw new ZoneNotFoundException(id);
 		}
-		return null;
+		return zone;
+		
 	}
 
 	@Override
 	public List<Zone> findAll() {
-		List<Zone> zones = zoneRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		//List<Zone> zones = zoneRepository.findAll().stream().filter(s -> s.isActive()).collect(Collectors.toList());
+		List<Zone> zones = new ArrayList<Zone>();
+		for(Zone z : zoneRepository.findAll()) {
+			if(z.isActive())
+				zones.add(z);
+		}
 		return zones;
-	}
-
-	@Override
-	public void addStations(Zone zone, List<Station> stations) {
-		zone.setStations(new HashSet<Station>(stations));
-		zoneRepository.save(zone);
-
-	}
-
-	@Override
-	public Zone update(ZoneDTO z, Long id) {
-		Zone zone = zoneRepository.findById(id).get();
-		zone.setName(z.getName());
-		
-		//+ STANICE
-		
-		zoneRepository.save(zone);
-		return zone;
 	}
 	
 }

@@ -1,4 +1,4 @@
-package ftn.kts.exception;
+package ftn.kts.transport.exception;
 
 import org.springframework.http.HttpStatus;
 
