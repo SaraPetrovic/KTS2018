@@ -18,7 +18,7 @@ import ftn.kts.transport.repositories.ZoneRepository;
 
 @Service
 public class ZoneServiceImpl implements ZoneService{
-	
+
 	@Autowired
 	private ZoneRepository zoneRepository;
 
@@ -30,7 +30,7 @@ public class ZoneServiceImpl implements ZoneService{
 	@Override
 	public boolean deleteZone(Long id) {
 		Zone z = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
-		
+
 		z.setActive(false);
 		zoneRepository.save(z);
 		return true;
@@ -43,7 +43,7 @@ public class ZoneServiceImpl implements ZoneService{
 			 throw new ZoneNotFoundException(id);
 		}
 		return zone;
-		
+
 	}
 
 	@Override
@@ -56,5 +56,5 @@ public class ZoneServiceImpl implements ZoneService{
 		}
 		return zones;
 	}
-	
+
 }
