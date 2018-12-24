@@ -8,15 +8,15 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import ftn.kts.transport.enums.VehicleType;
 
 @Entity
 public class RouteSchedule implements Serializable {
@@ -47,10 +47,11 @@ public class RouteSchedule implements Serializable {
 	@Column
 	@Temporal(TemporalType.TIME)
 	private Set<Date> sunday;
-	@Enumerated
-	private VehicleType typeOfTransport;
+	@OneToOne(fetch = FetchType.LAZY)
+	private Line line;
 	@Column
-	private boolean active;
+	private boolean active;		// mogu npr samo poslednja 2 biti active, ostali false
+								// recimo da ide novi raspored svaki mesec npr (ili po godini svj)
 	
 	public RouteSchedule() {
 		
@@ -58,17 +59,29 @@ public class RouteSchedule implements Serializable {
 
 
 	public RouteSchedule(Long id, Date dateActivated, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
-			VehicleType typeOfTransport, boolean active) {
+			boolean active) {
 		super();
 		this.id = id;
 		this.dateActivated = dateActivated;
 		this.weekday = weekday;
 		this.saturday = saturday;
 		this.sunday = sunday;
-		this.typeOfTransport = typeOfTransport;
 		this.active = active;
 	}
 
+
+
+	public RouteSchedule(Long id, Date dateActivated, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
+			Line line, boolean active) {
+		super();
+		this.id = id;
+		this.dateActivated = dateActivated;
+		this.weekday = weekday;
+		this.saturday = saturday;
+		this.sunday = sunday;
+		this.line = line;
+		this.active = active;
+	}
 
 
 	public Long getId() {
@@ -116,16 +129,13 @@ public class RouteSchedule implements Serializable {
 		this.active = active;
 	}
 
-	public VehicleType getTypeOfTransport() {
-		return typeOfTransport;
+	public Line getLine() {
+		return line;
 	}
 
-	public void setTypeOfTransport(VehicleType typeOfTransport) {
-		this.typeOfTransport = typeOfTransport;
+	public void setLine(Line line) {
+		this.line = line;
 	}
-	
-	
-	
 	
 	
 }
