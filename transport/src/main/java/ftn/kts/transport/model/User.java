@@ -45,13 +45,15 @@ public class User implements Serializable {
 	private boolean documentVerified;
 	@OneToMany(mappedBy = "user")
 	private Set<Ticket> tickets;
+	@Column
+	private double moneyBalance;
 	
     public User() {
     	
     }
 
 	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
-			UserTypeDemographic userTypeDemo, String document, boolean documentVerified, Set<Ticket> tickets) {
+			UserTypeDemographic userTypeDemo, String document, boolean documentVerified, Set<Ticket> tickets, double moneyBalance) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -63,6 +65,7 @@ public class User implements Serializable {
 		this.document = document;
 		this.documentVerified = documentVerified;
 		this.tickets = tickets;
+		this.moneyBalance = moneyBalance;
 	}
 	
 
@@ -143,7 +146,21 @@ public class User implements Serializable {
 	public Set<Ticket> getTickets() { return tickets; }
 
 	public void setTickets(Set<Ticket> tickets) { this.tickets = tickets; }
-    
-	
+
+	public UserTypeDemographic getUserTypeDemo() {
+		return userTypeDemo;
+	}
+
+	public void setUserTypeDemo(UserTypeDemographic userTypeDemo) {
+		this.userTypeDemo = userTypeDemo;
+	}
+
+	public double getMoneyBalance() {
+		return moneyBalance;
+	}
+
+	public void setMoneyBalance(double moneyBalance) {
+		this.moneyBalance = moneyBalance;
+	}
     
 }
