@@ -32,7 +32,6 @@ public class StationController {
 	private StationService stationService;
 	
 	@GetMapping(path="/all")
-	@Produces("application/json")
 	public ResponseEntity<List<StationDTO>> getAll(){
 		List<StationDTO> dtoStations = new ArrayList<>();
 		for(Station s : stationService.findAll()) {
@@ -51,7 +50,7 @@ public class StationController {
 	}
 	
 	@DeleteMapping(path="delete/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		boolean rez = stationService.delete(id);
 		if(!rez) {
 			throw new StationNotFoundException(id);

@@ -10,6 +10,7 @@ public interface LineService {
 	Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException;
 	Line updateLine(LineDTO line, long id) throws DAOException;
 	Line deleteLine(LineDTO line) throws DAOException;
+	Line findById(Long id);
 	
 	
 }

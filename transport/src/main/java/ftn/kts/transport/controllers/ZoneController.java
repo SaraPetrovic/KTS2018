@@ -80,7 +80,6 @@ public class ZoneController {
 	
 	@PostMapping(path="/addStations/{id}") //id zone
 	@Consumes("applications/json")
-	@Produces("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
 		Set<Station> stations = checkStations(new HashSet<StationDTO>(dtoStations));
