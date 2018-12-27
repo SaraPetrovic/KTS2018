@@ -57,7 +57,21 @@ public class Station implements Serializable {
 		this.lineSet = lineSet;
 		this.active = active;
 	}
-
+	
+	public Station(Long id, String address, String name, boolean active) {
+		super();
+		this.address = address;
+		this.name = name;
+		this.active = active;
+	}
+	
+	public Station(String address, String name, boolean active) {
+		super();
+		this.address = address;
+		this.name = name;
+		this.active = active;
+	}
+	
 	@JsonManagedReference
 	public Set<LineAndStation> getLineSet() {
 		return lineSet;

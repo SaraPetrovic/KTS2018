@@ -24,6 +24,17 @@ public class StationDTO {
 		this.lines = lines;
 	}
 	
+	public StationDTO(Long id, String address, String name) {
+		this.id = id;
+		this.address = address;
+		this.name = name;
+	}
+	
+	public StationDTO(String address, String name) {
+		this.address = address;
+		this.name = name;
+	}
+	
 	public StationDTO(Station station) {
 		this.id = station.getId();
 		this.address = station.getAddress();

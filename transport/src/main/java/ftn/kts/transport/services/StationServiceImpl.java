@@ -21,13 +21,13 @@ public class StationServiceImpl implements StationService{
 	@Autowired
 	private StationRepository stationRepository;
 	
-	
+	@Override
 	public Station fromDtoToStation(StationDTO dtoStation) {
 		
-		if(dtoStation.getName() != null) {
-			return stationRepository.findByName(dtoStation.getName());
-		}else if(dtoStation.getId() != null) {
-			return stationRepository.findById(dtoStation.getId()).get();
+		if(dtoStation.getId() != null) {
+			return findById(dtoStation.getId());
+		}else if(dtoStation.getName() != null) {
+			return findByName(dtoStation.getName());
 		}
 		
 		return null;
@@ -50,10 +50,10 @@ public class StationServiceImpl implements StationService{
 	@Override
 	public Station findByName(String name) {
 		Station station = stationRepository.findByName(name);
-		if(station != null && station.isActive()) {
-			return station;
+		if(station == null || !station.isActive()) {
+			throw new StationNotFoundException(null);
 		}
-		return null;
+		return station;
 	}
 
 	@Override
@@ -69,10 +69,8 @@ public class StationServiceImpl implements StationService{
 
 	@Override
 	public boolean delete(Long id) {
-		Station station = stationRepository.findById(id).get();
-		if(station == null) {
-			return false;
-		}
+		Station station = stationRepository.findById(id).orElseThrow(() -> new StationNotFoundException(id));
+		
 		station.setActive(false);
 		stationRepository.save(station);
 		return true;
