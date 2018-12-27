@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,6 +36,11 @@ public class LineServiceImpl implements LineService {
 	
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
+	@Override
+	public Line findById(Long id) {
+		Optional<Line> line = lineRepository.findById(id);
+		return line.orElseThrow(() -> new DAOException("Line[id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+	}
 	
 	@Override
 	public Line addLine(Line line) throws DAOException {

@@ -52,7 +52,7 @@ public abstract class Ticket implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
 	@Column
-	private boolean active;
+	private boolean active;	//atribut za aktivaciju karte od strane user-a
 
 	
 	public Ticket() {

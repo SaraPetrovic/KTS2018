@@ -12,10 +12,10 @@ public interface LineService {
 	Line addLine(Line line) throws DAOException;
 	Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException;
 	Line updateLine(LineDTO line, long id) throws DAOException;
+
 	Line deleteLine(long id) throws DAOException;
 	List<RouteSchedule> getScheduleByLine(long id);
 	RouteSchedule addSchedule(RouteSchedule schedule, long lineId);
-	
-	
+	Line findById(Long id);
 	
 }

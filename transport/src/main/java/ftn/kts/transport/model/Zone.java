@@ -46,6 +46,14 @@ public class Zone implements Serializable {
 		this.subZone = subZone;
 		this.active = active;
 	}
+	
+	public Zone(Long id, String name, boolean active) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.active = active;
+	}
+	
 	public Long getId() {
 		return id;
 	}
