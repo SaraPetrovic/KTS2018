@@ -31,7 +31,7 @@ public class RouteSchedule implements Serializable {
 	private Long id;
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateActivated;
+	private Date activeFrom;
 	@ElementCollection
 	@CollectionTable(name="WeekdaySchedule", joinColumns=@JoinColumn(name="route_schedule_id"))
 	@Column
@@ -50,19 +50,18 @@ public class RouteSchedule implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	private Line line;
 	@Column
-	private boolean active;		// mogu npr samo poslednja 2 biti active, ostali false
-								// recimo da ide novi raspored svaki mesec npr (ili po godini svj)
+	private boolean active;			// logical delete
 	
 	public RouteSchedule() {
 		
 	}
 
 
-	public RouteSchedule(Long id, Date dateActivated, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
+	public RouteSchedule(Long id, Date activeFrom, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
 			boolean active) {
 		super();
 		this.id = id;
-		this.dateActivated = dateActivated;
+		this.activeFrom = activeFrom;
 		this.weekday = weekday;
 		this.saturday = saturday;
 		this.sunday = sunday;
@@ -71,11 +70,11 @@ public class RouteSchedule implements Serializable {
 
 
 
-	public RouteSchedule(Long id, Date dateActivated, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
+	public RouteSchedule(Long id, Date activeFrom, Set<Date> weekday, Set<Date> saturday, Set<Date> sunday,
 			Line line, boolean active) {
 		super();
 		this.id = id;
-		this.dateActivated = dateActivated;
+		this.activeFrom = activeFrom;
 		this.weekday = weekday;
 		this.saturday = saturday;
 		this.sunday = sunday;
@@ -89,12 +88,12 @@ public class RouteSchedule implements Serializable {
 	}
 
 
-	public Date getDateActivated() {
-		return dateActivated;
+	public Date getactiveFrom() {
+		return activeFrom;
 	}
 
-	public void setDateActivated(Date dateActivated) {
-		this.dateActivated = dateActivated;
+	public void setactiveFrom(Date activeFrom) {
+		this.activeFrom = activeFrom;
 	}
 
 	public Set<Date> getWeekday() {

@@ -1,7 +1,9 @@
 package ftn.kts.transport.service;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,28 +39,50 @@ public class LineServiceTest {
 	@MockBean
 	private StationRepository stationRepoMocked;
 	
+	private Line l;
+	
 	@Before
 	public void setUp() {
-		Line l1 = new Line();
-		l1.setName("1A");
-		l1.setTransportType(VehicleType.BUS);
+		l = new Line();
+		l.setName("1A");
+		l.setTransportType(VehicleType.BUS);
 		
-		Line l2Duplicate = new Line();
-		l2Duplicate.setName("1A");
-		l2Duplicate.setTransportType(VehicleType.BUS);
-		
-		//Mockito.when(lineRepoMocked.save(any(Line.class)).thenReturn(l1).thenThrow(new DAOException("Duplicate entry for line [" + l2Duplicate.getName() + "]"));
-		//Mockito.when(lineRepoMocked.save(l2Duplicate)).thenThrow(new DAOException("Duplicate entry for line [" + l2Duplicate.getName() + "]"));
+		Mockito.when(lineRepoMocked.save(l)).thenReturn(l).thenThrow(new DAOException("Duplicate entry"));
+		Mockito.when(lineRepoMocked.findById(1L)).thenReturn(Optional.of(l));
+		Mockito.when(lineRepoMocked.findById(-1L)).thenThrow(new DAOException("Line not found"));
+	}
+	
+	@Test(expected = DAOException.class)
+	public void addLineTest() {
+		// prvi put uspesno dodavanje -> return Line
+		// drugi put baca exception za duplicate entry
+		Line ret = service.addLine(l);
+		assertEquals(l.getName(), ret.getName());
+		service.addLine(l);
+	}
+	
+	@Test(expected = DAOException.class)
+	public void updateLineTest() {
+		LineDTO dto = new LineDTO();
+		dto.setName("Novo ime");
+		dto.setVehicleType(1);
+		// updated
+		Line ret = service.updateLine(dto, 1);
+		assertEquals(dto.getName(), ret.getName());
+		assertEquals(VehicleType.values()[dto.getVehicleType()], ret.getTransportType());
+		// id=-1  ->  not found
+		service.updateLine(dto, -1);
 		
 	}
 	
-	@Test
-	public void someTest() {
-		
-		LineDTO lineDTO = new LineDTO();
-		lineDTO.setName("1A");
-		Line ret = service.addLine(lineDTO);
-		assertEquals(lineDTO.getName(), ret.getName());
-		//assertEquals(1,1);
+	@Test(expected = DAOException.class)
+	public void deleteLineTest() {
+		long id = 1;
+		// deleted
+		Line ret = service.deleteLine(id);
+		assertFalse(ret.isActive());
+		// not found
+		service.deleteLine(-1);
 	}
+	
 }
