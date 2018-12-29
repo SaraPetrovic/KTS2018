@@ -71,7 +71,7 @@ public class LineController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<Line> updateStations(@PathVariable("id") long id, @RequestBody LineDTO newStations) {
-		Line ret = lineService.addStationsToLine(id, newStations);
+		Line ret = lineService.updateLineStations(id, newStations);
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
 	}
 	
@@ -92,10 +92,37 @@ public class LineController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
-	public ResponseEntity<RouteSchedule> addSchedule(@PathVariable("id") long id, RouteScheduleDTO scheduleDTO) {
+	public ResponseEntity<RouteSchedule> addSchedule(@PathVariable("id") long id, @RequestBody RouteScheduleDTO scheduleDTO) {
 		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
 		RouteSchedule ret = lineService.addSchedule(schedule, id);
 		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(
+			value = "/line/{lineId}/schedule/{scheduleId}/update",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE
+			)
+	public ResponseEntity<RouteSchedule> updateSchedule(@PathVariable("lineId") long lineId, 
+														@PathVariable("scheduleId") long scheduleId,
+														@RequestBody RouteScheduleDTO scheduleDTO) {
+		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
+		RouteSchedule ret = lineService.updateSchedule(schedule, lineId, scheduleId);
+		
+		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(
+			value = "/line/{lineId}/schedule/{scheduleId}/delete",
+			method = RequestMethod.DELETE
+			)
+	public ResponseEntity<Boolean> deleteSchedule(@PathVariable("scheduleId") long scheduleId) {
+		
+		boolean ret = lineService.deleteSchedule(scheduleId);
+		return new ResponseEntity<Boolean>(ret, HttpStatus.OK);
 	}
 	
 }

@@ -3,11 +3,20 @@ package ftn.kts.transport.dtos;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+
+
 public class RouteScheduleDTO {
 
+	private static final String TZ = "Europe/Belgrade";
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy.")
 	private Date activeFrom;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = TZ)
 	private Set<Date> weekday;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = TZ)
 	private Set<Date> saturday;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = TZ)
 	private Set<Date> sunday;
 	
 	public RouteScheduleDTO() {

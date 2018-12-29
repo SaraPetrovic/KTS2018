@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +16,7 @@ import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.LineRepository;
@@ -36,10 +35,13 @@ public class LineServiceImpl implements LineService {
 	
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
+	
+	
 	@Override
 	public Line findById(Long id) {
-		Optional<Line> line = lineRepository.findById(id);
-		return line.orElseThrow(() -> new DAOException("Line[id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+		Line line = lineRepository.findById(id).orElseThrow(() -> 
+									new DAOException("Line [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
+		return line;
 	}
 	
 	@Override
@@ -48,7 +50,7 @@ public class LineServiceImpl implements LineService {
 		try {
 			return lineRepository.save(line);	
 		} catch(DataIntegrityViolationException e) {
-			throw new DAOException("Duplicate entry for line [" + line.getName() + "]");
+			throw new DAOException("Duplicate entry for line [" + line.getName() + "]", HttpStatus.CONFLICT);
 		} 
 	}
 	
@@ -120,12 +122,29 @@ public class LineServiceImpl implements LineService {
 		
 		return lineRepository.save(found);	
 	}
+	
+	@Override
+	public Line updateLineStations(long id, LineDTO lineDTO) {
+		Line l = findById(id);
+		l.setStationSet(new HashSet<LineAndStation>());
+		lineRepository.save(l);
+		return addStationsToLine(id, lineDTO);
+		
+	}
 
+	
+	@Override
+	public RouteSchedule findScheduleById(Long id) {
+		RouteSchedule schedule = scheduleRepository.findById(id).orElseThrow(() -> 
+								new DAOException("Schedule [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
+		return schedule;
+	}
+	
 
 	@Override
 	public List<RouteSchedule> getScheduleByLine(long id) {
 		Line l = lineRepository.findById(id).orElseThrow(() -> 
-								new DAOException("Line [id=" + id + "] cannot be found!"));
+								new DAOException("Line [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, -32);
 		Date earlierDate = c.getTime();
@@ -138,13 +157,33 @@ public class LineServiceImpl implements LineService {
 
 	@Override
 	public RouteSchedule addSchedule(RouteSchedule schedule, long lineId) {
-		
-		return null;
+		Line l = findById(lineId);
+		schedule.setLine(l);
+		return scheduleRepository.save(schedule);
 	}
-	
-	
-	
 
-	
+	@Override
+	public RouteSchedule updateSchedule(RouteSchedule updatedSchedule, long lineId, long scheduleId) {
+		RouteSchedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> 
+								new DAOException("Schedule [id=" + scheduleId + "] for line [id=" + lineId + 
+												 "] cannot be found!", HttpStatus.CONFLICT));
+		//Line l = findById(lineId);
+		//schedule.setLine(l);
+		schedule.setactiveFrom(updatedSchedule.getactiveFrom());
+		schedule.setWeekday(updatedSchedule.getWeekday());
+		schedule.setSaturday(updatedSchedule.getSaturday());
+		schedule.setSunday(updatedSchedule.getSunday());
+		return scheduleRepository.save(schedule);
+	}
+
+	@Override
+	public boolean deleteSchedule(long id) {
+		RouteSchedule schedule = findScheduleById(id);
+		
+		schedule.setActive(false);
+		scheduleRepository.save(schedule);
+		return true;
+	}
+
 	
 }
