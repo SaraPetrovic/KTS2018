@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Station;
@@ -70,10 +72,12 @@ public class StationServiceImpl implements StationService{
 	@Override
 	public boolean delete(Long id) {
 		Station station = stationRepository.findById(id).orElseThrow(() -> new StationNotFoundException(id));
-		
-		station.setActive(false);
-		stationRepository.save(station);
-		return true;
+		if(station.getLineSet().size() == 0) {
+			station.setActive(false);
+			stationRepository.save(station);
+			return true;
+		}
+		throw new DAOException("", HttpStatus.BAD_REQUEST);
 	}
 
 }

@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.exception.StationNotFoundException;
+import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.StationRepository;
 import ftn.kts.transport.services.StationService;
@@ -159,10 +161,10 @@ public class StationServiceTest {
 	
 	@Test
 	public void deleteTestReturnTrue() {
-		Station station = new Station(Long.valueOf(1), "Futoska 13", "Centar", true);
-		Mockito.when(stationRepository.findById(station.getId())).thenReturn(Optional.of(station));
+		Station s = new Station(Long.valueOf(1), "Futoska 13", "Centar", new HashSet<LineAndStation>(), true);
+		Mockito.when(stationRepository.findById(s.getId())).thenReturn(Optional.of(s));
 		
-		boolean rez = stationService.delete(station.getId());
+		boolean rez = stationService.delete(s.getId());
 		
 		assertTrue(rez);
 	}

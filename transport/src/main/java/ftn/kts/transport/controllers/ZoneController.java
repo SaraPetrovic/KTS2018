@@ -73,7 +73,7 @@ public class ZoneController {
 	
 	@DeleteMapping(path="/delete/{id}")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
-		boolean rez = zoneService.deleteZone(id);	
+		zoneService.deleteZone(id);	
 		
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}

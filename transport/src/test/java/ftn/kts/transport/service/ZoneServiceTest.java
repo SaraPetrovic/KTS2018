@@ -6,9 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,7 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
+import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.ZoneRepository;
 import ftn.kts.transport.services.ZoneService;
@@ -33,6 +38,18 @@ public class ZoneServiceTest {
 	@MockBean
 	private ZoneRepository zoneRepository;
 	
+	@Before
+	public void setUp() {
+		Mockito.when(zoneRepository.findById(Long.valueOf(5))).thenThrow(ZoneNotFoundException.class);
+	
+		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
+		Mockito.when(zoneRepository.findById(zone.getId())).thenReturn(Optional.of(zone));
+		
+		Zone zone2 = new Zone(Long.valueOf(2), "Gradska", null, zone, true);
+		Mockito.when(zoneRepository.findById(zone2.getId())).thenReturn(Optional.of(zone2));
+		
+	}
+	
 	@Test
 	public void saveTest() {
 		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
@@ -45,19 +62,41 @@ public class ZoneServiceTest {
 	}
 	
 	@Test
-	public void deleteZoneTestOK() {
-		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
-		Mockito.when(zoneRepository.findById(zone.getId())).thenReturn(Optional.of(zone));
-		
-		boolean rez = zoneService.deleteZone(zone.getId());
+	public void deleteZoneTestOK1() {
+		boolean rez = zoneService.deleteZone(Long.valueOf(2));
 		
 		assertTrue(rez);
 	}
 	
-	@Test(expected=ZoneNotFoundException.class)
-	public void deleteZoneTestNotOK() {
-		Mockito.when(zoneRepository.findById(Long.valueOf(1))).thenThrow(ZoneNotFoundException.class);
+	@Test
+	public void deleteZoneTestOK2() {
+		Set<Station> stations = new HashSet<Station>();
+		stations.add(new Station("Jevrejska 13", "Centar", true));
+		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Gradska2", stations, zone, true);
+		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska", null, zone2, true);
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone);
+		zones.add(zone2);
+		zones.add(zone3);
+		Mockito.when(zoneRepository.findById(zone2.getId())).thenReturn(Optional.of(zone2));
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
 		
+		boolean rez = zoneService.deleteZone(zone2.getId());
+		
+		assertEquals(stations.size(), zone.getStations().size());
+		assertEquals(zone.getId(), zone3.getSubZone().getId());
+		System.out.println(zone.getId() + " " + zone3.getSubZone().getId());
+		assertTrue(rez);
+	}
+	
+	@Test(expected=ZoneNotFoundException.class)
+	public void deleteZoneTestNotOK1() {
+		zoneService.deleteZone(Long.valueOf(5));
+	}
+	
+	@Test(expected=DAOException.class)
+	public void deleteZoneTestNotOK2() {
 		zoneService.deleteZone(Long.valueOf(1));
 	}
 	
