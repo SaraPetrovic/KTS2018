@@ -1,6 +1,7 @@
 package ftn.kts.transport.services;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -32,11 +33,14 @@ public class UserServiceImpl implements UserService {
     	u.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	u.setTickets(new HashSet<Ticket>());
     	u.setRoles(Role.ROLE_CLIENT);
-        save(u);
+    	userRepository.save(u);
     }
 
-    public User login(String username, String password) throws Exception{
+    public User login(String username, String password){
         User user = userRepository.findByUsername(username);
+        if(user == null) {
+        	throw new DAOException("Invalid username", HttpStatus.BAD_REQUEST);
+        }
         if(user.getPassword().equals(password)){
             //TO DO
             user.setRoles(Role.ROLE_CLIENT);
@@ -46,9 +50,8 @@ public class UserServiceImpl implements UserService {
             session.setAttribute("user", user);
             return user;
         }else{
-            throw new Exception();
+            throw new DAOException("Invalid password", HttpStatus.BAD_REQUEST);
         }
-
     }
 
 	@Override
@@ -59,6 +62,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findById(Long id) {
 		return userRepository.findById(id).orElseThrow(() -> new DAOException("User[id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+	}
+
+	@Override
+	public Set<Ticket> getTickets(Long id) {
+		User user = findById(id);
+		Set<Ticket> tickets = user.getTickets();
+		return tickets;
 	}
 
 }

@@ -1,9 +1,14 @@
 package ftn.kts.transport.controllers;
 
 import ftn.kts.transport.dtos.UserDTO;
+import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.security.JwtGenerator;
 import ftn.kts.transport.services.UserService;
+
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
@@ -21,30 +26,61 @@ public class UserController {
     @Autowired
     private JwtGenerator jwtGenerator;
 
-    @PostMapping( path = "/user" ,consumes = {"application/json"} )
-    public ResponseEntity addUser(@RequestBody UserDTO userDTO){
+    @PostMapping( path = "/add" ,consumes = {"application/json"} )
+    public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
 
-        try{
-            userService.addUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(), userDTO.getLastName());
-
-        }catch(Exception ex){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-
+    	if(userDTO.getPassword().equals(userDTO.getRepeatedPassword()) && userDTO.getPassword().length() >= 8) {
+    		userService.addUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(), userDTO.getLastName());
+    	}else if(!userDTO.getPassword().equals(userDTO.getRepeatedPassword())){
+    		throw new DAOException("Invalid repeated password", HttpStatus.BAD_REQUEST);
+    	}else if(userDTO.getPassword().length() < 8) {
+    		throw new DAOException("Password must contain at least eight characters ", HttpStatus.BAD_REQUEST);
+    	}
+        
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @PostMapping( path = "/login", consumes = {"application/json"} )
-    public ResponseEntity loginUser(@RequestBody UserDTO userDTO){
-
-        try {
-            User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtGenerator.generate(user));
-        }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<String> loginUser(@RequestBody UserDTO userDTO){
+        User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtGenerator.generate(user));
     }
-
+    
+    @GetMapping(path="/tickets/{id}", produces="application/json")
+    public ResponseEntity<Set<Ticket>> getTickets(@PathVariable long id){
+		Set<Ticket> tickets = userService.getTickets(id);
+		return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
+    
+    @PutMapping( path = "/update")
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDto){
+		
+    	User user = userService.findById(userDto.getId());
+    	
+    	if(userDto.getPassword().equals(userDto.getRepeatedPassword()) && userDto.getPassword().length() >= 8) {
+    		user.setUsername(userDto.getUsername());
+    		user.setPassword(userDto.getPassword());
+    		user.setFirstName(userDto.getFirstName());
+    		user.setLastName(userDto.getLastName());
+    	}else if(!userDto.getPassword().equals(userDto.getRepeatedPassword())){
+    		throw new DAOException("Invalid repeated password", HttpStatus.BAD_REQUEST);
+    	}else if(userDto.getPassword().length() < 8) {
+    		throw new DAOException("Password must contain at least eight characters ", HttpStatus.BAD_REQUEST);
+    	}
+    	userService.save(user);
+    	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+    }
+    
+    @PutMapping( path = "/addMoney")
+    public ResponseEntity<UserDTO> addMoney(@RequestBody UserDTO userDto){
+    	
+    	User user = userService.findById(userDto.getId());
+    	user.setMoneyBalance(userDto.getMoney());
+    	
+    	userService.save(user);
+    	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
+    }
+    
     @GetMapping(path = "/rest/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public String helloAdmin(){
