@@ -1,0 +1,14 @@
+#wrapper{
+    width: 80%;
+    margin-left: 10%;
+    min-height: 600px;
+    background: white;
+    padding: 16px;
+    margin-top: -16px;
+    border-right: 2px solid #333;
+    border-left: 2px solid #333;
+}
+
+li{
+    list-style: none;
+}

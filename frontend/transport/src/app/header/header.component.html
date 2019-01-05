@@ -1,0 +1,32 @@
+<header>
+  <div id="container">
+    <h1>eJGSP</h1>
+  </div>
+  <ul>
+      <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+      <li><a routerLink="/lines" routerLinkActive="active">Lines</a></li>
+      <li><a routerLink="/pricelist" routerLinkActive="active">Price List</a></li>
+      <li><a routerLink="/ticket" routerLinkActive="active">Tickets</a></li>
+      <li><a routerLink="/notifications" routerLinkActive="active">Notifications</a></li>
+
+      <li style="float:right">
+        <a *ngIf="!userLogged" (click)="ngxSmartModalService.getModal('myModal').open()">
+          Login
+        </a>
+        <a *ngIf="userLogged" (click)="authenticationService.logout()">
+          Logout
+        </a>
+      </li>
+
+      
+      <li style="float: right; margin-right: 20px;">
+        <a *ngIf="userLogged">
+          {{authenticationService.currentUserValue.username}}
+        </a>
+      </li>
+  </ul>
+</header>
+
+<ngx-smart-modal #myModal identifier="myModal" (onAnyCloseEvent)="closeLogin()">
+  <app-login></app-login>
+</ngx-smart-modal>
