@@ -41,7 +41,12 @@ public class LineServiceImpl implements LineService {
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
 	
-	
+	@Override
+	public List<Line> getAllLines(){
+		return this.lineRepository.findAll();
+	}
+
+
 	@Override
 	public Line findById(Long id) {
 		Line line = lineRepository.findById(id).orElseThrow(() -> 

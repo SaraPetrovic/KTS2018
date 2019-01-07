@@ -16,6 +16,7 @@ public interface LineService {
 	Line updateLine(LineDTO line, long id) throws DAOException;
 	Line deleteLine(long id) throws DAOException;
 	Line updateLineStations(long id, LineDTO lineDTO);
+	List<Line> getAllLines();
 	
 	RouteSchedule findScheduleById(Long id);
 	List<RouteSchedule> getScheduleByLine(long id);
