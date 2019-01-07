@@ -6,6 +6,7 @@ import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.RouteSchedule;
+import ftn.kts.transport.model.Zone;
 
 public interface LineService {
 
@@ -21,5 +22,7 @@ public interface LineService {
 	RouteSchedule addSchedule(RouteSchedule schedule, long lineId);
 	RouteSchedule updateSchedule(RouteSchedule updatedSchedule, long lineId, long scheduleId);
 	boolean deleteSchedule(long id);
+	
+	Zone getZoneForLine(Line line);
 	
 }

@@ -1,18 +1,15 @@
 package ftn.kts.transport.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
@@ -82,6 +79,12 @@ public class ZoneServiceImpl implements ZoneService{
 				zones.add(z);
 		}
 		return zones;
+	}
+
+	@Override
+	public Set<Zone> getZonesByStations(Collection<Station> stations) {
+		Set<Zone> found = zoneRepository.findByStationsIn(stations);
+		return found;
 	}
 
 }

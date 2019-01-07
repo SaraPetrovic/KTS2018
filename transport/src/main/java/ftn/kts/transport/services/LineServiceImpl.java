@@ -3,9 +3,11 @@ package ftn.kts.transport.services;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,6 +21,7 @@ import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.model.Station;
+import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.RouteScheduleRepository;
 import ftn.kts.transport.repositories.StationRepository;
@@ -32,6 +35,8 @@ public class LineServiceImpl implements LineService {
 	private StationRepository stationRepository;
 	@Autowired
 	private RouteScheduleRepository scheduleRepository;
+	@Autowired
+	private ZoneService zoneService;
 	
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
@@ -184,6 +189,36 @@ public class LineServiceImpl implements LineService {
 		scheduleRepository.save(schedule);
 		return true;
 	}
+
+	@Override
+	public Zone getZoneForLine(Line line) {
+		Collection<Station> stations = new HashSet<Station>();
+		for (LineAndStation ls : line.getStationSet()) {
+			stations.add(ls.getStation());
+		}
+		
+		// zone kojima pripadaju stanice
+		Set<Zone> zones = zoneService.getZonesByStations(stations);
+		Zone parent = null;
+		boolean flag;
+		for (Zone potentialParent : zones) {
+			flag = false;
+			for (Zone zone : zones) {
+				if (zone.getSubZone().equals(potentialParent)) {
+					flag = true;
+					break;
+				}
+			}
+			if (flag) {
+				continue;
+			}
+			parent = potentialParent;
+		}
+		
+		return parent;
+	}
+	
+
 
 	
 }

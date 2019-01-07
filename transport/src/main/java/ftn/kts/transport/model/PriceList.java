@@ -26,49 +26,48 @@ public class PriceList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name="price")
-	@MapKeyColumn(name="zoneName")
+	@MapKeyColumn(name="zoneId")
 	@ElementCollection
 	@CollectionTable(name="OneTimePrices", joinColumns=@JoinColumn(name = "price_list_id"))
-	private Map<String, Double> oneTimeZonePrices;
-	@Column(name="price")
-	@MapKeyColumn(name="zoneName")
-	@ElementCollection
-	@CollectionTable(name="MonthlyPrices", joinColumns=@JoinColumn(name = "price_list_id"))
-	private Map<String, Double> monthlyZonePrices;
-	@Column(name="price")
-	@MapKeyColumn(name="zoneName")
-	@ElementCollection
-	@CollectionTable(name="YearlyPrices", joinColumns=@JoinColumn(name = "price_list_id"))
-	private Map<String, Double> yearlyZonePrices;
+	private Map<Long, Double> oneTimePrices;
+	@Column
+	private double monthlyCoeffitient;
+	@Column
+	private double yearlyCoeffitient;
 	@Column
 	private double studentDiscount;
 	@Column
 	private double seniorDiscount;
+	@Column
+	private double lineDiscount;  			// discount u odnosu na zonsku mesecnu/godisnju ako hoces samo za jednu liniju
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDateTime;
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDateTime;
+	@Column
+	private boolean active;
 	
 	public PriceList() {
 		
 	}
 
-	public PriceList(Long id, Map<String, Double> oneTime, Map<String, Double> monthly, Map<String, Double> yearly, double studentDiscount,
-			double seniorDiscount, Date startDateTime, Date endDateTime) {
+	public PriceList(Long id, Map<Long, Double> oneTimePrices, double monthlyCoeffitient, double yearlyCoeffitient,
+			double studentDiscount, double seniorDiscount, Date startDateTime, Date endDateTime, boolean active, 
+			double lineDiscount) {
 		super();
 		this.id = id;
-		this.oneTimeZonePrices = oneTime;
-		this.monthlyZonePrices = monthly;
-		this.yearlyZonePrices = yearly;
+		this.oneTimePrices = oneTimePrices;
+		this.monthlyCoeffitient = monthlyCoeffitient;
+		this.yearlyCoeffitient = yearlyCoeffitient;
 		this.studentDiscount = studentDiscount;
 		this.seniorDiscount = seniorDiscount;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
+		this.active = active;
+		this.lineDiscount = lineDiscount;
 	}
-	
-	
 
 	public Long getId() {
 		return id;
@@ -78,28 +77,28 @@ public class PriceList implements Serializable {
 		this.id = id;
 	}
 
-	public Map<String, Double> getOneTime() {
-		return oneTimeZonePrices;
+	public Map<Long, Double> getOneTimePrices() {
+		return oneTimePrices;
 	}
 
-	public void setOneTime(Map<String, Double> oneTime) {
-		this.oneTimeZonePrices = oneTime;
+	public void setOneTimePrices(Map<Long, Double> oneTimePrices) {
+		this.oneTimePrices = oneTimePrices;
 	}
 
-	public Map<String, Double> getMonthly() {
-		return monthlyZonePrices;
+	public double getMonthlyCoeffitient() {
+		return monthlyCoeffitient;
 	}
 
-	public void setMonthly(Map<String, Double> monthly) {
-		this.monthlyZonePrices = monthly;
+	public void setMonthlyCoeffitient(double monthlyCoeffitient) {
+		this.monthlyCoeffitient = monthlyCoeffitient;
 	}
 
-	public Map<String, Double> getYearly() {
-		return yearlyZonePrices;
+	public double getYearlyCoeffitient() {
+		return yearlyCoeffitient;
 	}
 
-	public void setYearly(Map<String, Double> yearly) {
-		this.yearlyZonePrices = yearly;
+	public void setYearlyCoeffitient(double yearlyCoeffitient) {
+		this.yearlyCoeffitient = yearlyCoeffitient;
 	}
 
 	public double getStudentDiscount() {
@@ -118,23 +117,38 @@ public class PriceList implements Serializable {
 		this.seniorDiscount = seniorDiscount;
 	}
 
-	public Date getstartDateTime() {
+	public Date getStartDateTime() {
 		return startDateTime;
 	}
 
-	public void setstartDateTime(Date startDateTime) {
+	public void setStartDateTime(Date startDateTime) {
 		this.startDateTime = startDateTime;
 	}
 
-	public Date getendDateTime() {
+	public Date getEndDateTime() {
 		return endDateTime;
 	}
 
-	public void setendDateTime(Date endDateTime) {
+	public void setEndDateTime(Date endDateTime) {
 		this.endDateTime = endDateTime;
 	}
-	
-	
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public double getLineDiscount() {
+		return lineDiscount;
+	}
+
+	public void setLineDiscount(double lineDiscount) {
+		this.lineDiscount = lineDiscount;
+	}
+
 	
 	
 }

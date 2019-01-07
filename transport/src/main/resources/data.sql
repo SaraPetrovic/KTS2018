@@ -7,8 +7,8 @@ insert into stations(id, active, address, name) values (2, 1, 'Bulevar Oslobodje
 insert into line_and_station(line_id, station_id, station_order) values (1, 1, 1)
 insert into line_and_station(line_id, station_id, station_order) values (1, 2, 2)
 
---insert into zones(id, active, name, sub_zone_id) values (1, true, 'gradska', 2)
---insert into zones(id, active, name, sub_zone_id) values (2, true, 'gradska', 2)
+insert into zones(id, active, name, sub_zone_id) values (1, true, 'gradska', NULL)
+insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 1)
 
 --insert into zones_stations(zone_id, stations_id) values (1,1)
 --insert into zones_stations(zone_id, stations_id) values (1,2)

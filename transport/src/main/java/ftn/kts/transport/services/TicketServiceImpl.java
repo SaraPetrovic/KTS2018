@@ -7,15 +7,17 @@ import java.util.Date;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.Ticket;
-import ftn.kts.transport.model.User;
+import ftn.kts.transport.model.Zone;
+import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
 
 @Service
@@ -25,32 +27,36 @@ public class TicketServiceImpl implements TicketService{
 	private TicketRepository ticketRepository;
 	@Autowired
 	private HttpServletRequest request;
-	//@Autowired
-	//private PriceListService priceListService;
+	@Autowired
+	private ZoneService zoneService;
+	@Autowired
+	private LineService lineService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PriceListService priceListService;
 	
 	@Override
-	public Ticket addTicket(Ticket ticket) {
-		HttpSession session = request.getSession();
-		User sessionUser = (User) session.getAttribute("user");
+	public Ticket buyTicket(Ticket ticket) {
 
-		ticket.setUser(sessionUser);
-		ticket.setActive(false);
+		if (ticket instanceof LineTicket) {
+			Line l = lineService.findById(((LineTicket) ticket).getLine().getId());
+			((LineTicket) ticket).setLine(l);
+		} else if (ticket instanceof ZoneTicket) {
+			Zone z = zoneService.findById(((ZoneTicket) ticket).getZone().getId());
+			((ZoneTicket) ticket).setZone(z);
+		}
 		
-		double price = 0;// = priceListService.getPriceForTicket();
-		//ticket.setPrice(price);
+		double calculatedPrice = priceListService.calculateTicketPrice(ticket);
+		ticket.setPrice(calculatedPrice);
 		
-		if(sessionUser.getMoneyBalance() < price)
-			return null;
+		// provera za usera da li ima dovoljno sredstava na racunu
+		// skidanje sa racuna
+		// i kacenje usera
 		
-		sessionUser.setMoneyBalance(sessionUser.getMoneyBalance() - price);
-		sessionUser.getTickets().add(ticket);
-		
-		userService.save(sessionUser);
-		ticketRepository.save(ticket);
 		
 		return ticket;
+	
 	}
 	
 	@Override

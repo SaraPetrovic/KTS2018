@@ -38,7 +38,7 @@ public class LineController {
 
 		ret = lineService.addLine(l);
 
-		//ret = lineService.addStationsToLine(ret.getId(), lineDTO);
+		ret = lineService.addStationsToLine(ret.getId(), lineDTO);
 		
 		return new ResponseEntity<Line>(ret, HttpStatus.CREATED);
 	}

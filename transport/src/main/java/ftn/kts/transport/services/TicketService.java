@@ -8,5 +8,5 @@ import ftn.kts.transport.model.Ticket;
 public interface TicketService {
 	Ticket findById(Long id);
 	void activateTicket(Ticket ticket);
-	Ticket addTicket(Ticket ticket);
+	Ticket buyTicket(Ticket ticket);
 }
