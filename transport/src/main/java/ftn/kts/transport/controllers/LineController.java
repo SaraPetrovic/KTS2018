@@ -20,7 +20,11 @@ public class LineController {
 
 	@Autowired
 	private LineService lineService;
+	@Autowired
+	private DTOConverter dtoConverter;
 
+	
+	
 	@GetMapping(value = "/line")
 	public ResponseEntity<List<Line>> getLInes(){
 		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
@@ -36,7 +40,7 @@ public class LineController {
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO lineDTO) {
 		
 		Line ret = null;
-		Line l = DTOConverter.convertDTOtoLine(lineDTO);
+		Line l = dtoConverter.convertDTOtoLine(lineDTO);
 
 		ret = lineService.addLine(l);
 
@@ -95,7 +99,7 @@ public class LineController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<RouteSchedule> addSchedule(@PathVariable("id") long id, @RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
+		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
 		RouteSchedule ret = lineService.addSchedule(schedule, id);
 		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
 	}
@@ -110,7 +114,7 @@ public class LineController {
 	public ResponseEntity<RouteSchedule> updateSchedule(@PathVariable("lineId") long lineId, 
 														@PathVariable("scheduleId") long scheduleId,
 														@RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
+		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
 		RouteSchedule ret = lineService.updateSchedule(schedule, lineId, scheduleId);
 		
 		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);

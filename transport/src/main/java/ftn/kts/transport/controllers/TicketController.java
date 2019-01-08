@@ -33,6 +33,8 @@ public class TicketController {
 	private ZoneService zoneService;
 	@Autowired
 	private LineService lineService;
+	@Autowired
+	private DTOConverter dtoConverter;
 	
 	@PutMapping("/activate/{id}")
 	public ResponseEntity<Void> activateTicket(@PathVariable Long id){
@@ -48,7 +50,7 @@ public class TicketController {
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<Ticket> buyTicket(@RequestBody TicketDTO ticketDTO){
-		Ticket ticket = DTOConverter.convertDTOtoTicket(ticketDTO);
+		Ticket ticket = dtoConverter.convertDTOtoTicket(ticketDTO);
 		Ticket ret = ticketService.buyTicket(ticket);
 		return null;
 	}
