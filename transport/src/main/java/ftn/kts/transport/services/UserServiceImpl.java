@@ -38,20 +38,16 @@ public class UserServiceImpl implements UserService {
 
     public User login(String username, String password){
         User user = userRepository.findByUsername(username);
-        if(user == null) {
-        	throw new DAOException("Invalid username", HttpStatus.BAD_REQUEST);
+        if(user == null || !user.getPassword().equals(password)) {
+        	throw new DAOException("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
-        if(user.getPassword().equals(password)){
-            //TO DO
-            user.setRoles(Role.ROLE_CLIENT);
-            userRepository.save(user);
-            
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            return user;
-        }else{
-            throw new DAOException("Invalid password", HttpStatus.BAD_REQUEST);
-        }
+		//TO DO
+		user.setRoles(Role.ROLE_CLIENT);
+		userRepository.save(user);
+
+		//HttpSession session = request.getSession();
+		//session.setAttribute("user", user);
+		return user;
     }
 
 	@Override
