@@ -41,7 +41,7 @@ public class DTOConverterImpl implements DTOConverter{
 	@Override
 	public Ticket convertDTOtoTicket(TicketDTO ticketDTO) {
 		
-		if (ticketDTO.getLineId() != -1) {
+		if (ticketDTO.getLineId() != null) {
 			LineTicket ticket = new LineTicket();
 			// samo prosledi id od Line, pa cu getovati iz servisa
 			Line l = new Line();
@@ -53,7 +53,7 @@ public class DTOConverterImpl implements DTOConverter{
 			return ticket;
 			
 			
-		} else if (ticketDTO.getZoneId() != -1) {
+		} else if (ticketDTO.getZoneId() != null) {
 			ZoneTicket ticket = new ZoneTicket();
 			// ista prica
 			Zone z = new Zone();

@@ -67,4 +67,13 @@ public class UserServiceImpl implements UserService {
 		return tickets;
 	}
 
+	@Override
+	public User findByUsername(String username) {
+		User found = userRepository.findByUsername(username);
+		if (found == null) {
+			throw new DAOException("User [username=" + username + "] not found!", HttpStatus.NOT_FOUND);
+		}
+		return found;
+	}
+
 }

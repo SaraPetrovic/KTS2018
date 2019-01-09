@@ -10,5 +10,7 @@ insert into line_and_station(line_id, station_id, station_order) values (1, 2, 2
 insert into zones(id, active, name, sub_zone_id) values (1, true, 'gradska', NULL)
 insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 1)
 
+INSERT INTO users(id, document_verified, first_name, last_name, username, password, roles, user_type_demo, money_balance) VALUES (1, FALSE, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1, 500.00)
+INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0)
 --insert into zones_stations(zone_id, stations_id) values (1,1)
 --insert into zones_stations(zone_id, stations_id) values (1,2)
