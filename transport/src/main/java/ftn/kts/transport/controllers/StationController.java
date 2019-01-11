@@ -43,20 +43,16 @@ public class StationController {
 		return new ResponseEntity<>(dtoStations, HttpStatus.OK);
 	}
 	
-	@RequestMapping(
-			value = "/add",
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE
-			)
+	@PostMapping(path="/add")
+	@Produces("applications/json")
 	public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
 		
 		Station station = stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
-		return new ResponseEntity<>(new StationDTO(station), HttpStatus.CREATED);	
+		return new ResponseEntity<>(new StationDTO(station), HttpStatus.OK);	
 		
 	}
 	
-	@DeleteMapping(path="delete/{id}")
+	@DeleteMapping(path="/delete/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		stationService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);

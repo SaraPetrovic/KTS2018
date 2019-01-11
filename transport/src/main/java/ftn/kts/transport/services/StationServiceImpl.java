@@ -76,8 +76,9 @@ public class StationServiceImpl implements StationService{
 			station.setActive(false);
 			stationRepository.save(station);
 			return true;
+		}else {
+			throw new DAOException("Ova stanica sadrzi linije", HttpStatus.BAD_REQUEST);
 		}
-		throw new DAOException("", HttpStatus.BAD_REQUEST);
 	}
 
 }

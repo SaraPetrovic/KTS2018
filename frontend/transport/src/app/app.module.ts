@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
+import { ZonesComponent } from './zones/zones.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { JwtInterceptor } from './_helper/jwt.interceptor';
     FooterComponent,
     LinesComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    ZonesComponent
   ],
   imports: [
     BrowserModule,

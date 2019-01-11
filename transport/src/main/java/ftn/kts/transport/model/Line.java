@@ -56,7 +56,7 @@ public class Line implements Serializable {
 	}
 
 
-	@JsonManagedReference
+	@JsonManagedReference(value="lines")
 	public Set<LineAndStation> getStationSet() {
 		return stationSet;
 	}

@@ -12,3 +12,5 @@ insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 
 
 --insert into zones_stations(zone_id, stations_id) values (1,1)
 --insert into zones_stations(zone_id, stations_id) values (1,2)
+
+insert into users(id, document, document_verified, first_name, last_name, money_balance, password, roles, user_type_demo, username) values (1, null, false, 'Sara', 'Petrovic', 500, '123', 1, null, 'Sara')
