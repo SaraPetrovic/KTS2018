@@ -12,4 +12,5 @@ public interface UserService  {
 	User save(User user);
 	User findById(Long id);
 	Set<Ticket> getTickets(Long id);
+	User findByUsername(String username);
 }

@@ -20,6 +20,10 @@ public class PriceListController {
 
 	@Autowired
 	private PriceListService priceListService;
+	@Autowired
+	private DTOConverter dtoConverter;
+	
+	
 	
 	@RequestMapping(
 			value = "/priceList/add",
@@ -28,7 +32,7 @@ public class PriceListController {
 			consumes = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<PriceList> addNewPriceList(@RequestBody PriceListDTO priceListDTO) {
-		PriceList newPriceList = DTOConverter.convertDTOtoPriceList(priceListDTO);
+		PriceList newPriceList = dtoConverter.convertDTOtoPriceList(priceListDTO);
 		PriceList ret = priceListService.addPriceList(newPriceList);
 		return new ResponseEntity<PriceList>(ret, HttpStatus.CREATED);
 	}

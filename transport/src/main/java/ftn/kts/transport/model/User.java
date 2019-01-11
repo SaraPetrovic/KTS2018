@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ftn.kts.transport.enums.UserTypeDemographic;
 
 @Entity
@@ -142,7 +144,7 @@ public class User implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	@JsonBackReference
 	public Set<Ticket> getTickets() { return tickets; }
 
 	public void setTickets(Set<Ticket> tickets) { this.tickets = tickets; }
