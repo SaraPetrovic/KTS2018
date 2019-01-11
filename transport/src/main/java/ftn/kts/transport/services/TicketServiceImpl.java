@@ -75,7 +75,7 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Ticket findById(Long id) {
 		Optional<Ticket> ticket = ticketRepository.findById(id);
-		return ticket.orElseThrow(() -> new DAOException("Ticket[id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+		return ticket.orElseThrow(() -> new DAOException("Ticket [id=" + id + "] not found!", HttpStatus.NOT_FOUND));
 	}
 
 	@Override
