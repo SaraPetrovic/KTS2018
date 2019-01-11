@@ -24,7 +24,7 @@ import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.services.TicketService;
 
 @RestController
-@RequestMapping(value = "/ticket")
+@RequestMapping(value = "rest/ticket")
 public class TicketController {
 
 	@Autowired
