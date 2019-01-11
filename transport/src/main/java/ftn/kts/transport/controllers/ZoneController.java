@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +38,10 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
+	 
 	@GetMapping("/all")
 	@Produces("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<ZoneDTO>> getAllZones() {
 		List<Zone> zones = zoneService.findAll();
 		List<ZoneDTO> dtoZones = new ArrayList<ZoneDTO>();
@@ -46,6 +49,7 @@ public class ZoneController {
 			ZoneDTO dto = new ZoneDTO(z);
 			dtoZones.add(dto);
 		}
+		
 		return new ResponseEntity<>(dtoZones, HttpStatus.OK);
 	}
 	
@@ -53,7 +57,7 @@ public class ZoneController {
 	@Consumes("application/json")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		if(zoneDTO.getSubZoneId() == null || zoneDTO.getStations().size() == 0) {
+		if(zoneDTO.getSubZoneId() == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Zone subZone = null;
@@ -71,7 +75,8 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
-	@DeleteMapping(path="/delete/{id}")
+	@DeleteMapping("/delete/{id}")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
 		

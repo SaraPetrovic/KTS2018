@@ -64,6 +64,7 @@ public class Line implements Serializable {
 	}
 
 
+
 	public Line(Long id, String name, VehicleType transportType, Set<LineAndStation> stationSet, Set<String> streetPath,
 			boolean active) {
 		super();
@@ -75,7 +76,8 @@ public class Line implements Serializable {
 		this.active = active;
 	}
 
-	@JsonManagedReference
+
+	@JsonManagedReference(value="lines")
 	public Set<LineAndStation> getStationSet() {
 		return stationSet;
 	}

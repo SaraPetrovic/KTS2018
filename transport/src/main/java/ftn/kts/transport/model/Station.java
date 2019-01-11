@@ -72,7 +72,7 @@ public class Station implements Serializable {
 		this.active = active;
 	}
 	
-	@JsonManagedReference
+	@JsonManagedReference(value="stations-lineSet")
 	public Set<LineAndStation> getLineSet() {
 		return lineSet;
 	}
