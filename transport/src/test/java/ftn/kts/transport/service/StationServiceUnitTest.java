@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.dtos.StationDTO;
@@ -32,8 +33,8 @@ import ftn.kts.transport.services.StationService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class StationServiceTest {
+@TestPropertySource(locations = "classpath:test.properties")
+public class StationServiceUnitTest {
 
 	@Autowired
 	private StationService stationService;

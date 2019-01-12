@@ -60,6 +60,7 @@ public class Station implements Serializable {
 	
 	public Station(Long id, String address, String name, boolean active) {
 		super();
+		this.id = id;
 		this.address = address;
 		this.name = name;
 		this.active = active;

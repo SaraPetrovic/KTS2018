@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 
     public void addUser(String username, String password, String first_name, String last_name){
     	User u = new User(username, password, first_name, last_name);
-    	u.setMoneyBalance(Double.valueOf(0));
     	u.setDocumentVerified(false);
     	u.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	u.setTickets(new HashSet<Ticket>());
