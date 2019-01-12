@@ -11,6 +11,7 @@ import ftn.kts.transport.model.Zone;
 public interface LineService {
 
 	Line findById(Long id);
+	Line findByName(String name);
 	Line addLine(Line line) throws DAOException;
 	Line addStationsToLine(long id, LineDTO lineDTO) throws DAOException;
 	Line updateLine(LineDTO line, long id) throws DAOException;

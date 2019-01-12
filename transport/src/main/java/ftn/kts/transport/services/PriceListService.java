@@ -8,7 +8,6 @@ public interface PriceListService {
 
 	PriceList addPriceList(PriceList newPriceList);
 	boolean activatePriceList(Long id);
-	boolean checkData(PriceList priceList);
 	double calculateTicketPrice(Ticket ticket);
 	PriceList getActivePriceList();
 }

@@ -30,29 +30,8 @@ public class PriceListServiceImpl implements PriceListService {
 	
 	@Override
 	public PriceList addPriceList(PriceList newPriceList) {
-		// bacice exception ako je bilo greske.
-		checkData(newPriceList);
-		
+	
 		return priceListRepository.save(newPriceList);
-	}
-
-
-	@Override
-	public boolean checkData(PriceList pl) {
-		
-		// proveri da li postoje sve zone
-		for (Long id : pl.getOneTimePrices().keySet()) {
-			// throw ce neki custom exception ako ne nadje
-			zoneService.findById(id);
-		}
-		
-		if (pl.getLineDiscount() < 0 || pl.getMonthlyCoeffitient() < 0 ||
-				pl.getSeniorDiscount() < 0 || pl.getStudentDiscount() < 0 ||
-				pl.getYearlyCoeffitient() < 0) {
-			throw new InvalidInputDataException("Invalid input data for Price List!");
-		}
-		
-		return true;
 	}
 
 

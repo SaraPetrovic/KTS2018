@@ -34,7 +34,7 @@ public class LineRepositoryTest {
 		entityManager.persist(newLine);
 		entityManager.flush();
 		
-		Line found = lineRepository.findByName(newLine.getName());
+		Line found = lineRepository.findByName(newLine.getName()).get();
 		assertEquals(found.getName(), newLine.getName());
 		
 	}

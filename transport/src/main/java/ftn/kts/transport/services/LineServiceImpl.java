@@ -55,6 +55,12 @@ public class LineServiceImpl implements LineService {
 	}
 	
 	@Override
+	public Line findByName(String name) {
+		return lineRepository.findByName(name).orElseThrow(() -> 
+									new DAOException("Line [name= " + name + "] already exists!", HttpStatus.CONFLICT));
+	}
+	
+	@Override
 	public Line addLine(Line line) throws DAOException {
 		
 		try {
