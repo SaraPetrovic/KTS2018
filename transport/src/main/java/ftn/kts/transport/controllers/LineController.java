@@ -26,6 +26,7 @@ public class LineController {
 	
 	
 	@GetMapping(value = "/line")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<List<Line>> getLInes(){
 		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
 	}

@@ -6,12 +6,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,6 +40,10 @@ public class Line implements Serializable {
 	private VehicleType transportType;
 	@OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
 	private Set<LineAndStation> stationSet;
+	@ElementCollection
+	@CollectionTable(name="StreetPath", joinColumns=@JoinColumn(name="line_id"))
+	@Column
+	private Set<String> streetPath;
 	@Column
 	private boolean active;
 
@@ -45,6 +52,7 @@ public class Line implements Serializable {
 	public Line() {
 		this.active = true;
 		this.stationSet = new HashSet<LineAndStation>();
+		this.streetPath = new HashSet<String>();
 	}
 
 	public Line(Long id, String name, Set<LineAndStation> stationSet, boolean active) {
@@ -52,6 +60,19 @@ public class Line implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.stationSet = stationSet;
+		this.active = active;
+	}
+
+
+
+	public Line(Long id, String name, VehicleType transportType, Set<LineAndStation> stationSet, Set<String> streetPath,
+			boolean active) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.transportType = transportType;
+		this.stationSet = stationSet;
+		this.streetPath = streetPath;
 		this.active = active;
 	}
 
@@ -114,6 +135,16 @@ public class Line implements Serializable {
 		this.stationSet.add(las);
 		
 	}
+
+	public Set<String> getStreetPath() {
+		return streetPath;
+	}
+
+	public void setStreetPath(Set<String> streetPath) {
+		this.streetPath = streetPath;
+	}
+	
+	
 	
 	
 	
