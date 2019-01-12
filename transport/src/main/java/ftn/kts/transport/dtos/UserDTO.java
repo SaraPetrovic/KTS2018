@@ -10,18 +10,16 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String repeatedPassword;
-    private double money;
 
     public UserDTO() {  }
 
-    public UserDTO(Long id, String username, String password, String firstName, String lastName, String repeatedPassword, double money) {
+    public UserDTO(Long id, String username, String password, String firstName, String lastName, String repeatedPassword) {
         this.id = id;
     	this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.repeatedPassword = repeatedPassword;
-        this.money = money;
     }
     
     public UserDTO(User user) {
@@ -30,16 +28,7 @@ public class UserDTO {
         this.password = user.getPassword();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.money = user.getMoneyBalance();
     }
-    
-    public double getMoney() {
-		return money;
-	}
-
-	public void setMoney(double money) {
-		this.money = money;
-	}
 
 	public Long getId() {
 		return id;

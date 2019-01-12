@@ -45,8 +45,12 @@ public class StationController {
 	
 	@PostMapping(path="/add")
 	@Produces("applications/json")
+	@Consumes("applications/json")
 	public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
 		
+		if(stationDTO.getAddress() == null || stationDTO.getName() == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		Station station = stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
 		return new ResponseEntity<>(new StationDTO(station), HttpStatus.OK);	
 		
@@ -61,7 +65,7 @@ public class StationController {
 	@PostMapping(path="/update")
 	@Consumes("applications/json")
 	@Produces("applications/json")
-	public ResponseEntity<StationDTO> updateZone(@RequestBody StationDTO dtoStation){
+	public ResponseEntity<StationDTO> updateStation(@RequestBody StationDTO dtoStation){
 		
 		Station station = stationService.findById(dtoStation.getId());
 		if(station == null) {

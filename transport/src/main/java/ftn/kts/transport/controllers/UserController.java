@@ -80,16 +80,6 @@ public class UserController {
     	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
     
-    @PutMapping( path = "/addMoney")
-    public ResponseEntity<UserDTO> addMoney(@RequestBody UserDTO userDto){
-    	
-    	User user = userService.findById(userDto.getId());
-    	user.setMoneyBalance(userDto.getMoney());
-    	
-    	userService.save(user);
-    	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
-    }
-    
     @GetMapping(path = "/rest/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public String helloAdmin(){

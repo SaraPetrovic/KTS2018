@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.exception.DAOException;
@@ -32,8 +33,8 @@ import ftn.kts.transport.services.ZoneService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class ZoneServiceTest {
+@TestPropertySource(locations = "classpath:test.properties")
+public class ZoneServiceUnitTest {
 
 	@Autowired
 	private ZoneService zoneService;
