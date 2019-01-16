@@ -66,10 +66,13 @@ public class ZoneController {
 		}
 		
 		Set<Station> stations = new HashSet<Station>();
-		for(StationDTO s : zoneDTO.getStations()) {
-			Station station = stationService.findById(s.getId());
-			stations.add(station);
+		if(zoneDTO.getStations() != null) {
+			for(StationDTO s : zoneDTO.getStations()) {
+				Station station = stationService.findById(s.getId());
+				stations.add(station);
+			}
 		}
+		
 		Zone zone = zoneService.save(new Zone(zoneDTO.getName(), stations, subZone, true));
 		
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
@@ -87,9 +90,13 @@ public class ZoneController {
 	@Consumes("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
+		Zone zone = zoneService.findById(id);
+		
+		if(dtoStations == null || dtoStations.size() == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		Set<Station> stations = checkStations(new HashSet<StationDTO>(dtoStations));
 				
-		Zone zone = zoneService.findById(id);
 		zone.setStations(stations);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -99,19 +106,28 @@ public class ZoneController {
 	@Produces("applications/json")
 	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){
 		
-		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+//		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
 		
 		Zone zone = zoneService.findById(dtoZone.getId());
 		
+		if(dtoZone.getName() == null || dtoZone.getName() == "") {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 		zone.setName(dtoZone.getName());
 		
-		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
-		zone.setSubZone(subZone);
+//		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
+//		zone.setSubZone(subZone);
 		
-		Set<Station> stations = checkStations(dtoZone.getStations());
-		zone.setStations(stations);
+		Set<Station> stations = new HashSet<Station>();
+		if(dtoZone.getStations() != null) {
+			if(dtoZone.getStations().size() != 0) {
+				stations = checkStations(dtoZone.getStations());
+				zone.setStations(stations);	
+			}
+		}
 		
 		zoneService.save(zone);
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
@@ -122,8 +138,6 @@ public class ZoneController {
 		
 		for(StationDTO dtoStation : dtoStations) {
 			Station station = stationService.fromDtoToStation(dtoStation);
-			if(station == null)
-				throw new StationNotFoundException(dtoStation.getId());
 			stations.add(station);
 		}
 		return stations;

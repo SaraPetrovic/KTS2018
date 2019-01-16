@@ -68,9 +68,12 @@ public class StationController {
 	public ResponseEntity<StationDTO> updateStation(@RequestBody StationDTO dtoStation){
 		
 		Station station = stationService.findById(dtoStation.getId());
-		if(station == null) {
-			throw new StationNotFoundException(dtoStation.getId());
+	
+		if(dtoStation.getAddress() == null || dtoStation.getAddress() == "" 
+				|| dtoStation.getName() == "" || dtoStation.getName() == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+		
 		station.setAddress(dtoStation.getAddress());
 		station.setName(dtoStation.getName());
 		

@@ -27,7 +27,6 @@ public class Zone implements Serializable {
 	private boolean active;
 	
 	public Zone() {
-		
 	}
 
 	public Zone(Long id, String name, Set<Station> stations, Zone subZone, boolean active) {

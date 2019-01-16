@@ -31,7 +31,7 @@ public class ZoneServiceImpl implements ZoneService{
 	public boolean deleteZone(Long id) {
 		Zone zone = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
 		
-		if(zone.getSubZone() == null) {
+		if(zone.getSubZone() == null && zone.getStations().size() != 0) {
 			throw new DAOException("Zone[id=" + id + "] contains stations and does not contain a subzone. Can not be deleted!",
 					HttpStatus.BAD_REQUEST);
 		}
