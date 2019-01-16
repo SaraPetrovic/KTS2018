@@ -11,12 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.exception.DAOException;
-import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.LineTicket;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
-import ftn.kts.transport.model.Zone;
-import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
 import ftn.kts.transport.security.JwtValidator;
 
@@ -25,10 +22,6 @@ public class TicketServiceImpl implements TicketService{
 
 	@Autowired
 	private TicketRepository ticketRepository;
-	@Autowired
-	private ZoneService zoneService;
-	@Autowired
-	private LineService lineService;
 	@Autowired
 	private PriceListService priceListService;
 	@Autowired
@@ -39,24 +32,32 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Ticket buyTicket(Ticket ticket, String token) {
 
-		if (ticket instanceof LineTicket) {
-			Line l = lineService.findById(((LineTicket) ticket).getLine().getId());
-			((LineTicket) ticket).setLine(l);
-		} else if (ticket instanceof ZoneTicket) {
-			Zone z = zoneService.findById(((ZoneTicket) ticket).getZone().getId());
-			((ZoneTicket) ticket).setZone(z);
+		User logged = getUser(token);
+		
+		// mesecne i godisnje karte mogu kupiti samo Useri kojima je approved verification document!
+		if (ticket.getTicketTemporal().ordinal() != 0) {
+			if (logged.getDocumentVerified().ordinal() == 0) {
+				throw new InvalidInputDataException("User's personal document is not uploaded! Only"
+						+ " One-hour ticket can be purchased if User hasn't uploaded personal document!", 
+						HttpStatus.FORBIDDEN);
+			} else if (logged.getDocumentVerified().ordinal() == 1) {
+				throw new InvalidInputDataException("User's personal document has not been verified yet! Only"
+						+ " One-hour ticket can be purchased if personal document is not verified!", 
+						HttpStatus.FORBIDDEN);
+			} else if (logged.getDocumentVerified().ordinal() == 2) {
+				throw new InvalidInputDataException("User's personal document has been rejected! Try"
+						+ " uploading document again! One-hour tickets can be purchased without personal document", 
+						HttpStatus.FORBIDDEN);
+			} 
 		}
 		
-		User logged = getUser(token);
+		
 		ticket.setUser(logged);
 		
 		double calculatedPrice = priceListService.calculateTicketPrice(ticket);
 		ticket.setPrice(calculatedPrice);
 		
-		
-
-		ticketRepository.save(ticket);
-		return ticket;
+		return ticketRepository.save(ticket);
 	
 	}
 	

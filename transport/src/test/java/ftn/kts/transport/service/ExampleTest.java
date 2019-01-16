@@ -14,7 +14,7 @@ import ftn.kts.transport.model.Line;
 import ftn.kts.transport.services.LineService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
 public class ExampleTest {
 
