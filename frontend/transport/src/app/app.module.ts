@@ -18,6 +18,7 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
+import { ZonesComponent } from './zones/zones.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AdministrationZoneComponent } from './administration-zone/administratio
     AdministrationComponent,
     AdministrationLineComponent,
     AdministrationStationComponent,
-    AdministrationZoneComponent
+    AdministrationZoneComponent,
+    ZonesComponent
   ],
   imports: [
     BrowserModule,
