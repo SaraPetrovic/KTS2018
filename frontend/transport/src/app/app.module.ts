@@ -13,6 +13,11 @@ import { HomeComponent } from './home/home.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
+import { MapComponent, StreetEventDirective, StreetClickedDirective, StreetEnterDirective, DrowStationDirective } from './map/map.component';
+import { AdministrationComponent } from './administration/administration.component';
+import { AdministrationLineComponent } from './administration-line/administration-line.component';
+import { AdministrationStationComponent } from './administration-station/administration-station.component';
+import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +26,16 @@ import { JwtInterceptor } from './_helper/jwt.interceptor';
     FooterComponent,
     LinesComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    MapComponent,
+    StreetEventDirective,
+    StreetClickedDirective,
+    StreetEnterDirective,
+    DrowStationDirective,
+    AdministrationComponent,
+    AdministrationLineComponent,
+    AdministrationStationComponent,
+    AdministrationZoneComponent
   ],
   imports: [
     BrowserModule,

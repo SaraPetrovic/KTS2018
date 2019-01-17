@@ -23,4 +23,8 @@ export class HeaderComponent implements OnInit {
         value => {value === null ? this.userLogged = false : this.userLogged = true;}
       );
   }
+
+  closeLogin(){
+    this.ngxSmartModalService.closeLatestModal();
+  }
 }

@@ -7,8 +7,14 @@
     margin-top: -16px;
     border-right: 2px solid #333;
     border-left: 2px solid #333;
+    padding-bottom: 50px;
 }
 
 li{
     list-style: none;
+}
+
+#lines-wrapper{
+    float: right;
+    width: 100px;
 }
