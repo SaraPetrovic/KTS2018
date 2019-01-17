@@ -1,5 +1,6 @@
 package ftn.kts.transport.controllers;
 
+import ftn.kts.transport.dtos.LoginDTO;
 import ftn.kts.transport.dtos.UserDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Ticket;
@@ -41,9 +42,17 @@ public class UserController {
     }
 
     @PostMapping( path = "/login", consumes = {"application/json"} )
-    public ResponseEntity<String> loginUser(@RequestBody UserDTO userDTO){
-        User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(jwtGenerator.generate(user));
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Object> loginUser(@RequestBody UserDTO userDTO){
+
+        try {
+            User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
+            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), jwtGenerator.generate(user));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseBody);
+        }
+        catch(DAOException e){
+            return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+        }
     }
     
     @GetMapping(path="/tickets/{id}", produces="application/json")
@@ -67,16 +76,6 @@ public class UserController {
     	}else if(userDto.getPassword().length() < 8) {
     		throw new DAOException("Password must contain at least eight characters ", HttpStatus.BAD_REQUEST);
     	}
-    	userService.save(user);
-    	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
-    }
-    
-    @PutMapping( path = "/addMoney")
-    public ResponseEntity<UserDTO> addMoney(@RequestBody UserDTO userDto){
-    	
-    	User user = userService.findById(userDto.getId());
-    	user.setMoneyBalance(userDto.getMoney());
-    	
     	userService.save(user);
     	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }

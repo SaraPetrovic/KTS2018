@@ -6,11 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ftn.kts.transport.DTOconverter.DTOConverter;
 import ftn.kts.transport.dtos.LineDTO;
@@ -24,7 +20,18 @@ public class LineController {
 
 	@Autowired
 	private LineService lineService;
+	@Autowired
+	private DTOConverter dtoConverter;
+
 	
+	
+	@GetMapping(value = "/line")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public ResponseEntity<List<Line>> getLInes(){
+		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
+	}
+
+
 	@RequestMapping(
 			value = "/line",
 			method = RequestMethod.POST,
@@ -34,11 +41,11 @@ public class LineController {
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO lineDTO) {
 		
 		Line ret = null;
-		Line l = DTOConverter.convertDTOtoLine(lineDTO);
+		Line l = dtoConverter.convertDTOtoLine(lineDTO);
 
 		ret = lineService.addLine(l);
 
-		//ret = lineService.addStationsToLine(ret.getId(), lineDTO);
+		ret = lineService.addStationsToLine(ret.getId(), lineDTO);
 		
 		return new ResponseEntity<Line>(ret, HttpStatus.CREATED);
 	}
@@ -93,7 +100,7 @@ public class LineController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
 	public ResponseEntity<RouteSchedule> addSchedule(@PathVariable("id") long id, @RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
+		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
 		RouteSchedule ret = lineService.addSchedule(schedule, id);
 		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
 	}
@@ -108,7 +115,7 @@ public class LineController {
 	public ResponseEntity<RouteSchedule> updateSchedule(@PathVariable("lineId") long lineId, 
 														@PathVariable("scheduleId") long scheduleId,
 														@RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = DTOConverter.convertDTOtoRouteSchedule(scheduleDTO);
+		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
 		RouteSchedule ret = lineService.updateSchedule(schedule, lineId, scheduleId);
 		
 		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);

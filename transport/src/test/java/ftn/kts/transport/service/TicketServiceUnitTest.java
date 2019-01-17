@@ -13,7 +13,7 @@ import ftn.kts.transport.services.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-public class TicketServiceTest {
+public class TicketServiceUnitTest {
 	
 	@Autowired
 	private TicketService ticketService;

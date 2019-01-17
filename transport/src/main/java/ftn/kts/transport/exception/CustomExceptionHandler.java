@@ -14,5 +14,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
 	}
 	
+	@ExceptionHandler(InvalidInputDataException.class)
+	public ResponseEntity<ExceptionResponse> handleInputDataException(InvalidInputDataException e) {
+		ExceptionResponse response = new ExceptionResponse(e.getMessage());
+		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
+	}
 	
 }

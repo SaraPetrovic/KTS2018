@@ -60,6 +60,7 @@ public class Station implements Serializable {
 	
 	public Station(Long id, String address, String name, boolean active) {
 		super();
+		this.id = id;
 		this.address = address;
 		this.name = name;
 		this.active = active;
@@ -72,7 +73,7 @@ public class Station implements Serializable {
 		this.active = active;
 	}
 	
-	@JsonManagedReference
+	@JsonManagedReference(value="stations-lineSet")
 	public Set<LineAndStation> getLineSet() {
 		return lineSet;
 	}

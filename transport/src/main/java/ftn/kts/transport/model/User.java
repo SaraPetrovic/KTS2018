@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.enums.UserTypeDemographic;
 
 @Entity
@@ -41,19 +44,19 @@ public class User implements Serializable {
 	private UserTypeDemographic userTypeDemo;
 	@Column
 	private String document;
-	@Column
-	private boolean documentVerified;
+	@Enumerated
+	private DocumentVerification documentVerified;
 	@OneToMany(mappedBy = "user")
 	private Set<Ticket> tickets;
-	@Column
-	private double moneyBalance;
 	
     public User() {
     	
     }
+	
 
 	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
-			UserTypeDemographic userTypeDemo, String document, boolean documentVerified, Set<Ticket> tickets, double moneyBalance) {
+			UserTypeDemographic userTypeDemo, String document, DocumentVerification documentVerified,
+			Set<Ticket> tickets) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -65,9 +68,8 @@ public class User implements Serializable {
 		this.document = document;
 		this.documentVerified = documentVerified;
 		this.tickets = tickets;
-		this.moneyBalance = moneyBalance;
 	}
-	
+
 
 	public User(String username, String password, String firstName, String lastName) {
 		super();
@@ -127,11 +129,11 @@ public class User implements Serializable {
 		this.document = document;
 	}
 
-	public boolean isDocumentVerified() {
+	public DocumentVerification getDocumentVerified() {
 		return documentVerified;
 	}
 
-	public void setDocumentVerified(boolean documentVerified) {
+	public void setDocumentVerified(DocumentVerification documentVerified) {
 		this.documentVerified = documentVerified;
 	}
 
@@ -142,7 +144,7 @@ public class User implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	@JsonBackReference
 	public Set<Ticket> getTickets() { return tickets; }
 
 	public void setTickets(Set<Ticket> tickets) { this.tickets = tickets; }
@@ -153,14 +155,6 @@ public class User implements Serializable {
 
 	public void setUserTypeDemo(UserTypeDemographic userTypeDemo) {
 		this.userTypeDemo = userTypeDemo;
-	}
-
-	public double getMoneyBalance() {
-		return moneyBalance;
-	}
-
-	public void setMoneyBalance(double moneyBalance) {
-		this.moneyBalance = moneyBalance;
 	}
     
 }

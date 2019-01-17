@@ -50,7 +50,7 @@ public class LineAndStation {
 	}
 
 
-	@JsonBackReference
+	@JsonBackReference(value="lines")
 	public Line getLine() {
 		return line;
 	}
@@ -59,7 +59,7 @@ public class LineAndStation {
 		this.line = line;
 	}
 
-	@JsonBackReference
+	@JsonBackReference(value="stations-lineSet")
 	public Station getStation() {
 		return station;
 	}

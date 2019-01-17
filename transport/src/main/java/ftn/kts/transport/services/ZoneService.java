@@ -1,8 +1,9 @@
 package ftn.kts.transport.services;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 
@@ -11,4 +12,5 @@ public interface ZoneService {
 	boolean deleteZone(Long id);
 	Zone findById(Long id);
 	List<Zone> findAll();
+	Set<Zone> getZonesByStations(Collection<Station> stations);
 }

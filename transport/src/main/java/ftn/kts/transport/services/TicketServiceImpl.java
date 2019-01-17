@@ -6,17 +6,16 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
+import ftn.kts.transport.security.JwtValidator;
 
 @Service
 public class TicketServiceImpl implements TicketService{
@@ -24,33 +23,42 @@ public class TicketServiceImpl implements TicketService{
 	@Autowired
 	private TicketRepository ticketRepository;
 	@Autowired
-	private HttpServletRequest request;
-	//@Autowired
-	//private PriceListService priceListService;
+	private PriceListService priceListService;
+	@Autowired
+	private JwtValidator jwtValidator;
 	@Autowired
 	private UserService userService;
 	
 	@Override
-	public Ticket addTicket(Ticket ticket) {
-		HttpSession session = request.getSession();
-		User sessionUser = (User) session.getAttribute("user");
+	public Ticket buyTicket(Ticket ticket, String token) {
 
-		ticket.setUser(sessionUser);
-		ticket.setActive(false);
+		User logged = getUser(token);
 		
-		double price = 0;// = priceListService.getPriceForTicket();
-		//ticket.setPrice(price);
+		// mesecne i godisnje karte mogu kupiti samo Useri kojima je approved verification document!
+		if (ticket.getTicketTemporal().ordinal() != 0) {
+			if (logged.getDocumentVerified().ordinal() == 0) {
+				throw new InvalidInputDataException("User's personal document is not uploaded! Only"
+						+ " One-hour ticket can be purchased if User hasn't uploaded personal document!", 
+						HttpStatus.FORBIDDEN);
+			} else if (logged.getDocumentVerified().ordinal() == 1) {
+				throw new InvalidInputDataException("User's personal document has not been verified yet! Only"
+						+ " One-hour ticket can be purchased if personal document is not verified!", 
+						HttpStatus.FORBIDDEN);
+			} else if (logged.getDocumentVerified().ordinal() == 2) {
+				throw new InvalidInputDataException("User's personal document has been rejected! Try"
+						+ " uploading document again! One-hour tickets can be purchased without personal document", 
+						HttpStatus.FORBIDDEN);
+			} 
+		}
 		
-		if(sessionUser.getMoneyBalance() < price)
-			return null;
 		
-		sessionUser.setMoneyBalance(sessionUser.getMoneyBalance() - price);
-		sessionUser.getTickets().add(ticket);
+		ticket.setUser(logged);
 		
-		userService.save(sessionUser);
-		ticketRepository.save(ticket);
+		double calculatedPrice = priceListService.calculateTicketPrice(ticket);
+		ticket.setPrice(calculatedPrice);
 		
-		return ticket;
+		return ticketRepository.save(ticket);
+	
 	}
 	
 	@Override
@@ -68,7 +76,14 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Ticket findById(Long id) {
 		Optional<Ticket> ticket = ticketRepository.findById(id);
-		return ticket.orElseThrow(() -> new DAOException("Ticket[id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+		return ticket.orElseThrow(() -> new DAOException("Ticket [id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+	}
+
+	@Override
+	public User getUser(String token) {
+		User credentials = jwtValidator.validate(token.substring(7));
+		User ret = userService.findByUsername(credentials.getUsername());
+		return ret;
 	}
 	
 }

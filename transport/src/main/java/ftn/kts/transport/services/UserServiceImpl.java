@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Role;
@@ -28,8 +29,8 @@ public class UserServiceImpl implements UserService {
 
     public void addUser(String username, String password, String first_name, String last_name){
     	User u = new User(username, password, first_name, last_name);
-    	u.setMoneyBalance(Double.valueOf(0));
-    	u.setDocumentVerified(false);
+
+    	u.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
     	u.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	u.setTickets(new HashSet<Ticket>());
     	u.setRoles(Role.ROLE_CLIENT);
@@ -38,20 +39,16 @@ public class UserServiceImpl implements UserService {
 
     public User login(String username, String password){
         User user = userRepository.findByUsername(username);
-        if(user == null) {
-        	throw new DAOException("Invalid username", HttpStatus.BAD_REQUEST);
+        if(user == null || !user.getPassword().equals(password)) {
+        	throw new DAOException("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
-        if(user.getPassword().equals(password)){
-            //TO DO
-            user.setRoles(Role.ROLE_CLIENT);
-            userRepository.save(user);
-            
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            return user;
-        }else{
-            throw new DAOException("Invalid password", HttpStatus.BAD_REQUEST);
-        }
+		//TO DO
+		user.setRoles(Role.ROLE_CLIENT);
+		userRepository.save(user);
+
+		//HttpSession session = request.getSession();
+		//session.setAttribute("user", user);
+		return user;
     }
 
 	@Override
@@ -69,6 +66,15 @@ public class UserServiceImpl implements UserService {
 		User user = findById(id);
 		Set<Ticket> tickets = user.getTickets();
 		return tickets;
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		User found = userRepository.findByUsername(username);
+		if (found == null) {
+			throw new DAOException("User [username=" + username + "] not found!", HttpStatus.NOT_FOUND);
+		}
+		return found;
 	}
 
 }

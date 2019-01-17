@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +38,10 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
+	 
 	@GetMapping("/all")
 	@Produces("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<ZoneDTO>> getAllZones() {
 		List<Zone> zones = zoneService.findAll();
 		List<ZoneDTO> dtoZones = new ArrayList<ZoneDTO>();
@@ -46,6 +49,7 @@ public class ZoneController {
 			ZoneDTO dto = new ZoneDTO(z);
 			dtoZones.add(dto);
 		}
+		
 		return new ResponseEntity<>(dtoZones, HttpStatus.OK);
 	}
 	
@@ -53,7 +57,7 @@ public class ZoneController {
 	@Consumes("application/json")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		if(zoneDTO.getSubZoneId() == null || zoneDTO.getStations().size() == 0) {
+		if(zoneDTO.getSubZoneId() == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Zone subZone = null;
@@ -62,16 +66,20 @@ public class ZoneController {
 		}
 		
 		Set<Station> stations = new HashSet<Station>();
-		for(StationDTO s : zoneDTO.getStations()) {
-			Station station = stationService.findById(s.getId());
-			stations.add(station);
+		if(zoneDTO.getStations() != null) {
+			for(StationDTO s : zoneDTO.getStations()) {
+				Station station = stationService.findById(s.getId());
+				stations.add(station);
+			}
 		}
+		
 		Zone zone = zoneService.save(new Zone(zoneDTO.getName(), stations, subZone, true));
 		
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
-	@DeleteMapping(path="/delete/{id}")
+	@DeleteMapping("/delete/{id}")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
 		
@@ -82,9 +90,13 @@ public class ZoneController {
 	@Consumes("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
+		Zone zone = zoneService.findById(id);
+		
+		if(dtoStations == null || dtoStations.size() == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		Set<Station> stations = checkStations(new HashSet<StationDTO>(dtoStations));
 				
-		Zone zone = zoneService.findById(id);
 		zone.setStations(stations);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -94,19 +106,28 @@ public class ZoneController {
 	@Produces("applications/json")
 	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){
 		
-		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+//		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
 		
 		Zone zone = zoneService.findById(dtoZone.getId());
 		
+		if(dtoZone.getName() == null || dtoZone.getName() == "") {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
 		zone.setName(dtoZone.getName());
 		
-		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
-		zone.setSubZone(subZone);
+//		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
+//		zone.setSubZone(subZone);
 		
-		Set<Station> stations = checkStations(dtoZone.getStations());
-		zone.setStations(stations);
+		Set<Station> stations = new HashSet<Station>();
+		if(dtoZone.getStations() != null) {
+			if(dtoZone.getStations().size() != 0) {
+				stations = checkStations(dtoZone.getStations());
+				zone.setStations(stations);	
+			}
+		}
 		
 		zoneService.save(zone);
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
@@ -117,8 +138,6 @@ public class ZoneController {
 		
 		for(StationDTO dtoStation : dtoStations) {
 			Station station = stationService.fromDtoToStation(dtoStation);
-			if(station == null)
-				throw new StationNotFoundException(dtoStation.getId());
 			stations.add(station);
 		}
 		return stations;
