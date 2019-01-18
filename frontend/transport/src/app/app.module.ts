@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+import { NgQrScannerModule } from 'angular2-qrscanner';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -19,6 +21,7 @@ import { AdministrationLineComponent } from './administration-line/administratio
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
 import { ZonesComponent } from './zones/zones.component';
+import { ConductorComponent } from './conductor/conductor.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { ZonesComponent } from './zones/zones.component';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
-    ZonesComponent
+    ZonesComponent,
+    ConductorComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +49,8 @@ import { ZonesComponent } from './zones/zones.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxSmartModalModule.forRoot()
+    NgxSmartModalModule.forRoot(),
+    NgQrScannerModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

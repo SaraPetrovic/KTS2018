@@ -7,11 +7,15 @@ import { AdministrationLineComponent } from './administration-line/administratio
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
 import { ZonesComponent } from './zones/zones.component';
+import { ConductorComponent } from './conductor/conductor.component';
 
 const routes: Routes = [
   {
     path: 'lines',
     component: LinesComponent
+  },{
+    path: 'conductor',
+    component: ConductorComponent
   },
   {
     path: 'administration',
