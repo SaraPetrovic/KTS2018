@@ -42,12 +42,12 @@ public class UserServiceUnitTest {
 		Mockito.when(userRepository.findById(Long.valueOf(2))).thenThrow(DAOException.class);
 	}
 	
-//	@Test
-//	public void loginTestOK() {
-//		User user = userService.login("sarapetrovic", "123456789");
-//		
-//		assertNotNull(user);
-//	}
+	@Test
+	public void loginTestOK() {
+		User user = userService.login("sarapetrovic", "123456789");
+		
+		assertNotNull(user);
+	}
 
 	@Test(expected=DAOException.class)
 	public void loginTestInvalidUsername() {

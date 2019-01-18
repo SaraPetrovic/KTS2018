@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ZoneService } from '../_services/zones/zone.service';
+import { ZonePopupService } from '../_services/zones/zone-popup.service';
 import { Zone } from '../model/zone';
-import { Router } from '@angular/Router';
+import { Router, ActivatedRoute } from '@angular/Router';
 
 @Component({
   selector: 'app-zones',
@@ -31,5 +32,7 @@ export class ZonesComponent implements OnInit {
     this.zoneService.addZone(zone).subscribe(
       (zone) => this.zones.push(zone));
   }
-  
+
 }
+
+

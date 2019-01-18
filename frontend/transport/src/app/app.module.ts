@@ -14,6 +14,8 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
 import { ZonesComponent } from './zones/zones.component';
+import { ZonePopupComponent, ZoneDialogComponent } from './zones/zone-dialog.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,12 @@ import { ZonesComponent } from './zones/zones.component';
     LinesComponent,
     HomeComponent,
     LoginComponent,
-    ZonesComponent
+    ZonesComponent,
+    ZoneDialogComponent,
+    ZonePopupComponent
+  ],
+  entryComponents: [
+    ZoneDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +38,8 @@ import { ZonesComponent } from './zones/zones.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxSmartModalModule.forRoot()
+    NgxSmartModalModule.forRoot(),
+    NgbModule.forRoot()
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

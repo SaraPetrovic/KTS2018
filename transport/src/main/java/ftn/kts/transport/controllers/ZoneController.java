@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,18 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
-	 
+	@GetMapping("/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
+	@Produces("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
+	public ResponseEntity<ZoneDTO> getZone(@PathVariable Long id) {
+		Zone zone = zoneService.findById(id);
+		
+		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
+	}
+	
 	@GetMapping("/all")
+	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<ZoneDTO>> getAllZones() {
@@ -54,6 +65,7 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/add")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("application/json")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
@@ -79,6 +91,7 @@ public class ZoneController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
@@ -87,6 +100,7 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/addStations/{id}") //id zone
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
@@ -102,6 +116,7 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/update")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@Produces("applications/json")
 	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){

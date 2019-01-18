@@ -1,6 +1,7 @@
 package ftn.kts.transport.services;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +76,11 @@ public class UserServiceImpl implements UserService {
 			throw new DAOException("User [username=" + username + "] not found!", HttpStatus.NOT_FOUND);
 		}
 		return found;
+	}
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
 	}
 
 }

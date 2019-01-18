@@ -21,6 +21,12 @@ export class ZoneService {
     return this.http.get<Zone[]>(`${this.zoneUrl}/all`);
   }
 
+  getZone(id: number): Observable<Zone>{
+    return this.http.get<Zone>(`${this.zoneUrl}/${id}`);
+  }
+
+
+
   deleteZone(zoneId : number): Observable<any>{
     return this.http.delete<void>(`${this.zoneUrl}/delete/${zoneId}`)
       .pipe(
