@@ -1,10 +1,13 @@
 <div id="wrapper">
-    <p>
-      lines work!
-    </p>
-    <ul>
-      <li *ngFor="let line of lines">
-        {{line.name}}
-      </li>
-    </ul>
+    <div id="lines-wrapper">
+      <ul>
+        <li *ngFor="let line of lines" (click)="LineClicked(line)">
+          {{line.name}}
+        </li>
+      </ul>
+    </div>
+
+    <app-map>
+      
+    </app-map>
 </div>

@@ -1,0 +1,12 @@
+#wrapper{
+    width: 100%;
+    padding: 10px;
+}
+
+app-map{
+    float: right;
+}
+
+#formWrapper{
+    width: 200px;
+}

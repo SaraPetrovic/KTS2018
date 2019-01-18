@@ -9,6 +9,8 @@
       <li><a routerLink="/pricelist" routerLinkActive="active">Price List</a></li>
       <li><a routerLink="/ticket" routerLinkActive="active">Tickets</a></li>
       <li><a routerLink="/notifications" routerLinkActive="active">Notifications</a></li>
+      <li><a routerLink="/administration" routerLinkActive="active">Administration</a></li>
+      <li><a routerLink="/conductor" routerLinkActive="active">Conductor</a></li>
 
       <li style="float:right">
         <a *ngIf="!userLogged" (click)="ngxSmartModalService.getModal('myModal').open()">
