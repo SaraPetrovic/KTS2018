@@ -34,10 +34,10 @@ public class TicketController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/activate/{id}")
-	public ResponseEntity<Void> activateTicket(@PathVariable Long id){
+	public ResponseEntity<Ticket> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		ticketService.activateTicket(ticket);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<Ticket>(HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")

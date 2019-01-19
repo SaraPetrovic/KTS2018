@@ -62,7 +62,7 @@ public class TicketServiceImpl implements TicketService{
 	}
 	
 	@Override
-	public void activateTicket(Ticket ticket) {
+	public Ticket activateTicket(Ticket ticket) {
 		ticket.setActive(true);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date currentDate = new Date();
@@ -70,7 +70,7 @@ public class TicketServiceImpl implements TicketService{
 		System.out.println("Current date " + sdf.format(currentDate) + " + 1 hour : " + sdf.format(endDate));
 		ticket.setStartTime(currentDate);
 		ticket.setEndTime(endDate);
-		ticketRepository.save(ticket);
+		return ticketRepository.save(ticket);
 	}
 
 	@Override
