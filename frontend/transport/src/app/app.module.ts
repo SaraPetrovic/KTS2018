@@ -35,10 +35,7 @@ import { ConductorComponent } from './conductor/conductor.component';
     LoginComponent,
     ZonesComponent,
     ZoneDialogComponent,
-    ZonePopupComponent
-  ],
-  entryComponents: [
-    ZoneDialogComponent,
+    ZonePopupComponent,
     MapComponent,
     DrowStationDirective,
     StreetClickedDirective,
@@ -48,8 +45,11 @@ import { ConductorComponent } from './conductor/conductor.component';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
-    ZonesComponent,
     ConductorComponent
+  ],
+  entryComponents: [
+    ZoneDialogComponent,
+    ZonesComponent
   ],
   imports: [
     BrowserModule,

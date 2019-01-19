@@ -72,6 +72,11 @@ public class UserController {
 		
     	User user = userService.findById(userDto.getId());
     	
+    	if(userDto.getUsername() == "" || userDto.getPassword() == "" || userDto.getFirstName() == "" || userDto.getLastName() == ""
+    			|| userDto.getUsername() == null || userDto.getPassword() == null || userDto.getFirstName() == null || userDto.getLastName() == null) {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
+    	
     	if(userDto.getPassword().equals(userDto.getRepeatedPassword()) && userDto.getPassword().length() >= 8) {
     		user.setUsername(userDto.getUsername());
     		user.setPassword(userDto.getPassword());

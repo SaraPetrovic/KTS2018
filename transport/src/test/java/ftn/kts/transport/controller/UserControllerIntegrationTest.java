@@ -3,12 +3,15 @@ package ftn.kts.transport.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
@@ -41,6 +44,19 @@ public class UserControllerIntegrationTest {
 		
 		assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
 		assertEquals(size + 1, userService.findAll().size());
+	}
+	
+	@Test
+	public void addUserTestExistsUsername() {
+		int size = userService.findAll().size();
+		
+		UserDTO dtoUser = new UserDTO("user3", "12345678", "Sara", "Petrovic", "12345678");
+		
+		ResponseEntity<Void> responseEntity = 
+				restTemplate.postForEntity("/user/add", dtoUser, Void.class);
+		
+		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+		assertEquals(size, userService.findAll().size());
 	}
 	
 	@Test
@@ -82,25 +98,27 @@ public class UserControllerIntegrationTest {
 		assertEquals(size, userService.findAll().size());
 	}
 	
-	/*
+	
 	@Test
 	public void updateTestNotFoundUser() {
-		UserDTO dto = new UserDTO(Long.valueOf(13), "Sara", "12345", "Sara", "Petrovic", "12345");
 		
 		ResponseEntity<UserDTO> responseEntity =
-				restTemplate.postForEntity("/user/update", dto, UserDTO.class);
+	            restTemplate.exchange("/user/update", HttpMethod.PUT, 
+	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(13), "Sara", "12345", "Sara", "Petrovic", "12345")),
+	            		UserDTO.class);
 		
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
 	
 	@Test
 	public void updateTestOK() {
-		UserDTO dto = new UserDTO(Long.valueOf(1), "Sara", "123456789", "Sara", "Petrovic", "123456789");
 		
 		ResponseEntity<UserDTO> responseEntity =
-				restTemplate.postForEntity("/user/update", dto, UserDTO.class);
+	            restTemplate.exchange("/user/update", HttpMethod.PUT, 
+	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(2), "SaraPetrovic", "123456789", "Sara", "Petrovic", "123456789")),
+	            		UserDTO.class);
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}
-	*/
+	
 }

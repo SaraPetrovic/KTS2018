@@ -29,13 +29,20 @@ public class UserServiceImpl implements UserService {
 	private HttpServletRequest request;
 
     public void addUser(String username, String password, String first_name, String last_name){
-    	User u = new User(username, password, first_name, last_name);
+    	List<User> users = findAll();
+    	for(User u: users) {
+    		if(u.getUsername().equals(username)) {
+    			throw new DAOException("User with the same username already exists", HttpStatus.CONFLICT);
+    		}
+    	}
+    	
+    	User user = new User(username, password, first_name, last_name);
 
-    	u.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
-    	u.setUserTypeDemo(UserTypeDemographic.NORMAL);
-    	u.setTickets(new HashSet<Ticket>());
-    	u.setRoles(Role.ROLE_CLIENT);
-    	userRepository.save(u);
+    	user.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+    	user.setUserTypeDemo(UserTypeDemographic.NORMAL);
+    	user.setTickets(new HashSet<Ticket>());
+    	user.setRoles(Role.ROLE_CLIENT);
+    	userRepository.save(user);
     }
 
     public User login(String username, String password){
