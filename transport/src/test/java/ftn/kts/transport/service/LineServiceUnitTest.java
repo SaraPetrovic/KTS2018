@@ -43,7 +43,7 @@ import ftn.kts.transport.services.LineService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class LineServiceTest {
+public class LineServiceUnitTest {
 
 	@Autowired
 	private LineService service;

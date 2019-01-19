@@ -41,7 +41,7 @@ import ftn.kts.transport.services.ZoneService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
-public class PriceListServiceTest {
+public class PriceListServiceUnitTest {
 
 	@Autowired
 	private PriceListService service;
