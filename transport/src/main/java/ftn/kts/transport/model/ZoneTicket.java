@@ -1,5 +1,7 @@
 package ftn.kts.transport.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 import javax.persistence.DiscriminatorValue;
@@ -30,7 +32,7 @@ public class ZoneTicket extends Ticket implements Serializable {
 	}
 
 
-
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	public Zone getZone() {
 		return zone;
 	}

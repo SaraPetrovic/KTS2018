@@ -1,5 +1,6 @@
 package ftn.kts.transport.security;
 
+import ftn.kts.transport.exception.DAOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -23,7 +24,8 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
 
 
         if (header == null || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("JWT Token is missing");
+            //throw new RuntimeException("JWT Token is missing");
+            return null;
         }
 
         String authenticationToken = header.substring(7);

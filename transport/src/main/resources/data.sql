@@ -199,5 +199,6 @@ INSERT INTO users(id, document_verified, first_name, last_name, username, passwo
 INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0) 
 insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, null, 'Sara')
 
+
 insert into zones_stations(zone_id, stations_id) values (1,1)
 insert into zones_stations(zone_id, stations_id) values (1,2)

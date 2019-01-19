@@ -120,7 +120,13 @@ public class DTOConverterImpl implements DTOConverter{
 			}
 			
 			ticket.setLine(l);
-			ticket.setActive(false);
+			// ako je one_time -> potrebna je aktivacija
+			if (ticketTemporal == 0) {
+				ticket.setActive(false);	
+				// ako je monthly/yearly -> aktiviraj odmah
+			} else {
+				ticket.setActive(true);
+			}
 			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
 			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
@@ -137,7 +143,12 @@ public class DTOConverterImpl implements DTOConverter{
 			}
 			
 			ticket.setZone(z);
-			ticket.setActive(false);
+			// ista prica
+			if (ticketTemporal == 0) {
+				ticket.setActive(false);	
+			} else {
+				ticket.setActive(true);
+			}
 			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
 			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
