@@ -1,11 +1,18 @@
 package ftn.kts.transport.services;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +23,7 @@ import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
 import ftn.kts.transport.security.JwtValidator;
+
 
 @Service
 public class TicketServiceImpl implements TicketService{
@@ -85,5 +93,10 @@ public class TicketServiceImpl implements TicketService{
 		User ret = userService.findByUsername(credentials.getUsername());
 		return ret;
 	}
-	
+
+
+	@Override
+    public List<Ticket> getTickets(User user){
+	    return this.ticketRepository.findByUser(user);
+	}
 }

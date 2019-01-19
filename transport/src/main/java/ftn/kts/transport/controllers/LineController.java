@@ -38,8 +38,9 @@ public class LineController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO lineDTO) {
-		
+		System.out.println("usao sam ovde");
 		Line ret = null;
 		Line l = dtoConverter.convertDTOtoLine(lineDTO);
 

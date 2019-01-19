@@ -1,21 +1,19 @@
 package ftn.kts.transport.controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.io.BaseEncoding;
+import ftn.kts.transport.model.User;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ftn.kts.transport.DTOconverter.DTOConverter;
 import ftn.kts.transport.dtos.TicketDTO;
@@ -63,5 +61,63 @@ public class TicketController {
 	}
 	
 	
-	
+    @GetMapping(
+            value = "/check/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Ticket> checkTicket(@PathVariable String id){
+
+	    try{
+            Ticket ret = this.ticketService.findById(decodeId(id));
+
+            return ResponseEntity.ok(ret);
+        }catch(Exception e){
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+	}
+
+	@GetMapping(
+			value = "/me",
+			produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public ResponseEntity<List<TicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token){
+
+	    try {
+            List<TicketDTO> ret = new ArrayList<>();
+            User user = this.ticketService.getUser(token);
+
+            List<Ticket> tickets = this.ticketService.getTickets(user);
+
+            for (Ticket t : tickets) {
+            	System.out.println(generateQrCode(t.getId()));
+                ret.add(new TicketDTO(t, generateQrCode(t.getId()).getPath()));
+            }
+
+            return ResponseEntity.ok(ret);
+        } catch(Exception e){
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+	}
+
+    private File generateQrCode(Long id) {
+
+        String encodedID = BaseEncoding.base64()
+                .encode(("TicketID=" + id.toString()).getBytes());
+
+        File qrCode = QRCode.from(encodedID).to(ImageType.JPG).withSize(250, 250).file();
+
+        return qrCode;
+    }
+
+    private Long decodeId(String encodedID){
+
+	    byte[] decodedID = BaseEncoding.base64()
+                .decode(encodedID);
+
+	    String stringID = new String(decodedID);
+
+	    return Long.parseLong(stringID.substring(9));
+    }
+
 }
