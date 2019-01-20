@@ -26,7 +26,7 @@ public class PriceListController {
 	
 	
 	@RequestMapping(
-			value = "/priceList/add",
+			value = "rest/priceList/add",
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE
