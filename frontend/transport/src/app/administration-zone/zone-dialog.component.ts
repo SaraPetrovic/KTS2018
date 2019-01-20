@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute, ChildActivationEnd } from '@angular/router';
 import { ZonePopupService } from '../_services/zones/zone-popup.service';
 import { Zone } from '../model/zone';
 import { ZoneService } from '../_services/zones/zone.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { AdministrationZoneComponent } from './administration-zone.component';
 
 @Component({
   selector: 'app-zone-dialog',
@@ -12,27 +14,33 @@ import { ZoneService } from '../_services/zones/zone.service';
 export class ZoneDialogComponent implements OnInit {
 
     private zone: Zone;
-    display = 'none';
 
-    constructor(private zoneService: ZoneService) { }
+    constructor(private zoneService: ZoneService,
+            private activeModal: NgbActiveModal) { }
 
     ngOnInit() {
-        this.zone.id = 1;
-        this.zone.name = 'aa';
     }
 
     save() {
         //this.isSaving = true;
-        if (this.zone.id !== undefined) {
+        //if (this.zone.id !== undefined) {
                 //this.zoneService.updateZone(this.zone));
-        } else {
-                this.zoneService.addZone(this.zone);
-        }
+        //} else {
+                //this.zoneService.addZone(this.zone);
+        //}
+
+        
     }
 
-    onCloseHandled(){
-        this.display='none'; 
-     }
+    addZone(): void {
+        this.zoneService.addZone(this.zone).subscribe();
+    }
+
+    clear() {
+        this.activeModal.dismiss('cancel');
+    }
+
+
 }
 
 @Component({

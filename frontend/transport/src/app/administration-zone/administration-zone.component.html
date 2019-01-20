@@ -1,3 +1,45 @@
-<p>
-  administration-zone works!
-</p>
+<div id="wrapper">
+<h2>
+    <span style="margin-left: 2%;">Zones</span>
+    <button class="btn btn-primary float-right" routerLink="/zzz"
+            style="margin-right: 2%;">
+        <span class="fa fa-plus"></span>
+        <span >
+        Create new Zone
+        </span>
+    </button>
+</h2>
+<div class="table-responsive" *ngIf="zones">
+<table class="table table-striped">
+    <thead>
+    <tr>
+    <th><span>ID</span></th>
+    <th><span>Name</span></th>
+    <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let zone of zones">
+        <td><a [routerLink]="['../zone', zone.id ]">{{zone.id}}</a></td>
+        <td>{{zone.name}}</td>
+        <td class="text-right">
+            <div class="btn-group flex-btn-group-container">
+                <button type="submit" class="btn btn-info btn-sm">
+                    <span class="fa fa-eye"></span>
+                    <span class="d-none d-md-inline">View</span>
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <span class="fa fa-pencil"></span>
+                    <span class="d-none d-md-inline">Edit</span>
+                </button>
+                <button type="submit" class="btn btn-danger btn-sm" (click)="deleteZone(zone.id)">
+                    <span class="fa fa-remove"></span>
+                    <span class="d-none d-md-inline">Delete</span>
+                </button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</div>

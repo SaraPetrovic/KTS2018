@@ -20,10 +20,9 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
-import { ZonesComponent } from './zones/zones.component';
-import { ZonePopupComponent, ZoneDialogComponent } from './zones/zone-dialog.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConductorComponent } from './conductor/conductor.component';
+import { ZoneDialogComponent, ZonePopupComponent } from './administration-zone/zone-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +32,7 @@ import { ConductorComponent } from './conductor/conductor.component';
     LinesComponent,
     HomeComponent,
     LoginComponent,
-    ZonesComponent,
+    AdministrationZoneComponent,
     ZoneDialogComponent,
     ZonePopupComponent,
     MapComponent,
@@ -49,7 +48,7 @@ import { ConductorComponent } from './conductor/conductor.component';
   ],
   entryComponents: [
     ZoneDialogComponent,
-    ZonesComponent
+    AdministrationZoneComponent
   ],
   imports: [
     BrowserModule,
