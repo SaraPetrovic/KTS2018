@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Zone } from '../model/zone';
 import { ZoneService } from '../_services/zones/zone.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-administration-zone',
@@ -14,7 +15,8 @@ export class AdministrationZoneComponent implements OnInit {
 
   private zones: Zone[];
   
-  constructor(private zoneService: ZoneService) { }
+  constructor(private zoneService: ZoneService,
+    private router: Router) { }
 
   ngOnInit() {
     this.zoneService.getZones()
@@ -24,14 +26,14 @@ export class AdministrationZoneComponent implements OnInit {
       });
   }
 
+  new(){
+    this.router.navigate(['/administration/zones',{ outlets: { popup: [ 'zzz' ] }}]); 
+  }
   deleteZone(zoneId : number) : void {
     this.zoneService.deleteZone(zoneId).subscribe(
       () => this.ngOnInit());
   }
 
-  addZone(zone : Zone): void {
-    this.zoneService.addZone(zone).subscribe(
-      (zone) => this.zones.push(zone));
-  }
+  
 
 }

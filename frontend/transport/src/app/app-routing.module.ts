@@ -13,7 +13,8 @@ const routes: Routes = [
   {
     path: 'lines',
     component: LinesComponent
-  },{
+  },
+  {
     path: 'conductor',
     component: ConductorComponent
   },
@@ -31,7 +32,15 @@ const routes: Routes = [
       },
       {
         path: 'zones',
-        component: AdministrationZoneComponent
+        component: AdministrationZoneComponent,
+        children: [
+          {
+            path: 'zzz',
+            component: ZonePopupComponent,
+            outlet: 'popup'
+          }
+        ]
+        
       },
       {
         path: '',
@@ -47,7 +56,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    pathMatch: 'full'
   },
   {
     path: '**',
@@ -55,12 +65,9 @@ const routes: Routes = [
   }
 ];
 
+
 const zonesRoutes: Routes = [
-  {
-    path: 'zone-new',
-    component: ZonePopupComponent,
-    outlet: 'popup'
-  },
+  
   /*{
     path: 'zone/:id/delete',
     component: ZoneDeletePopupComponent,

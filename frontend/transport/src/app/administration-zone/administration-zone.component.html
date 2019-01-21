@@ -1,12 +1,15 @@
 <div id="wrapper">
 <h2>
     <span style="margin-left: 2%;">Zones</span>
-    <button class="btn btn-primary float-right" routerLink="/zzz"
+    <button class="btn btn-primary float-right" [routerLink]="['/administration/zones',{ outlets: { popup: ['zzz'] } }]"
             style="margin-right: 2%;">
         <span class="fa fa-plus"></span>
         <span >
         Create new Zone
         </span>
+    </button>
+    <button routerLink='/zzz'>
+        Add
     </button>
 </h2>
 <div class="table-responsive" *ngIf="zones">

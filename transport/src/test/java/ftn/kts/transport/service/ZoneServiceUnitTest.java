@@ -52,7 +52,8 @@ public class ZoneServiceUnitTest {
 		Zone zone1 = new Zone(Long.valueOf(10), "Gradska", true);
 		Mockito.when(zoneRepository.findById(zone1.getId())).thenReturn(Optional.of(zone));
 		
-		Zone zone2 = new Zone(Long.valueOf(2), "Gradska", null, zone, true);
+		Set<Station> stationsEmpty = new HashSet<Station>();
+		Zone zone2 = new Zone(Long.valueOf(2), "Gradska", stationsEmpty, zone, true);
 		Mockito.when(zoneRepository.findById(zone2.getId())).thenReturn(Optional.of(zone2));
 		
 		Set<Station> stations = new HashSet<Station>();
@@ -63,14 +64,35 @@ public class ZoneServiceUnitTest {
 	}
 	
 	@Test
-	public void saveTest() {
-		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
-		Mockito.when(zoneRepository.save(zone)).thenReturn(zone);
+	public void addZoneTestOK1() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
 		
-		Zone rez = zoneService.save(zone);
+		Zone rez = zoneService.save(zone2);
 		
 		assertNotNull(rez);
-		assertEquals(zone, rez);
+		assertEquals(zone2, rez);
+	}
+	
+	@Test
+	public void addZoneTestOK2() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska 2", null, zone2, true);
+		Zone zone4 = new Zone(Long.valueOf(4), "Prigradska 3", null, zone2, true);
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		zones.add(zone3);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+		Mockito.when(zoneRepository.save(zone4)).thenReturn(zone4);
+		
+		Zone rez = zoneService.save(zone4);
+		
+		assertNotNull(rez);
+		assertEquals(zone4, rez);
+		assertEquals(zone3.getSubZone().getId(), zone4.getId());
 	}
 	
 	@Test
@@ -83,7 +105,6 @@ public class ZoneServiceUnitTest {
 	@Test
 	public void deleteZoneTestOK2() {
 		Set<Station> stations = new HashSet<Station>();
-		stations.add(new Station("Jevrejska 13", "Centar", true));
 		Zone zone = new Zone(Long.valueOf(1), "Gradska", true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Gradska2", stations, zone, true);
 		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska", null, zone2, true);
@@ -96,7 +117,6 @@ public class ZoneServiceUnitTest {
 		
 		boolean rez = zoneService.deleteZone(zone2.getId());
 		
-		assertEquals(stations.size(), zone.getStations().size());
 		assertEquals(zone.getId(), zone3.getSubZone().getId());
 		assertTrue(rez);
 	}

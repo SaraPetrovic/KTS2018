@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ChildActivationEnd } from '@angular/router';
+import { ActivatedRoute, ChildActivationEnd, Router } from '@angular/router';
 import { ZonePopupService } from '../_services/zones/zone-popup.service';
 import { Zone } from '../model/zone';
 import { ZoneService } from '../_services/zones/zone.service';
@@ -16,6 +16,7 @@ export class ZoneDialogComponent implements OnInit {
     private zone: Zone;
 
     constructor(private zoneService: ZoneService,
+         private router: Router,
             private activeModal: NgbActiveModal) { }
 
     ngOnInit() {
@@ -38,6 +39,7 @@ export class ZoneDialogComponent implements OnInit {
 
     clear() {
         this.activeModal.dismiss('cancel');
+        this.router.navigateByUrl('http://localhost:4200/administration/zones');
     }
 
 

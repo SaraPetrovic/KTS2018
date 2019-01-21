@@ -50,9 +50,11 @@ export class ZoneService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${JSON.stringify(error.error.errorMessage)}`;
+      if(error.error.errorMessage != null){
+        errorMessage = `Error Code: ${error.status}\nMessage: ${JSON.stringify(error.error.errorMessage)}`;
+        window.alert(errorMessage);
+        return throwError(errorMessage);
+      }
     }
-    window.alert(errorMessage);
-    return throwError(errorMessage);
   }
 }

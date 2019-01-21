@@ -13,4 +13,5 @@ public interface ZoneService {
 	Zone findById(Long id);
 	List<Zone> findAll();
 	Set<Zone> getZonesByStations(Collection<Station> stations);
+	Zone addZone(Zone zone);
 }

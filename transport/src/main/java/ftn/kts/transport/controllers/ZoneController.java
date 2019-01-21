@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
@@ -67,9 +68,10 @@ public class ZoneController {
 	@PostMapping(path="/add")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		if(zoneDTO.getSubZoneId() == null) {
+		if(zoneDTO.getSubZoneId() == null || zoneDTO.getName() == null || zoneDTO.getName() == "") {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Zone subZone = null;
@@ -78,14 +80,8 @@ public class ZoneController {
 		}
 		
 		Set<Station> stations = new HashSet<Station>();
-		if(zoneDTO.getStations() != null) {
-			for(StationDTO s : zoneDTO.getStations()) {
-				Station station = stationService.findById(s.getId());
-				stations.add(station);
-			}
-		}
 		
-		Zone zone = zoneService.save(new Zone(zoneDTO.getName(), stations, subZone, true));
+		Zone zone = zoneService.addZone(new Zone(zoneDTO.getName(), stations, subZone, true));
 		
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
@@ -135,14 +131,6 @@ public class ZoneController {
 		
 //		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
 //		zone.setSubZone(subZone);
-		
-		Set<Station> stations = new HashSet<Station>();
-		if(dtoZone.getStations() != null) {
-			if(dtoZone.getStations().size() != 0) {
-				stations = checkStations(dtoZone.getStations());
-				zone.setStations(stations);	
-			}
-		}
 		
 		zoneService.save(zone);
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);

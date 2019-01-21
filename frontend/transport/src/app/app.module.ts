@@ -32,7 +32,6 @@ import { ZoneDialogComponent, ZonePopupComponent } from './administration-zone/z
     LinesComponent,
     HomeComponent,
     LoginComponent,
-    AdministrationZoneComponent,
     ZoneDialogComponent,
     ZonePopupComponent,
     MapComponent,
