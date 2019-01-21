@@ -6,14 +6,15 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
-import { ZonesComponent } from './zones/zones.component';
 import { ConductorComponent } from './conductor/conductor.component';
+import { ZonePopupComponent } from './administration-zone/zone-dialog.component';
 
 const routes: Routes = [
   {
     path: 'lines',
     component: LinesComponent
-  },{
+  },
+  {
     path: 'conductor',
     component: ConductorComponent
   },
@@ -31,7 +32,15 @@ const routes: Routes = [
       },
       {
         path: 'zones',
-        component: AdministrationZoneComponent
+        component: AdministrationZoneComponent,
+        children: [
+          {
+            path: 'zzz',
+            component: ZonePopupComponent,
+            outlet: 'popup'
+          }
+        ]
+        
       },
       {
         path: '',
@@ -41,13 +50,29 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'zzz',
+    component: ZonePopupComponent
+
+  },
+  {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    pathMatch: 'full'
   },
   {
     path: '**',
     redirectTo: ''
   }
+];
+
+
+const zonesRoutes: Routes = [
+  
+  /*{
+    path: 'zone/:id/delete',
+    component: ZoneDeletePopupComponent,
+    outlet: 'popup'
+  }*/
 ];
 
 @NgModule({

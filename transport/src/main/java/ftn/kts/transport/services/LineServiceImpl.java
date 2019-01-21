@@ -151,7 +151,7 @@ public class LineServiceImpl implements LineService {
 	
 	@Override
 	public RouteSchedule findScheduleById(Long id) {
-		RouteSchedule schedule = scheduleRepository.findById(id).orElseThrow(() -> 
+		RouteSchedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
 								new DAOException("Schedule [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
 		return schedule;
 	}
@@ -166,6 +166,7 @@ public class LineServiceImpl implements LineService {
 		Date earlierDate = c.getTime();
 		
 		List<RouteSchedule> availableSchedules = scheduleRepository.findByActiveFromGreaterThanAndLine(earlierDate, l);
+
 		return availableSchedules;
 	}
 
@@ -215,9 +216,11 @@ public class LineServiceImpl implements LineService {
 		for (Zone potentialParent : zones) {
 			flag = false;
 			for (Zone zone : zones) {
-				if (zone.getSubZone().equals(potentialParent)) {
-					flag = true;
-					break;
+				if(zone.getSubZone() != null) {
+					if (zone.getSubZone().equals(potentialParent)) {
+						flag = true;
+						break;
+					}
 				}
 			}
 			if (flag) {

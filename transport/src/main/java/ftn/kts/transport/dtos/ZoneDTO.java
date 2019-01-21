@@ -22,6 +22,12 @@ public class ZoneDTO {
 		this.subZoneId = subZoneId;
 	}
 	
+	public ZoneDTO(String name, Set<StationDTO> stations, Long subZoneId) {
+		this.name = name;
+		this.stations = stations;
+		this.subZoneId = subZoneId;
+	}
+	
 	public ZoneDTO(Zone zone) {
 		this.id = zone.getId();
 		this.name = zone.getName();

@@ -28,8 +28,12 @@ public class UserController {
     private JwtGenerator jwtGenerator;
 
     @PostMapping( path = "/add" ,consumes = {"application/json"} )
+    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
-
+    	if(userDTO.getUsername() == "" || userDTO.getPassword() == "" || userDTO.getRepeatedPassword() == "" || userDTO.getFirstName() == "" || userDTO.getLastName() == ""
+    			|| userDTO.getUsername() == null || userDTO.getPassword() == null || userDTO.getRepeatedPassword() == null || userDTO.getFirstName() == null || userDTO.getLastName() == null) {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
     	if(userDTO.getPassword().equals(userDTO.getRepeatedPassword()) && userDTO.getPassword().length() >= 8) {
     		userService.addUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(), userDTO.getLastName());
     	}else if(!userDTO.getPassword().equals(userDTO.getRepeatedPassword())){
@@ -42,6 +46,7 @@ public class UserController {
     }
 
     @PostMapping( path = "/login", consumes = {"application/json"} )
+    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Object> loginUser(@RequestBody UserDTO userDTO){
 
@@ -61,10 +66,16 @@ public class UserController {
 		return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
     
-    @PutMapping( path = "/update")
+    @PutMapping( path = "/update", consumes = {"application/json"}, produces="application/json")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDto){
 		
     	User user = userService.findById(userDto.getId());
+    	
+    	if(userDto.getUsername() == "" || userDto.getPassword() == "" || userDto.getFirstName() == "" || userDto.getLastName() == ""
+    			|| userDto.getUsername() == null || userDto.getPassword() == null || userDto.getFirstName() == null || userDto.getLastName() == null) {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
     	
     	if(userDto.getPassword().equals(userDto.getRepeatedPassword()) && userDto.getPassword().length() >= 8) {
     		user.setUsername(userDto.getUsername());

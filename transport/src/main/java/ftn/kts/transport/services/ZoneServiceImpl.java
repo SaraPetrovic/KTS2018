@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
@@ -23,6 +24,23 @@ public class ZoneServiceImpl implements ZoneService{
 	private ZoneRepository zoneRepository;
 
 	@Override
+	public Zone addZone(Zone zone) {
+		List<Zone> zones = findAll();
+
+		Zone rez = zoneRepository.save(zone);
+		
+		for(Zone z : zones) {
+			if(z.getSubZone() != null && zone.getSubZone() != null) {
+				if(z.getSubZone().getId() == zone.getSubZone().getId()) {
+					z.setSubZone(zone);
+					zoneRepository.save(z);
+				}
+			}
+		}
+		return rez;
+	}
+
+	@Override
 	public Zone save(Zone zone) {
 		return zoneRepository.save(zone);
 	}
@@ -31,24 +49,14 @@ public class ZoneServiceImpl implements ZoneService{
 	public boolean deleteZone(Long id) {
 		Zone zone = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
 		
-		if(zone.getSubZone() == null && zone.getStations().size() != 0) {
-			throw new DAOException("Zone[id=" + id + "] contains stations and does not contain a subzone. Can not be deleted!",
+		if(zone.getStations().size() != 0) {
+			throw new DAOException("Zone[id=" + id + "] can not be deleted, because it contains stations!",
 					HttpStatus.BAD_REQUEST);
 		}
+		
 		Zone subzone = zone.getSubZone();
-		if(zone.getStations() != null) {
-			if(subzone.getStations() == null) {
-				subzone.setStations(new HashSet<Station>());
-			}
-			if(zone.getStations().size() != 0) {
-				//stanice se dodaju u stanice podzone
-				for(Station s : zone.getStations()) {
-					subzone.getStations().add(s);
-				}
-				zoneRepository.save(subzone);
-			}
-		}
-		//promeni se podzona zone, kojoj je zona koja se brise bila podzona
+		
+		//podzona zone = zona koja se brise -> podzona zone = podzona zone koja se brise
 		for(Zone z : findAll()) {
 			if(z.getSubZone() != null && z.getSubZone().getId() == id) {
 				z.setSubZone(subzone);

@@ -66,6 +66,7 @@ public class TicketController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @CrossOrigin( origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('ROLE_CLIENT')")
     public ResponseEntity<Ticket> checkTicket(@PathVariable String id){
 
 	    try{
@@ -91,6 +92,7 @@ public class TicketController {
 
             for (Ticket t : tickets) {
             	System.out.println(generateQrCode(t.getId()));
+            	
                 ret.add(new TicketDTO(t, generateQrCode(t.getId()).getPath()));
             }
 

@@ -38,7 +38,7 @@ public class TicketServiceImpl implements TicketService{
 		User logged = getUser(token);
 		
 		// mesecne i godisnje karte mogu kupiti samo Useri kojima je approved verification document!
-		if (ticket.getTicketTemporal().ordinal() != 0) {
+		if (ticket.getTicketTemporal().ordinal() != 0 && ticket.getTicketTemporal().ordinal() != 3) {
 			if (logged.getDocumentVerified().ordinal() == 0) {
 				throw new InvalidInputDataException("User's personal document is not uploaded! Only"
 						+ " One-hour ticket can be purchased if User hasn't uploaded personal document!", 

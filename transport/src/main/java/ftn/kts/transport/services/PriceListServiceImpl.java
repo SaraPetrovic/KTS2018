@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import ftn.kts.transport.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,6 @@ import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
-import ftn.kts.transport.model.LineTicket;
-import ftn.kts.transport.model.PriceList;
-import ftn.kts.transport.model.Ticket;
-import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.PriceListRepository;
 
 @Service
@@ -23,9 +20,16 @@ public class PriceListServiceImpl implements PriceListService {
 
 	@Autowired
 	private PriceListRepository priceListRepository;
+
+	@Autowired
+	private ZoneService zoneService;
+
 	@Autowired
 	private LineService lineService;
-	
+
+	@Autowired
+	private RouteService routeService;
+
 	@Override
 	public PriceList addPriceList(PriceList newPriceList) {
 	
@@ -81,6 +85,7 @@ public class PriceListServiceImpl implements PriceListService {
 		double seniorDisc = activePriceList.getSeniorDiscount();
 		double studentDisc = activePriceList.getStudentDiscount();
 		double yearlyCoeff = activePriceList.getYearlyCoeffitient();
+		double oneHourCoeff = activePriceList.getOneHourCoeffitient();
 		Map<Long, Double> oneTimePrices = activePriceList.getOneTimePrices();
 		double finalPrice = 0;
 		
@@ -91,6 +96,7 @@ public class PriceListServiceImpl implements PriceListService {
 			finalPrice = oneTimePrices.get(zoneId);
 			if (ticketType.ordinal() == 0) {
 				// ostaje ista - nepotreban IF
+				finalPrice *= oneHourCoeff;
 			} else if (ticketType.ordinal() == 1) {
 				finalPrice *= monthlyCoeff;
 			} else if (ticketType.ordinal() == 2) {
@@ -106,6 +112,9 @@ public class PriceListServiceImpl implements PriceListService {
 			} else if (ticketType.ordinal() == 2) {
 				finalPrice *= yearlyCoeff * lineDisc;
 			}
+		} else if(ticket instanceof RouteTicket){
+			zoneId = lineService.getZoneForLine(((RouteTicket) ticket).getRoute().getLine()).getId();
+			finalPrice = oneTimePrices.get(zoneId);
 		}
 		
 		if (userTypeDemo.ordinal() == 1) {
