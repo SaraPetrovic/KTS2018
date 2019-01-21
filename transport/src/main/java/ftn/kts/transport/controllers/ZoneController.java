@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
@@ -38,8 +40,18 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
-	 
+	@GetMapping("/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
+	@Produces("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
+	public ResponseEntity<ZoneDTO> getZone(@PathVariable Long id) {
+		Zone zone = zoneService.findById(id);
+		
+		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
+	}
+	
 	@GetMapping("/all")
+	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<ZoneDTO>> getAllZones() {
@@ -54,10 +66,12 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/add")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("application/json")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		if(zoneDTO.getSubZoneId() == null) {
+		if(zoneDTO.getSubZoneId() == null || zoneDTO.getName() == null || zoneDTO.getName() == "") {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Zone subZone = null;
@@ -66,19 +80,14 @@ public class ZoneController {
 		}
 		
 		Set<Station> stations = new HashSet<Station>();
-		if(zoneDTO.getStations() != null) {
-			for(StationDTO s : zoneDTO.getStations()) {
-				Station station = stationService.findById(s.getId());
-				stations.add(station);
-			}
-		}
 		
-		Zone zone = zoneService.save(new Zone(zoneDTO.getName(), stations, subZone, true));
+		Zone zone = zoneService.addZone(new Zone(zoneDTO.getName(), stations, subZone, true));
 		
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
 	@DeleteMapping("/delete/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
@@ -87,6 +96,7 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/addStations/{id}") //id zone
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
 		
@@ -102,6 +112,7 @@ public class ZoneController {
 	}
 	
 	@PostMapping(path="/update")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@Produces("applications/json")
 	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){
@@ -120,14 +131,6 @@ public class ZoneController {
 		
 //		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
 //		zone.setSubZone(subZone);
-		
-		Set<Station> stations = new HashSet<Station>();
-		if(dtoZone.getStations() != null) {
-			if(dtoZone.getStations().size() != 0) {
-				stations = checkStations(dtoZone.getStations());
-				zone.setStations(stations);	
-			}
-		}
 		
 		zoneService.save(zone);
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);

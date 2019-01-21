@@ -34,6 +34,7 @@ public class StationController {
 	private StationService stationService;
 	
 	@GetMapping(path="/all")
+	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	public ResponseEntity<List<StationDTO>> getAll(){
 		List<StationDTO> dtoStations = new ArrayList<>();
@@ -44,6 +45,7 @@ public class StationController {
 	}
 	
 	@PostMapping(path="/add")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Produces("applications/json")
 	@Consumes("applications/json")
 	public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
@@ -57,12 +59,14 @@ public class StationController {
 	}
 	
 	@DeleteMapping(path="/delete/{id}")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		stationService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}		
 	
 	@PostMapping(path="/update")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@Produces("applications/json")
 	public ResponseEntity<StationDTO> updateStation(@RequestBody StationDTO dtoStation){

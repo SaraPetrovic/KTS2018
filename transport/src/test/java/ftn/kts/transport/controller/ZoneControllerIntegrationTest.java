@@ -3,11 +3,10 @@ package ftn.kts.transport.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
@@ -31,6 +30,8 @@ import ftn.kts.transport.services.ZoneService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
+//@Transactional
+@Rollback
 public class ZoneControllerIntegrationTest {
 
 	@Autowired
@@ -49,6 +50,10 @@ public class ZoneControllerIntegrationTest {
 		
 		ZoneDTO[] rez = responseEntity.getBody();
 		
+		for(ZoneDTO z : rez) {
+			System.out.println(z.getId() + " - " + z.getSubZoneId());
+		}
+		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertNotNull(rez);
 	}
@@ -57,33 +62,17 @@ public class ZoneControllerIntegrationTest {
 	public void addZoneTestOK() {
 		int size =zoneService.findAll().size();
 		
-		ZoneDTO entity= new ZoneDTO(Long.valueOf(44), "Zona44", null, Long.valueOf(1));
+		ZoneDTO entity= new ZoneDTO("Zona44", null, Long.valueOf(5));
 		
 		ResponseEntity<ZoneDTO> responseEntity = 
 				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
 	
-		responseEntity.getBody();
+		ZoneDTO rez = responseEntity.getBody();
 
+		Zone z = zoneService.findById(Long.valueOf(6));
+		assertEquals(rez.getId(), z.getSubZone().getId());
 		assertEquals(size + 1, zoneService.findAll().size());
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-	}
-	
-	@Test
-	public void addZoneTestStationNotFound() {
-		
-		Set<StationDTO> stations = new HashSet<StationDTO>();
-		StationDTO s1 = new StationDTO(Long.valueOf(30), "Adresa", "Ime");
-		stations.add(s1);
-		
-		ZoneDTO entity= new ZoneDTO(Long.valueOf(55), "Zona55", stations, Long.valueOf(1));
-		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
-		
-		responseEntity.getBody();
-
-		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-	
 	}
 	
 	@Test
@@ -119,9 +108,12 @@ public class ZoneControllerIntegrationTest {
 		int size = zoneService.findAll().size();
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/zone/delete/" + Long.valueOf(3),
+				restTemplate.exchange("/zone/delete/" + Long.valueOf(4),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
+		Zone z5 = zoneService.findById(Long.valueOf(5));
+		
+		assertEquals(Long.valueOf(3), z5.getSubZone().getId());
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(size - 1, zoneService.findAll().size());
 	}
@@ -200,6 +192,7 @@ public class ZoneControllerIntegrationTest {
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
 	
+	@Ignore
 	@Test
 	public void updateZoneTestOK() {
 		

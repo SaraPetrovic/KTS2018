@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import java.util.List;
 import java.util.Set;
 
 import ftn.kts.transport.model.Ticket;
@@ -13,4 +14,5 @@ public interface UserService  {
 	User findById(Long id);
 	Set<Ticket> getTickets(Long id);
 	User findByUsername(String username);
+	List<User> findAll();
 }

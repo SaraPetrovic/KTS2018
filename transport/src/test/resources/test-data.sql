@@ -1,8 +1,8 @@
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (1, 'Marko', 'Markovic', 'admin', 'admin', 0, 0)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (2, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (3, 'Marko', 'Balenovic', 'user2', '1234', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (4, 'Sara', 'Petrovic', 'user3', '1234', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '1234', 1, 2)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (1, 'Marko', 'Markovic', 'admin', 'adminadmin', 0, 0)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (2, 'Jovan', 'Lakovic', 'user1', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (3, 'Marko', 'Balenovic', 'user2', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (4, 'Sara', 'Petrovic', 'user3', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '12345678', 1, 2)
  
 
 insert into kts_lines(id, active, name, transport_type) values (1, true, '7A', 0)
