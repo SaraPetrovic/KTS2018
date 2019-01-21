@@ -11,6 +11,7 @@ public class TicketDTO {
 
 	private int transportType;
 	private int ticketTemporal;
+	private Long routeId;
 	private Long zoneId;
 	private Long lineId;
 	private User user;
@@ -19,6 +20,25 @@ public class TicketDTO {
 	
 	public TicketDTO() {
 		
+	}
+
+	public TicketDTO(int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
+		this.transportType = transportType;
+		this.ticketTemporal = ticketTemporal;
+		this.routeId = routeId;
+		this.zoneId = zoneId;
+		this.lineId = lineId;
+		this.user = user;
+		this.endTime = endTime;
+		this.qrCode = qrCode;
+	}
+
+	public Long getRouteId() {
+		return routeId;
+	}
+
+	public void setRouteId(Long routeId) {
+		this.routeId = routeId;
 	}
 
 	public TicketDTO(int transportType, int ticketTemporal, Long zoneId, Long lineId) {

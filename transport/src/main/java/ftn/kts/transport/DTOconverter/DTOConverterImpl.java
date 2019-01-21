@@ -3,6 +3,8 @@ package ftn.kts.transport.DTOconverter;
 import java.util.Calendar;
 import java.util.Date;
 
+import ftn.kts.transport.model.*;
+import ftn.kts.transport.services.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,6 @@ import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.InvalidInputDataException;
-import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.LineTicket;
-import ftn.kts.transport.model.PriceList;
-import ftn.kts.transport.model.RouteSchedule;
-import ftn.kts.transport.model.Ticket;
-import ftn.kts.transport.model.Zone;
-import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.services.LineService;
 import ftn.kts.transport.services.ZoneService;
 
@@ -31,6 +26,9 @@ public class DTOConverterImpl implements DTOConverter{
 
 	@Autowired
 	private ZoneService zoneService;
+
+	@Autowired
+    private RouteService routeService;
 
 	@Override
 	public Line convertDTOtoLine(LineDTO lineDTO) {
@@ -69,8 +67,8 @@ public class DTOConverterImpl implements DTOConverter{
 		int ticketTemporal = ticketDTO.getTicketTemporal();
 		int transportType = ticketDTO.getTransportType();
 		
-		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2) {
-			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2)} - bad request!");
+		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
+			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
 		}
 		
 		if (transportType != 0 && transportType != 1 && transportType != 2) {
@@ -153,7 +151,19 @@ public class DTOConverterImpl implements DTOConverter{
 			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
 		
-		} else {
+		} else if(ticketDTO.getRouteId() != null){
+
+            RouteTicket ticket = new RouteTicket();
+
+            Route route = this.routeService.getRoute(ticketDTO.getRouteId());
+            ticket.setRoute(route);
+            ticket.setActive(true);
+            ticket.setTicketTemporal(TicketTypeTemporal.ONE_TIME_PASS);
+            ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
+
+            return ticket;
+
+        } else {
 			// nikad ne ulazi
 			return null;
 		}

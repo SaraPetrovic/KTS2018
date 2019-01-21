@@ -73,6 +73,7 @@ public class PriceListServiceUnitTest {
 		validPriceList.setSeniorDiscount(0.7);
 		validPriceList.setStudentDiscount(0.8);
 		validPriceList.setYearlyCoeffitient(200);
+		validPriceList.setOneHourCoeffitient(3);
 		
 		invalidPriceList.setId(2L);
 		invalidPriceList.setLineDiscount(-0.5);
@@ -147,7 +148,7 @@ public class PriceListServiceUnitTest {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
 		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
 		// user je obican, ticket type = one_time --> cena ostaje ista
-		assertEquals(100.00, calculatedPrice, 0.001);
+		assertEquals(100.00*3, calculatedPrice, 0.001);
 	}
 	
 	@Transactional
@@ -177,7 +178,7 @@ public class PriceListServiceUnitTest {
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.STUDENT);
 		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
 		// user = STUDENT, ticket type = ONE_TIME --> cena nova
-		assertEquals(100.00*0.8, calculatedPrice, 0.001);
+		assertEquals(100.00*0.8*3, calculatedPrice, 0.001);
 	}
 	
 	@Transactional
@@ -187,7 +188,7 @@ public class PriceListServiceUnitTest {
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.SENIOR);
 		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
 		// user = SENIOR, ticket type = ONE_TIME --> cena nova
-		assertEquals(100.00*0.7, calculatedPrice, 0.001);
+		assertEquals(100.00*0.7*3, calculatedPrice, 0.001);
 	}
 	
 	@Transactional

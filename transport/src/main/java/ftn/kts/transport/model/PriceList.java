@@ -41,6 +41,8 @@ public class PriceList implements Serializable {
 	@Column
 	private double lineDiscount;  			// discount u odnosu na zonsku mesecnu/godisnju ako hoces samo za jednu liniju
 	@Column
+	private double oneHourCoeffitient;
+	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDateTime;
 	@Column
@@ -51,6 +53,27 @@ public class PriceList implements Serializable {
 	
 	public PriceList() {
 		
+	}
+
+	public PriceList(Map<Long, Double> oneTimePrices, double monthlyCoeffitient, double yearlyCoeffitient, double studentDiscount, double seniorDiscount, double lineDiscount, double oneHourCoeffitient, Date startDateTime, Date endDateTime, boolean active) {
+		this.oneTimePrices = oneTimePrices;
+		this.monthlyCoeffitient = monthlyCoeffitient;
+		this.yearlyCoeffitient = yearlyCoeffitient;
+		this.studentDiscount = studentDiscount;
+		this.seniorDiscount = seniorDiscount;
+		this.lineDiscount = lineDiscount;
+		this.oneHourCoeffitient = oneHourCoeffitient;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
+		this.active = active;
+	}
+
+	public double getOneHourCoeffitient() {
+		return oneHourCoeffitient;
+	}
+
+	public void setOneHourCoeffitient(double oneHourCoeffitient) {
+		this.oneHourCoeffitient = oneHourCoeffitient;
 	}
 
 	public PriceList(Long id, Map<Long, Double> oneTimePrices, double monthlyCoeffitient, double yearlyCoeffitient,

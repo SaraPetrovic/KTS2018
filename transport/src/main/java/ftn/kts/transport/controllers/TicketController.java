@@ -92,6 +92,7 @@ public class TicketController {
 
             for (Ticket t : tickets) {
             	System.out.println(generateQrCode(t.getId()));
+            	
                 ret.add(new TicketDTO(t, generateQrCode(t.getId()).getPath()));
             }
 

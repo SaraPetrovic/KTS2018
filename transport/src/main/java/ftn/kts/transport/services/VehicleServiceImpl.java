@@ -1,5 +1,7 @@
 package ftn.kts.transport.services;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,5 +58,26 @@ public class VehicleServiceImpl implements VehicleService{
 		found.setActive(false);
 		vehicleRepository.save(found);
 		return found;
+	}
+
+	@Override
+	public Vehicle getFreeVehicle(Date date, int duration){
+
+		List<Vehicle> vehicles = this.vehicleRepository.findAll();
+		for(Vehicle vehicle : vehicles){
+			if(vehicle.isFree() || vehicle.getFreeFrom().before(date)){
+				Calendar c = Calendar.getInstance();
+				c.setTime(date);
+				c.add(Calendar.SECOND, duration);
+
+				vehicle.setFree(false);
+				vehicle.setFreeFrom(c.getTime());
+
+				this.vehicleRepository.save(vehicle);
+
+				return  vehicle;
+			}
+		}
+		return null;
 	}
 }
