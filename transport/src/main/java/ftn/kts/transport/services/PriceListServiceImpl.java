@@ -24,8 +24,6 @@ public class PriceListServiceImpl implements PriceListService {
 	@Autowired
 	private PriceListRepository priceListRepository;
 	@Autowired
-	private ZoneService zoneService;
-	@Autowired
 	private LineService lineService;
 	
 	@Override
