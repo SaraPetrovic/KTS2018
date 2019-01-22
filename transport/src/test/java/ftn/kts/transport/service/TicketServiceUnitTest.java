@@ -35,7 +35,7 @@ import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
-import ftn.kts.transport.security.JwtValidator;
+import ftn.kts.transport.services.JwtGeneratorService;
 import ftn.kts.transport.services.PriceListService;
 import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
@@ -54,7 +54,7 @@ public class TicketServiceUnitTest {
 	@MockBean
 	private PriceListService priceListServiceMocked;
 	@MockBean
-	private JwtValidator jwtValidatorMocked;
+	private JwtGeneratorService jwtServiceMocked;
 	
 	
 	private User user = new User();
@@ -85,7 +85,7 @@ public class TicketServiceUnitTest {
 		ticketToBuy.setTransportType(VehicleType.BUS);
 		ticketToBuy.setZone(new Zone(1L, "Zone I", true));
 		
-		Mockito.when(jwtValidatorMocked.validate(TOKEN.substring(7))).thenReturn(user);
+		Mockito.when(jwtServiceMocked.validate(TOKEN.substring(7))).thenReturn(user);
 		Mockito.when(userServiceMocked.findByUsername("user1")).thenReturn(user);
 		Mockito.when(ticketRepositoryMocked.findById(1L)).thenReturn(Optional.of(zoneTicket));
 		Mockito.when(ticketRepositoryMocked.findById(2L)).thenReturn(Optional.of(lineTicket));

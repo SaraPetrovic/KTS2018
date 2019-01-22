@@ -10,7 +10,7 @@ import ftn.kts.transport.exception.ZoneNotFoundException;
 
 @ControllerAdvice
 public class ExceptionController {
-
+/*
 	@ExceptionHandler(ZoneNotFoundException.class)
 	public ResponseEntity<Error> zoneNotFound(ZoneNotFoundException e){
 		
@@ -30,4 +30,6 @@ public class ExceptionController {
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		
 	}
+	
+	*/
 }

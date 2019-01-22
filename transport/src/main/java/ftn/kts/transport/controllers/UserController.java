@@ -1,20 +1,27 @@
 package ftn.kts.transport.controllers;
 
-import ftn.kts.transport.dtos.LoginDTO;
-import ftn.kts.transport.dtos.UserDTO;
-import ftn.kts.transport.exception.DAOException;
-import ftn.kts.transport.model.Ticket;
-import ftn.kts.transport.model.User;
-import ftn.kts.transport.security.JwtGenerator;
-import ftn.kts.transport.services.UserService;
-
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ftn.kts.transport.dtos.LoginDTO;
+import ftn.kts.transport.dtos.UserDTO;
+import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.model.Ticket;
+import ftn.kts.transport.model.User;
+import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.UserService;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -23,9 +30,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @Autowired
-    private JwtGenerator jwtGenerator;
+    private JwtGeneratorService jwtService;
 
     @PostMapping( path = "/add" ,consumes = {"application/json"} )
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
@@ -52,7 +58,7 @@ public class UserController {
 
         try {
             User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), jwtGenerator.generate(user));
+            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), jwtService.generate(user));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseBody);
         }
         catch(DAOException e){

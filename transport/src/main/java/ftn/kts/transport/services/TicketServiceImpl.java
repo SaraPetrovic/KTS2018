@@ -17,7 +17,6 @@ import ftn.kts.transport.exception.TicketAlreadyActivatedException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
-import ftn.kts.transport.security.JwtValidator;
 
 
 @Service
@@ -28,7 +27,7 @@ public class TicketServiceImpl implements TicketService{
 	@Autowired
 	private PriceListService priceListService;
 	@Autowired
-	private JwtValidator jwtValidator;
+	private JwtGeneratorService jwtService;
 	@Autowired
 	private UserService userService;
 	
@@ -87,7 +86,7 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
 	public User getUser(String token) {
-		User credentials = jwtValidator.validate(token.substring(7));
+		User credentials = jwtService.validate(token.substring(7));
 		User ret = userService.findByUsername(credentials.getUsername());
 		return ret;
 	}
