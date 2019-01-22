@@ -124,14 +124,12 @@ public class DTOConverterUnitTest {
 		assertEquals(lineDTO.getStreetPath().iterator().next(), ret.getStreetPath().iterator().next());
 	}
 	
-	@Transactional
 	@Test(expected = DAOException.class)
 	public void convertToLine_LineAlreadyExists_Test() {
 		lineDTO.setName("7A");
 		converter.convertDTOtoLine(lineDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToLine_InvalidTransportTypeIndex_Test() {
 		// transport type = {0, 1, 2}
@@ -163,21 +161,18 @@ public class DTOConverterUnitTest {
 		converter.convertDTOtoTicket(ticketDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToTicket_InvalidTransport_Test() {
 		ticketDTO.setTransportType(-1);
 		converter.convertDTOtoTicket(ticketDTO);
 	}
 	
-	@Transactional
 	@Test(expected = DAOException.class)
 	public void convertToTicket_ZoneNotFound_Test() {
 		ticketDTO.setZoneId(-1L);
 		converter.convertDTOtoTicket(ticketDTO);
 	}
 	
-	@Transactional
 	@Test(expected = DAOException.class)
 	public void convertToTicket_LineNotFound_Test() {
 		ticketDTO.setLineId(-1L);
@@ -185,7 +180,6 @@ public class DTOConverterUnitTest {
 	}
 	
 	
-	@Transactional
 	@Test
 	public void convertToTicket_ZoneTicket_PASS_Test() {
 		ticketDTO.setZoneId(1L);
@@ -198,7 +192,6 @@ public class DTOConverterUnitTest {
 	}
 	
 	
-	@Transactional
 	@Test
 	public void convertToTicket_LineTicket_PASS_Test() {
 		ticketDTO.setLineId(1L);
@@ -210,7 +203,6 @@ public class DTOConverterUnitTest {
 		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
 	}
 	
-	@Transactional
 	@Test
 	public void convertToTicket_ZoneTicket_Monthly_PASS_Test() {
 		ticketDTO.setZoneId(1L);
@@ -250,35 +242,30 @@ public class DTOConverterUnitTest {
 		converter.convertDTOtoPriceList(plDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToPriceList_InvalidLineDiscount_Test() {
 		plDTO.setLineDiscount(-10.0);
 		converter.convertDTOtoPriceList(plDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToPriceList_InvalidMonthlyCoeff_Test() {
 		plDTO.setMonthlyCoeff(-10.0);
 		converter.convertDTOtoPriceList(plDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToPriceList_InvalidYearlyCoeff_Test() {
 		plDTO.setYearlyCoeff(-10.0);
 		converter.convertDTOtoPriceList(plDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToPriceList_InvalidSeniorDiscount_Test() {
 		plDTO.setSeniorDiscount(-10.0);
 		converter.convertDTOtoPriceList(plDTO);
 	}
 	
-	@Transactional
 	@Test(expected = InvalidInputDataException.class)
 	public void convertToPriceList_InvalidStudentDiscount_Test() {
 		plDTO.setStudentDiscount(-10.0);

@@ -2,9 +2,7 @@ package ftn.kts.transport.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,17 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineAndStation;
-import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.LineRepository;
-import ftn.kts.transport.repositories.RouteScheduleRepository;
 import ftn.kts.transport.repositories.StationRepository;
 
 @Service
@@ -33,8 +30,6 @@ public class LineServiceImpl implements LineService {
 	private LineRepository lineRepository;
 	@Autowired
 	private StationRepository stationRepository;
-	@Autowired
-	private RouteScheduleRepository scheduleRepository;
 	@Autowired
 	private ZoneService zoneService;
 	
@@ -149,58 +144,6 @@ public class LineServiceImpl implements LineService {
 	}
 
 	
-	@Override
-	public RouteSchedule findScheduleById(Long id) {
-		RouteSchedule schedule = scheduleRepository.findById(id).orElseThrow(() ->
-								new DAOException("Schedule [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
-		return schedule;
-	}
-	
-
-	@Override
-	public List<RouteSchedule> getScheduleByLine(long id) {
-		Line l = lineRepository.findById(id).orElseThrow(() -> 
-								new DAOException("Line [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DATE, -32);
-		Date earlierDate = c.getTime();
-		
-		List<RouteSchedule> availableSchedules = scheduleRepository.findByActiveFromGreaterThanAndLine(earlierDate, l);
-
-		return availableSchedules;
-	}
-
-
-
-	@Override
-	public RouteSchedule addSchedule(RouteSchedule schedule, long lineId) {
-		Line l = findById(lineId);
-		schedule.setLine(l);
-		return scheduleRepository.save(schedule);
-	}
-
-	@Override
-	public RouteSchedule updateSchedule(RouteSchedule updatedSchedule, long lineId, long scheduleId) {
-		RouteSchedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> 
-								new DAOException("Schedule [id=" + scheduleId + "] for line [id=" + lineId + 
-												 "] cannot be found!", HttpStatus.CONFLICT));
-		//Line l = findById(lineId);
-		//schedule.setLine(l);
-		schedule.setactiveFrom(updatedSchedule.getactiveFrom());
-		schedule.setWeekday(updatedSchedule.getWeekday());
-		schedule.setSaturday(updatedSchedule.getSaturday());
-		schedule.setSunday(updatedSchedule.getSunday());
-		return scheduleRepository.save(schedule);
-	}
-
-	@Override
-	public boolean deleteSchedule(long id) {
-		RouteSchedule schedule = findScheduleById(id);
-		
-		schedule.setActive(false);
-		scheduleRepository.save(schedule);
-		return true;
-	}
 
 	@Override
 	public Zone getZoneForLine(Line line) {
@@ -230,6 +173,15 @@ public class LineServiceImpl implements LineService {
 		}
 		
 		return parent;
+	}
+
+
+	@Transactional
+	@Override
+	public Line addLineMethod(Line line, LineDTO lineDTO) {
+		Line ret = addLine(line);
+		ret = addStationsToLine(ret.getId(), lineDTO);
+		return ret;
 	}
 	
 

@@ -3,7 +3,6 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,8 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -48,6 +46,9 @@ public class LineServiceUnitTest {
 	@Autowired
 	private LineService service;
 	
+	@SpyBean
+	private LineService spyService;
+	
 	@MockBean
 	private LineRepository lineRepoMocked;
 	
@@ -57,15 +58,20 @@ public class LineServiceUnitTest {
 	@MockBean
 	private RouteScheduleRepository routeRepoMocked;
 	
-	private Line l;
+	private Line l, l2;
 	private RouteSchedule sch;
 	private Station s;
 	
 	@Before
 	public void setUp() {
 		l = new Line();
+		l.setId(1L);
 		l.setName("1A");
 		l.setTransportType(VehicleType.BUS);
+		
+		l2 = new Line();
+		l2.setName("1A");
+		l2.setTransportType(VehicleType.BUS);
 		
 		s = new Station();
 		s.setId(1L);
@@ -247,85 +253,7 @@ public class LineServiceUnitTest {
 	}
 	
 	
-	@Test
-	public void findScheduleById_PASS_Test() {
-		RouteSchedule ret = service.findScheduleById(1L);
-		assertNotNull(ret);
-	}
 	
-	@Test(expected = DAOException.class)
-	public void findScheduleById_NotFound_Test() {
-
-		service.findScheduleById(-1L);
-	}
-	
-	@Test(expected = DAOException.class)
-	public void getScheduleByLine_LineNotFound_Test() {
-		service.getScheduleByLine(-1L);
-	}
-	
-	@Test
-	public void getScheduleByLine_PASS_Test() {
-		/*Calendar c = Calendar.getInstance();
-		c.add(Calendar.DATE, -32);
-		Date earlierDate = c.getTime();
-		
-		List<RouteSchedule> all = new ArrayList<RouteSchedule>();
-		all.add(sch);
-		
-		Mockito.when(routeRepoMocked.findByActiveFromGreaterThanAndLine(earlierDate, l)).thenReturn(all);
-		
-		List<RouteSchedule> found = service.getScheduleByLine(1L);
-		assertNotNull(found);
-		assertEquals(all.size(), found.size());
-		*/
-		
-		// ovo ne moze zbog datuma... nije isti datum, kad se mokuje i kad se napravi u metodi.
-	}
-	
-	@Test
-	public void addSchedule_PASS_Test() {
-		RouteSchedule ret = service.addSchedule(sch, 1L);
-		assertNotNull(ret);
-		assertEquals(sch.getactiveFrom(), ret.getactiveFrom());
-	}
-	
-	@Test(expected = DAOException.class)
-	public void addSchedule_LineNotFound_Test() {
-		// line not found
-		service.addSchedule(sch, -1L);
-	}
-	
-	@Test(expected = DAOException.class)
-	public void updateSchedule_NotFound_Test() {
-		// schedule [id=-1] doesn't exist!
-		service.updateSchedule(sch, 1L, -1L);
-	}
-	
-	@Transactional
-	@Test
-	public void updateSchedule_PASS_Test() {
-		Date d = new Date();
-		sch.setactiveFrom(d);
-		RouteSchedule ret = service.updateSchedule(sch, 1L, 1L);
-		assertEquals(d, ret.getactiveFrom());
-		
-	}
-	
-	@Test
-	public void deleteSchedule_PASS_Test() {
-		boolean ret = service.deleteSchedule(1L);
-		assertTrue(ret);
-		RouteSchedule s = service.findScheduleById(1L);
-		assertFalse(s.isActive());
-	}
-	
-	@Test(expected = DAOException.class)
-	public void deleteSchedule_SchNotFound_Test() {
-		service.deleteSchedule(-1L);
-	}
-	
-	@Transactional
 	@Test
 	public void getZoneForLine_PASS_Test() {
 		/*
@@ -343,6 +271,35 @@ public class LineServiceUnitTest {
 		*/
 		
 		// NE MOZE NI OVO JER SE U METODI PRAVI NOVI OBJEKAT Collection<Station> i onda nmg da mokujem
+		
+	}
+	
+	@Test
+	public void addLineMethod_PASS_Test() {
+		LineAndStation ls = new LineAndStation();
+		ls.addStation(l2, s, 1);
+		HashSet<LineAndStation> stations = new HashSet<LineAndStation>();
+		stations.add(ls);
+		l2.setStationSet(stations);
+		
+		HashMap<Integer, Long> dtoStations = new HashMap<Integer, Long>();
+		dtoStations.put(1, 1L);
+		LineDTO lineDTO = new LineDTO();
+		lineDTO.setStations(dtoStations);
+		
+		
+		Mockito.doReturn(l).when(spyService).addLine(l);
+		Mockito.doReturn(l2).when(spyService).addStationsToLine(l.getId(), lineDTO);
+		
+		Line ret = service.addLineMethod(l, lineDTO);
+		
+		assertNotNull(ret.getStationSet());
+		assertEquals(l.getName(), ret.getName());
+		
+		Mockito.verify(spyService, Mockito.times(1)).addLine(l);
+		Mockito.verify(spyService, Mockito.times(1)).addStationsToLine(l.getId(), lineDTO);
+		
+		assertEquals(stations.size(), ret.getStationSet().size());
 		
 	}
 	

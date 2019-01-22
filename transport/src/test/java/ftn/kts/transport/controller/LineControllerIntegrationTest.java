@@ -59,20 +59,17 @@ public class LineControllerIntegrationTest {
 	@Test
 	public void addLine_PASS_Test() {
 		
-		
-		
-		
 		HashMap<Integer, Long> stations = new HashMap<Integer, Long>();
 		stations.put(1, 1L);
 		LineDTO dto = new LineDTO("1A - Nova", stations, DB_TRANSPORT_TYPE);
+		
 		int countBefore = lineRepository.findAll().size();
-		System.out.println("BEFORE: " + countBefore);
+		
 		ResponseEntity<Line> responseEntity = 
 				restTemplate.postForEntity("/line", dto, Line.class);
 		Line ret = responseEntity.getBody();
 		
 		int countAfter = lineRepository.findAll().size();
-		System.out.println("AFTER: " + countAfter);
 		
 		assertNotNull(ret);
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
