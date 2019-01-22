@@ -17,8 +17,10 @@ export class ZoneTableComponent implements OnInit {
   }
 
   deleteZone(zoneId : number) : void {
-    this.zoneService.deleteZone(zoneId).subscribe(
-      () => this.ngOnInit());
+    this.zoneService.deleteZone(zoneId).subscribe();
   }
 
+  zoneEdit(zone : Zone) {
+    
+  }
 }

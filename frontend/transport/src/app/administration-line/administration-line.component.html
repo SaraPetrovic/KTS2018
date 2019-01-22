@@ -6,7 +6,7 @@
     <form [formGroup]="addLineForm" (ngSubmit)="onSubmit()">
       <div class='form-group'>
         <label>Line Name</label>
-        <input type="text" formControlName="lineName" class="form-control" [ngClass]="{'is-invalid': submitted && f.lineName.errors }" />
+        <input type="text" formControlName="lineName" class="form-control" [ngClass]="{'is-invalid': submitted && f.lineName.errors }" required/>
         <div *ngIf="submitted && f.lineName.errors" class="invalid-feedback">
           <div *ngIf="f.lineName.errors.required">Line Name is required</div>
         </div>

@@ -25,18 +25,18 @@ public class ZoneServiceImpl implements ZoneService{
 
 	@Override
 	public Zone addZone(Zone zone) {
-		List<Zone> zones = findAll();
+//		List<Zone> zones = findAll();
 
 		Zone rez = zoneRepository.save(zone);
 		
-		for(Zone z : zones) {
-			if(z.getSubZone() != null && zone.getSubZone() != null) {
-				if(z.getSubZone().getId() == zone.getSubZone().getId()) {
-					z.setSubZone(zone);
-					zoneRepository.save(z);
-				}
-			}
-		}
+//		for(Zone z : zones) {
+//			if(z.getSubZone() != null && zone.getSubZone() != null) {
+//				if(z.getSubZone().getId() == zone.getSubZone().getId()) {
+//					z.setSubZone(zone);
+//					zoneRepository.save(z);
+//				}
+//			}
+//		}
 		return rez;
 	}
 

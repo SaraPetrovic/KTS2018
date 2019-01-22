@@ -17,6 +17,8 @@ export class ZoneFormComponent implements OnInit {
     private zone: Zone = new Zone();
     @Input() zones : Zone[];
     private disabledOption = "";
+    private formLabel : string;
+
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }
 
@@ -47,4 +49,5 @@ export class ZoneFormComponent implements OnInit {
         this.zoneService.addZone(this.zone).subscribe((zone) => this.zones.push(zone));
     }
 
+    
 }
