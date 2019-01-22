@@ -9,31 +9,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./administration-zone.component.css']
 })
 export class AdministrationZoneComponent implements OnInit {
-    // static addZone(zone: Zone): any {
-    //     throw new Error("Method not implemented.");
-    // }
-
-  private zones: Zone[];
   
-  constructor(private zoneService: ZoneService,
-    private router: Router) { }
+    private zones : Zone[];
 
-  ngOnInit() {
-    this.zoneService.getZones()
-      .subscribe(data => {
-        this.zones = data;
-        console.log(data);
-      });
-  }
+    constructor(private zoneService : ZoneService) { }
 
-  new(){
-    this.router.navigate(['/administration/zones',{ outlets: { popup: [ 'zzz' ] }}]); 
-  }
-  deleteZone(zoneId : number) : void {
-    this.zoneService.deleteZone(zoneId).subscribe(
-      () => this.ngOnInit());
-  }
+    ngOnInit() {
+      this.getZones();
+    }
 
-  
-
+    getZones(){
+      this.zoneService.getZones()
+        .subscribe(data => {
+          this.zones = data;
+        });
+    }
 }

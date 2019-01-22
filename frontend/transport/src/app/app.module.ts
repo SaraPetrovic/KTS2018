@@ -22,7 +22,8 @@ import { AdministrationStationComponent } from './administration-station/adminis
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConductorComponent } from './conductor/conductor.component';
-import { ZoneDialogComponent, ZonePopupComponent } from './administration-zone/zone-dialog.component';
+import { ZoneFormComponent } from './administration-zone/zone-form.component';
+import { ZoneTableComponent } from './administration-zone/zone-table.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +33,7 @@ import { ZoneDialogComponent, ZonePopupComponent } from './administration-zone/z
     LinesComponent,
     HomeComponent,
     LoginComponent,
-    ZoneDialogComponent,
-    ZonePopupComponent,
+    ZoneFormComponent,
     MapComponent,
     DrowStationDirective,
     StreetClickedDirective,
@@ -43,10 +43,11 @@ import { ZoneDialogComponent, ZonePopupComponent } from './administration-zone/z
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
-    ConductorComponent
+    ConductorComponent,
+    ZoneTableComponent
   ],
   entryComponents: [
-    ZoneDialogComponent,
+    ZoneFormComponent,
     AdministrationZoneComponent
   ],
   imports: [

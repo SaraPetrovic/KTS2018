@@ -7,7 +7,6 @@ import { AdministrationLineComponent } from './administration-line/administratio
 import { AdministrationStationComponent } from './administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
 import { ConductorComponent } from './conductor/conductor.component';
-import { ZonePopupComponent } from './administration-zone/zone-dialog.component';
 
 const routes: Routes = [
   {
@@ -33,14 +32,6 @@ const routes: Routes = [
       {
         path: 'zones',
         component: AdministrationZoneComponent,
-        children: [
-          {
-            path: 'zzz',
-            component: ZonePopupComponent,
-            outlet: 'popup'
-          }
-        ]
-        
       },
       {
         path: '',
@@ -48,11 +39,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: 'zzz',
-    component: ZonePopupComponent
-
   },
   {
     path: '',
@@ -63,16 +49,6 @@ const routes: Routes = [
     path: '**',
     redirectTo: ''
   }
-];
-
-
-const zonesRoutes: Routes = [
-  
-  /*{
-    path: 'zone/:id/delete',
-    component: ZoneDeletePopupComponent,
-    outlet: 'popup'
-  }*/
 ];
 
 @NgModule({
