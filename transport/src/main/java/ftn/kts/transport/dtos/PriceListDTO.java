@@ -7,6 +7,7 @@ public class PriceListDTO {
 	private HashMap<Long, Double> zonePrices = new HashMap<Long, Double>();
 	private double monthlyCoeff;
 	private double yearlyCoeff;
+	private double onehourCoeff;
 	private double studentDiscount;
 	private double seniorDiscount;
 	// discount u odnosu na zonsku mesecnu/godisnju ako kupujes samo za jednu liniju
@@ -25,6 +26,24 @@ public class PriceListDTO {
 		this.studentDiscount = studentDiscount;
 		this.seniorDiscount = seniorDiscount;
 		this.lineDiscount = lineDiscount;
+	}
+
+	public PriceListDTO(HashMap<Long, Double> zonePrices, double monthlyCoeff, double yearlyCoeff, double onehourCoeff, double studentDiscount, double seniorDiscount, double lineDiscount) {
+		this.zonePrices = zonePrices;
+		this.monthlyCoeff = monthlyCoeff;
+		this.yearlyCoeff = yearlyCoeff;
+		this.onehourCoeff = onehourCoeff;
+		this.studentDiscount = studentDiscount;
+		this.seniorDiscount = seniorDiscount;
+		this.lineDiscount = lineDiscount;
+	}
+
+	public double getOnehourCoeff() {
+		return onehourCoeff;
+	}
+
+	public void setOnehourCoeff(double onehourCoeff) {
+		this.onehourCoeff = onehourCoeff;
 	}
 
 	public HashMap<Long, Double> getZonePrices() {

@@ -3,7 +3,10 @@ package ftn.kts.transport.DTOconverter;
 import java.util.Calendar;
 import java.util.Date;
 
+import ftn.kts.transport.model.*;
+import ftn.kts.transport.services.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.LineDTO;
@@ -12,14 +15,8 @@ import ftn.kts.transport.dtos.RouteScheduleDTO;
 import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
-import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.LineTicket;
-import ftn.kts.transport.model.PriceList;
-import ftn.kts.transport.model.RouteSchedule;
-import ftn.kts.transport.model.Ticket;
-import ftn.kts.transport.model.Zone;
-import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.services.LineService;
 import ftn.kts.transport.services.ZoneService;
 
@@ -32,11 +29,21 @@ public class DTOConverterImpl implements DTOConverter{
 	@Autowired
 	private ZoneService zoneService;
 
+	@Autowired
+    private RouteService routeService;
+
 	@Override
 	public Line convertDTOtoLine(LineDTO lineDTO) {
 		// ========== CHECK DATA ==========
-		
-		lineService.findByName(lineDTO.getName());	// throws DAO
+		Line found = null;
+		try {
+			found = lineService.findByName(lineDTO.getName());	// throws DAO
+		} catch (DAOException e) {
+			found = null;
+		}
+		if (found != null) {
+			throw new DAOException("Line [name=" + lineDTO.getName() +"] already exists!", HttpStatus.BAD_REQUEST);
+		}
 		int vehicle = lineDTO.getVehicleType();
 		if (vehicle != 0 && vehicle != 1 && vehicle != 2) {
 			throw new InvalidInputDataException("VehicleType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
@@ -69,8 +76,8 @@ public class DTOConverterImpl implements DTOConverter{
 		int ticketTemporal = ticketDTO.getTicketTemporal();
 		int transportType = ticketDTO.getTransportType();
 		
-		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2) {
-			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2)} - bad request!");
+		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
+			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
 		}
 		
 		if (transportType != 0 && transportType != 1 && transportType != 2) {
@@ -120,7 +127,13 @@ public class DTOConverterImpl implements DTOConverter{
 			}
 			
 			ticket.setLine(l);
-			ticket.setActive(false);
+			// ako je one_time -> potrebna je aktivacija
+			if (ticketTemporal == 0) {
+				ticket.setActive(false);	
+				// ako je monthly/yearly -> aktiviraj odmah
+			} else {
+				ticket.setActive(true);
+			}
 			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
 			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
@@ -137,12 +150,29 @@ public class DTOConverterImpl implements DTOConverter{
 			}
 			
 			ticket.setZone(z);
-			ticket.setActive(false);
+			// ista prica
+			if (ticketTemporal == 0) {
+				ticket.setActive(false);	
+			} else {
+				ticket.setActive(true);
+			}
 			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
 			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
 		
-		} else {
+		} else if(ticketDTO.getRouteId() != null){
+
+            RouteTicket ticket = new RouteTicket();
+
+            Route route = this.routeService.getRoute(ticketDTO.getRouteId());
+            ticket.setRoute(route);
+            ticket.setActive(true);
+            ticket.setTicketTemporal(TicketTypeTemporal.ONE_TIME_PASS);
+            ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
+
+            return ticket;
+
+        } else {
 			// nikad ne ulazi
 			return null;
 		}

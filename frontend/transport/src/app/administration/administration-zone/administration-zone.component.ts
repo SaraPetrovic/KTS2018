@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Zone } from '../model/zone';
+import { ZoneService } from '../_services/zones/zone.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-administration-zone',
@@ -6,10 +9,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./administration-zone.component.css']
 })
 export class AdministrationZoneComponent implements OnInit {
+  
+    private zones : Zone[];
 
-  constructor() { }
+    constructor(private zoneService : ZoneService) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+      this.getZones();
+    }
 
+    getZones(){
+      this.zoneService.getZones()
+        .subscribe(data => {
+          this.zones = data;
+        });
+    }
 }

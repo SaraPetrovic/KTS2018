@@ -47,8 +47,27 @@ public class Line implements Serializable {
 	@Column
 	private boolean active;
 
-	
-	
+	@Column
+	private int duration;
+
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public Line(String name, VehicleType transportType, Set<LineAndStation> stationSet, Set<String> streetPath, boolean active, int duration) {
+		this.name = name;
+		this.transportType = transportType;
+		this.stationSet = stationSet;
+		this.streetPath = streetPath;
+		this.active = active;
+		this.duration = duration;
+	}
+
 	public Line() {
 		this.active = true;
 		this.stationSet = new HashSet<LineAndStation>();

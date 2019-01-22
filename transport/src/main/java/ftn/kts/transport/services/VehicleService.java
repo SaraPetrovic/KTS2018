@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -14,4 +15,5 @@ public interface VehicleService {
 	Vehicle addVehicle(VehicleDTO vehicle);
 	Vehicle updateVehicle(VehicleDTO vehicle, long id);
 	Vehicle deleteVehicle(VehicleDTO vehicle);
+	Vehicle getFreeVehicle(Date time, int duration);
 }

@@ -6,7 +6,6 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
-import { ZonesComponent } from './zones/zones.component';
 import { ConductorComponent } from './conductor/conductor.component';
 import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
 import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
@@ -16,7 +15,8 @@ const routes: Routes = [
   {
     path: 'lines',
     component: LinesComponent
-  },{
+  },
+  {
     path: 'conductor',
     component: ConductorComponent,
     children: [
@@ -53,7 +53,7 @@ const routes: Routes = [
       },
       {
         path: 'zones',
-        component: AdministrationZoneComponent
+        component: AdministrationZoneComponent,
       },
       {
         path: '',
@@ -64,7 +64,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    pathMatch: 'full'
   },
   {
     path: '**',

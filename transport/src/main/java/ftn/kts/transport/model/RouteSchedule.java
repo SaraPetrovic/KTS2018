@@ -32,22 +32,22 @@ public class RouteSchedule implements Serializable {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date activeFrom;
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="WeekdaySchedule", joinColumns=@JoinColumn(name="route_schedule_id"))
 	@Column
 	@Temporal(TemporalType.TIME)
 	private Set<Date> weekday;
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="SaturdaySchedule", joinColumns=@JoinColumn(name="route_schedule_id"))
 	@Column
 	@Temporal(TemporalType.TIME)
 	private Set<Date> saturday;
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name="SundaySchedule", joinColumns=@JoinColumn(name="route_schedule_id"))
 	@Column
 	@Temporal(TemporalType.TIME)
 	private Set<Date> sunday;
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	private Line line;
 	@Column
 	private boolean active;			// logical delete

@@ -22,6 +22,14 @@ public class UserDTO {
         this.repeatedPassword = repeatedPassword;
     }
     
+    public UserDTO(String username, String password, String firstName, String lastName, String repeatedPassword) {
+    	this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.repeatedPassword = repeatedPassword;
+    }
+    
     public UserDTO(User user) {
     	this.id = user.getId();
     	this.username = user.getUsername();

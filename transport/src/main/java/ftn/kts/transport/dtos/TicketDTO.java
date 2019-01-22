@@ -1,14 +1,44 @@
 package ftn.kts.transport.dtos;
 
+import ftn.kts.transport.enums.VehicleType;
+import ftn.kts.transport.model.Ticket;
+import ftn.kts.transport.model.User;
+
+import java.io.File;
+import java.util.Date;
+
 public class TicketDTO {
 
 	private int transportType;
 	private int ticketTemporal;
+	private Long routeId;
 	private Long zoneId;
 	private Long lineId;
+	private User user;
+	private Date endTime;
+	private String qrCode;
 	
 	public TicketDTO() {
 		
+	}
+
+	public TicketDTO(int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
+		this.transportType = transportType;
+		this.ticketTemporal = ticketTemporal;
+		this.routeId = routeId;
+		this.zoneId = zoneId;
+		this.lineId = lineId;
+		this.user = user;
+		this.endTime = endTime;
+		this.qrCode = qrCode;
+	}
+
+	public Long getRouteId() {
+		return routeId;
+	}
+
+	public void setRouteId(Long routeId) {
+		this.routeId = routeId;
 	}
 
 	public TicketDTO(int transportType, int ticketTemporal, Long zoneId, Long lineId) {
@@ -17,6 +47,20 @@ public class TicketDTO {
 		this.ticketTemporal = ticketTemporal;
 		this.zoneId = zoneId;
 		this.lineId = lineId;
+	}
+
+	public TicketDTO(Ticket ticket, String qrCode){
+		this.user = ticket.getUser();
+		this.endTime = ticket.getEndTime();
+		this.transportType = ticket.getTransportType().ordinal();
+		this.ticketTemporal = ticket.getTicketTemporal().ordinal();
+		this.qrCode = qrCode;
+	}
+
+	public TicketDTO(Ticket ticket) {
+		this.user = ticket.getUser();
+		this.endTime = ticket.getEndTime();
+
 	}
 
 	public int getTransportType() {
@@ -50,6 +94,28 @@ public class TicketDTO {
 	public void setLineId(Long lineId) {
 		this.lineId = lineId;
 	}
-	
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getQrCode() {
+		return qrCode;
+	}
+
+	public void setQrCode(String qrCode) {
+		this.qrCode = qrCode;
+	}
 }

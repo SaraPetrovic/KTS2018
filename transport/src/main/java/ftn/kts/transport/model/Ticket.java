@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ftn.kts.transport.enums.TicketTypeTemporal;
@@ -76,7 +77,8 @@ public abstract class Ticket implements Serializable {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	@JsonManagedReference
+
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	public User getUser() {
 		return user;
 	}

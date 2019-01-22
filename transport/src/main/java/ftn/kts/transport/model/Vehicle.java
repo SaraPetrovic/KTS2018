@@ -3,6 +3,7 @@ package ftn.kts.transport.model;
 import ftn.kts.transport.enums.VehicleType;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="VEHICLES")
@@ -19,6 +20,36 @@ public class Vehicle {
 	private String vehicleName;
 	@Column
 	private boolean active;
+	@Column
+	private boolean free;
+	@Column
+	@Temporal(TemporalType.TIME)
+	private Date freeFrom;
+
+	public Vehicle(VehicleType vehicleType, String vehicleName, boolean active, boolean free, Date freeFrom) {
+		this.vehicleType = vehicleType;
+		this.vehicleName = vehicleName;
+		this.active = active;
+		this.free = free;
+		this.freeFrom = freeFrom;
+	}
+
+	public boolean isFree() {
+		return free;
+	}
+
+	public void setFree(boolean free) {
+		this.free = free;
+	}
+
+	public Date getFreeFrom() {
+		return freeFrom;
+	}
+
+	public void setFreeFrom(Date freeFrom) {
+		this.freeFrom = freeFrom;
+	}
+
 	public Vehicle() {
 		
 	}

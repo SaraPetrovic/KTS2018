@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.exception.TicketAlreadyActivatedException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
 import ftn.kts.transport.security.JwtValidator;
+
 
 @Service
 public class TicketServiceImpl implements TicketService{
@@ -35,7 +38,7 @@ public class TicketServiceImpl implements TicketService{
 		User logged = getUser(token);
 		
 		// mesecne i godisnje karte mogu kupiti samo Useri kojima je approved verification document!
-		if (ticket.getTicketTemporal().ordinal() != 0) {
+		if (ticket.getTicketTemporal().ordinal() != 0 && ticket.getTicketTemporal().ordinal() != 3) {
 			if (logged.getDocumentVerified().ordinal() == 0) {
 				throw new InvalidInputDataException("User's personal document is not uploaded! Only"
 						+ " One-hour ticket can be purchased if User hasn't uploaded personal document!", 
@@ -62,7 +65,10 @@ public class TicketServiceImpl implements TicketService{
 	}
 	
 	@Override
-	public void activateTicket(Ticket ticket) {
+	public Ticket activateTicket(Ticket ticket) {
+		if (ticket.getStartTime() != null) {
+			throw new TicketAlreadyActivatedException("Ticket had been already activated!");
+		}
 		ticket.setActive(true);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date currentDate = new Date();
@@ -70,7 +76,7 @@ public class TicketServiceImpl implements TicketService{
 		System.out.println("Current date " + sdf.format(currentDate) + " + 1 hour : " + sdf.format(endDate));
 		ticket.setStartTime(currentDate);
 		ticket.setEndTime(endDate);
-		ticketRepository.save(ticket);
+		return ticketRepository.save(ticket);
 	}
 
 	@Override
@@ -85,5 +91,10 @@ public class TicketServiceImpl implements TicketService{
 		User ret = userService.findByUsername(credentials.getUsername());
 		return ret;
 	}
-	
+
+
+	@Override
+    public List<Ticket> getTickets(User user){
+	    return this.ticketRepository.findByUser(user);
+	}
 }

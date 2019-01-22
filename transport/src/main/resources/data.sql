@@ -1,12 +1,12 @@
-insert into kts_lines(id, active, name, transport_type) values (1, 1, '1', 0)
-insert into kts_lines(id, active, name, transport_type) values (2, 1, '2', 0)
-insert into kts_lines(id, active, name, transport_type) values (3, 1, '3', 0)
-insert into kts_lines(id, active, name, transport_type) values (4, 1, '4', 0)
-insert into kts_lines(id, active, name, transport_type) values (5, 1, '5', 0)
-insert into kts_lines(id, active, name, transport_type) values (6, 1, '6', 0)
-insert into kts_lines(id, active, name, transport_type) values (7, 1, '7', 0)
-insert into kts_lines(id, active, name, transport_type) values (8, 1, '8', 0)
-insert into kts_lines(id, active, name, transport_type) values (9, 1, '9', 0)
+insert into kts_lines(id, active, name, transport_type, duration) values (1, 1, '1', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (2, 1, '2', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (3, 1, '3', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (4, 1, '4', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (5, 1, '5', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (6, 1, '6', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (7, 1, '7', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (8, 1, '8', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (9, 1, '9', 0, 1000)
 
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 2")
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 1")
@@ -191,13 +191,24 @@ insert into line_and_station(line_id, station_id, station_order) values (1, 2, 2
 insert into zones(id, active, name, sub_zone_id) values (1, true, 'gradska', NULL)
 insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 1)
 
---insert into zones_stations(zone_id, stations_id) values (1,1)
---insert into zones_stations(zone_id, stations_id) values (1,2)
-
 
 INSERT INTO users(id, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (1, 3, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
 INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0) 
 insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, null, 'Sara')
 
+
 insert into zones_stations(zone_id, stations_id) values (1,1)
 insert into zones_stations(zone_id, stations_id) values (1,2)
+
+insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
+
+insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-02-01 00:00:00', 1, 1)
+
+insert into route_schedule(id, active, active_from, line_id) values (1, true, '2019-02-01 00:00:00', 1)
+insert into weekday_schedule(route_schedule_id, weekday) values (1, '07:00:00')
+insert into weekday_schedule(route_schedule_id, weekday) values (1, '13:00:00')
+insert into weekday_schedule(route_schedule_id, weekday) values (1, '20:00:00')
+insert into saturday_schedule(route_schedule_id, saturday) values (1, '11:40:00')
+insert into saturday_schedule(route_schedule_id, saturday) values (1, '16:40:00')
+insert into sunday_schedule(route_schedule_id, sunday) values (1, '10:00:00')
+
