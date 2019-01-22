@@ -1,7 +1,5 @@
 package ftn.kts.transport.services;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -9,16 +7,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.BaseEncoding;
-import net.glxn.qrgen.core.image.ImageType;
-import net.glxn.qrgen.javase.QRCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.exception.TicketAlreadyActivatedException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
@@ -71,6 +66,9 @@ public class TicketServiceImpl implements TicketService{
 	
 	@Override
 	public Ticket activateTicket(Ticket ticket) {
+		if (ticket.getStartTime() != null) {
+			throw new TicketAlreadyActivatedException("Ticket had been already activated!");
+		}
 		ticket.setActive(true);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date currentDate = new Date();

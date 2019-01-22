@@ -6,6 +6,7 @@ import java.util.Date;
 import ftn.kts.transport.model.*;
 import ftn.kts.transport.services.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.LineDTO;
@@ -14,6 +15,7 @@ import ftn.kts.transport.dtos.RouteScheduleDTO;
 import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.services.LineService;
 import ftn.kts.transport.services.ZoneService;
@@ -33,8 +35,15 @@ public class DTOConverterImpl implements DTOConverter{
 	@Override
 	public Line convertDTOtoLine(LineDTO lineDTO) {
 		// ========== CHECK DATA ==========
-		
-		lineService.findByName(lineDTO.getName());	// throws DAO
+		Line found = null;
+		try {
+			found = lineService.findByName(lineDTO.getName());	// throws DAO
+		} catch (DAOException e) {
+			found = null;
+		}
+		if (found != null) {
+			throw new DAOException("Line [name=" + lineDTO.getName() +"] already exists!", HttpStatus.BAD_REQUEST);
+		}
 		int vehicle = lineDTO.getVehicleType();
 		if (vehicle != 0 && vehicle != 1 && vehicle != 2) {
 			throw new InvalidInputDataException("VehicleType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");

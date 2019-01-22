@@ -70,7 +70,7 @@ public class DTOConverterUnitTest {
 		Mockito.when(lineServiceMocked.findById(1L)).thenReturn(line);
 		Mockito.when(lineServiceMocked.findById(-1L)).thenThrow(new DAOException("Line [id=-1] cannot be found!"));
 		Mockito.when(lineServiceMocked.findByName("7A")).thenReturn(line);
-		Mockito.when(lineServiceMocked.findByName("755B")).thenThrow(new DAOException("Line [name=755B] cannot be found!"));
+		Mockito.when(lineServiceMocked.findByName("8A")).thenThrow(new DAOException("Line [name=755B] cannot be found!"));
 			
 		zone.setId(1L);
 		zone.setName("Zona I");
@@ -79,7 +79,7 @@ public class DTOConverterUnitTest {
 		Mockito.when(zoneServiceMocked.findById(1L)).thenReturn(zone);
 		Mockito.when(zoneServiceMocked.findById(-1L)).thenThrow(new DAOException("Station [id=-1] cannot be found!"));
 		
-		lineDTO.setName("7A");
+		lineDTO.setName("8A");
 		lineDTO.setVehicleType(0);
 		lineDTO.setStreetPath(new HashSet<String>());
 		lineDTO.getStreetPath().add("path1");
@@ -126,8 +126,8 @@ public class DTOConverterUnitTest {
 	
 	@Transactional
 	@Test(expected = DAOException.class)
-	public void convertToLine_LineNotFound_Test() {
-		lineDTO.setName("755B");
+	public void convertToLine_LineAlreadyExists_Test() {
+		lineDTO.setName("7A");
 		converter.convertDTOtoLine(lineDTO);
 	}
 	
