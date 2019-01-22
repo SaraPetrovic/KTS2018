@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute, ChildActivationEnd, Router } from '@angular/router';
-import { Zone } from '../model/zone';
-import { ZoneService } from '../_services/zones/zone.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ZoneTableComponent } from './zone-table.component';
+import { Zone } from 'src/app/model/zone';
+import { ZoneService } from 'src/app/_services/zones/zone.service';
 
 @Component({
   selector: 'app-zone-form',

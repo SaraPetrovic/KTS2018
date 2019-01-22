@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ZoneService } from '../_services/zones/zone.service';
-import { Zone } from '../model/zone';
+import { Zone } from 'src/app/model/zone';
+import { ZoneService } from 'src/app/_services/zones/zone.service';
+
 
 @Component({
   selector: 'app-zone-table',

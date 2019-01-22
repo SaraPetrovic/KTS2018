@@ -17,13 +17,15 @@ import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
 import { MapComponent, StreetEventDirective, StreetClickedDirective, StreetEnterDirective, DrowStationDirective } from './map/map.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { AdministrationLineComponent } from './administration-line/administration-line.component';
-import { AdministrationStationComponent } from './administration-station/administration-station.component';
-import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
+import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
+import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ConductorComponent } from './conductor/conductor.component';
-import { ZoneFormComponent } from './administration-zone/zone-form.component';
-import { ZoneTableComponent } from './administration-zone/zone-table.component';
+import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
+import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
+import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
+import { ZoneFormComponent } from './administration/administration-zone/zone-form.component';
+import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { ZoneTableComponent } from './administration-zone/zone-table.component';
     HomeComponent,
     LoginComponent,
     ZoneFormComponent,
+    ZoneTableComponent,
     MapComponent,
     DrowStationDirective,
     StreetClickedDirective,
@@ -44,11 +47,9 @@ import { ZoneTableComponent } from './administration-zone/zone-table.component';
     AdministrationStationComponent,
     AdministrationZoneComponent,
     ConductorComponent,
-    ZoneTableComponent
-  ],
-  entryComponents: [
-    ZoneFormComponent,
-    AdministrationZoneComponent
+    ConductorCheckInComponent,
+    ConductorScanComponent,
+    ConductorTicketComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +58,6 @@ import { ZoneTableComponent } from './administration-zone/zone-table.component';
     ReactiveFormsModule,
     HttpClientModule,
     NgxSmartModalModule.forRoot(),
-    NgbModule.forRoot(),
     NgQrScannerModule
   ],
   providers: [
