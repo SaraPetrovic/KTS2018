@@ -1,0 +1,66 @@
+
+<div id="wrapper">
+    <div id="ticket-wrapper">
+        <div id="ticket-info-wrapper">
+            <label class="primary-label">User Info:</label>
+
+            <div class="table-row">
+                <label class="secondary-label">First Name:</label>
+                <span>{{ticket.user.firstName}}</span>
+            </div>
+            <div class="table-row">
+                <label class="secondary-label">Last Name:</label>
+                <span>{{ticket.user.lastName}}</span>
+            </div>
+
+            <div class="table-row">
+                <label class="secondary-label">Verified:</label>
+                <span>{{ticket.user.documentVerified}}</span>
+            </div>
+
+            <div class="table-row">
+                <label class="secondary-label">User Type:</label>
+                <span>{{ticket.user.userTypeDemo}}</span>
+            </div>
+
+            <label class="primary-label">Ticket Info:</label>
+
+            <div class="table-row">
+                <label class="secondary-label">Transport Type:</label>
+                <span>{{ticket.transportType}}</span>
+            </div>
+                
+            <div class="table-row">
+                <label class="secondary-label">Ticket Type:</label>
+                <span>{{ticket.ticketTemporal}}</span>
+            </div>
+
+            <div *ngIf="ticket.ticketTemporal==='ONE_TIME_PASS'" class="table-row">
+                <label class="secondary-label">Route:</label>
+                <span>{{ticket.route.line.name}} ,  {{ticket.route.date | date:'medium'}}</span>
+            </div>
+
+            <div *ngIf="ticket.line" class="table-row">
+                <label class="secondary-label">Line:</label>
+                <span>{{ticket.line.name}}</span>
+            </div>
+            
+            
+            <div *ngIf="ticket.zone" class="table-row">
+                <label class="secondary-label">Line:</label>
+                <span>{{ticket.zone.name}}</span>
+            </div>
+
+            <div *ngIf="ticket.startTime" class="table-row">
+                <label class="secondary-label">Start Time:</label>
+                <span>{{ticket.startTime}}</span>
+            </div>
+            
+            <div *ngIf="ticket.endTime" class="table-row">
+                <label class="secondary-label">End Time:</label>
+                <span>{{ticket.endTime}}</span>
+            </div> 
+        </div>    
+        <a routerLink="/conductor/scan" routerLinkActive="active">Back</a>
+    </div>
+</div>

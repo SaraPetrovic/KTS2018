@@ -71,11 +71,11 @@ public class ZoneController {
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
-		if(zoneDTO.getSubZoneId() == null || zoneDTO.getName() == null || zoneDTO.getName() == "") {
+		if(zoneDTO.getName() == null || zoneDTO.getName() == "") {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Zone subZone = null;
-		if(zoneDTO.getSubZoneId() != 0) {
+		if(zoneDTO.getSubZoneId() != null && zoneDTO.getSubZoneId() != 0) {
 			subZone = zoneService.findById(zoneDTO.getSubZoneId());
 		}
 		

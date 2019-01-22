@@ -64,6 +64,16 @@ public class ZoneServiceUnitTest {
 	}
 	
 	@Test
+	public void saveTest() {
+		Zone zone = new Zone(Long.valueOf(18), "Gradska", null, null, true);
+		Mockito.when(zoneRepository.save(zone)).thenReturn(zone);
+		
+		Zone rez = zoneService.save(zone);
+		assertNotNull(rez);
+		assertEquals(zone, rez);
+	}
+	
+	@Test
 	public void addZoneTestOK1() {
 		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
@@ -81,18 +91,17 @@ public class ZoneServiceUnitTest {
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
 		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska 2", null, zone2, true);
 		Zone zone4 = new Zone(Long.valueOf(4), "Prigradska 3", null, zone2, true);
-		List<Zone> zones = new ArrayList<Zone>();
-		zones.add(zone1);
-		zones.add(zone2);
-		zones.add(zone3);
-		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+//		List<Zone> zones = new ArrayList<Zone>();
+//		zones.add(zone1);
+//		zones.add(zone2);
+//		zones.add(zone3);
+//		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
 		Mockito.when(zoneRepository.save(zone4)).thenReturn(zone4);
 		
-		Zone rez = zoneService.save(zone4);
+		Zone rez = zoneService.addZone(zone4);
 		
 		assertNotNull(rez);
 		assertEquals(zone4, rez);
-		assertEquals(zone3.getSubZone().getId(), zone4.getId());
 	}
 	
 	@Test

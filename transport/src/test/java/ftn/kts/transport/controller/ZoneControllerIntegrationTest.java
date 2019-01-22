@@ -69,23 +69,26 @@ public class ZoneControllerIntegrationTest {
 	
 		ZoneDTO rez = responseEntity.getBody();
 
-		Zone z = zoneService.findById(Long.valueOf(6));
-		assertEquals(rez.getId(), z.getSubZone().getId());
+		assertNotNull(rez);
+		assertEquals(Long.valueOf(5), rez.getSubZoneId());
 		assertEquals(size + 1, zoneService.findAll().size());
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 	}
 	
 	@Test
-	public void addZoneTestZoneNull() {
+	public void addZoneTestOK2() {
+		int size =zoneService.findAll().size();
 		
 		ZoneDTO entity= new ZoneDTO(Long.valueOf(55), "Zona55", null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity = 
 				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
 		
-		responseEntity.getBody();
+		ZoneDTO rez = responseEntity.getBody();
 
-		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		assertNotNull(rez);
+		assertEquals(size + 1, zoneService.findAll().size());
+		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 	
 	}
 	

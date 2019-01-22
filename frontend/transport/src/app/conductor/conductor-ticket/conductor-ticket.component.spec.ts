@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZoneDialogComponent } from './zone-dialog.component';
+import { ConductorTicketComponent } from './conductor-ticket.component';
 
-describe('ZoneDialogComponent', () => {
-  let component: ZoneDialogComponent;
-  let fixture: ComponentFixture<ZoneDialogComponent>;
+describe('ConductorTicketComponent', () => {
+  let component: ConductorTicketComponent;
+  let fixture: ComponentFixture<ConductorTicketComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ZoneDialogComponent ]
+      declarations: [ ConductorTicketComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ZoneDialogComponent);
+    fixture = TestBed.createComponent(ConductorTicketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
