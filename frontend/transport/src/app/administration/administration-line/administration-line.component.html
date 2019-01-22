@@ -1,0 +1,36 @@
+
+  <app-map (streetClick)="streetClicked($event)">
+
+  </app-map>
+  <div id="formWrapper">
+      <form [formGroup]="addLineForm" (ngSubmit)="onSubmit()">
+        <div class='form-group'>
+          <label>Line Name</label>
+          <input type="text" formControlName="lineName" class="form-control" [ngClass]="{'is-invalid': submitted && f.lineName.errors }" />
+          <div *ngIf="submitted && f.lineName.errors" class="invalid-feedback">
+            <div *ngIf="f.lineName.errors.required">Line Name is required</div>
+          </div>
+        </div>
+
+        <div class='form-group'>
+          <label>Line Description</label>
+          <input type="text" formControlName="lineDescription" class="form-control" [ngClass]="{'is-invalid': submitted && f.lineDescription.errors }" />
+          <div *ngIf="submitted && f.lineDescription.errors" class="invalid-feedback">
+            <div *ngIf="f.lineDescription.errors.required">Line Description is required</div>
+          </div>
+        </div>
+
+        <div class='form-group'>     
+          <button class="btn btn-primary">Add Line</button>
+        </div>
+      </form>
+  </div>
+  <ul>
+    <li *ngFor="let line of lines">
+
+      {{line.name}}
+
+    </li>
+  </ul>
+
+  <button (click)="createLine()">Create Line</button>

@@ -17,11 +17,14 @@ import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
 import { MapComponent, StreetEventDirective, StreetClickedDirective, StreetEnterDirective, DrowStationDirective } from './map/map.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { AdministrationLineComponent } from './administration-line/administration-line.component';
-import { AdministrationStationComponent } from './administration-station/administration-station.component';
-import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
+import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
+import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
+import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ZonesComponent } from './zones/zones.component';
 import { ConductorComponent } from './conductor/conductor.component';
+import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
+import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
+import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,10 @@ import { ConductorComponent } from './conductor/conductor.component';
     AdministrationStationComponent,
     AdministrationZoneComponent,
     ZonesComponent,
-    ConductorComponent
+    ConductorComponent,
+    ConductorCheckInComponent,
+    ConductorScanComponent,
+    ConductorTicketComponent
   ],
   imports: [
     BrowserModule,

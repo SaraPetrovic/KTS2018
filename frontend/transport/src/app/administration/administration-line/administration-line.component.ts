@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LineService } from '../_services/line.service';
+import { LineService } from '../../_services/line.service';
 
-import { Line } from '../model/line';
-import { MapComponent } from '../map/map.component';
+import { Line } from '../../model/line';
+import { MapComponent } from '../../map/map.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({

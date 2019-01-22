@@ -3,11 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { LinesComponent } from './lines/lines.component';
 import { HomeComponent } from './home/home.component';
 import { AdministrationComponent } from './administration/administration.component';
-import { AdministrationLineComponent } from './administration-line/administration-line.component';
-import { AdministrationStationComponent } from './administration-station/administration-station.component';
-import { AdministrationZoneComponent } from './administration-zone/administration-zone.component';
+import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
+import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
+import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ZonesComponent } from './zones/zones.component';
 import { ConductorComponent } from './conductor/conductor.component';
+import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
+import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
+import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
 
 const routes: Routes = [
   {
@@ -15,7 +18,26 @@ const routes: Routes = [
     component: LinesComponent
   },{
     path: 'conductor',
-    component: ConductorComponent
+    component: ConductorComponent,
+    children: [
+      {
+        path: 'checkIn',
+        component: ConductorCheckInComponent
+      },
+      {
+        path: 'scan',
+        component: ConductorScanComponent
+      },
+      {
+        path: 'ticket',
+        component: ConductorTicketComponent
+      },
+      {
+        path: '',
+        redirectTo: 'checkIn',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: 'administration',

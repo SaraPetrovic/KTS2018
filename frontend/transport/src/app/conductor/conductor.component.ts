@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { QrScannerComponent } from 'angular2-qrscanner';
+import { ConductorService } from '../_services/conductor/conductor.service';
+import { Ticket } from '../model/ticket';
+import { ConductorCommunicationService } from '../_services/conductor/communication/conductor-communication.service';
+import { Router } from '@angular/router';
+import { Route } from '../model/route';
 
 @Component({
   selector: 'app-conductor',
@@ -9,40 +14,45 @@ import { QrScannerComponent } from 'angular2-qrscanner';
 })
 export class ConductorComponent implements OnInit {
 
-  @ViewChild(QrScannerComponent) qrScannerComponent: QrScannerComponent;
+  private ticket: Ticket;
+  private route: Route;
 
-  constructor() { }
+  private error: string;
 
-  ngOnInit() {
+  constructor(private conductorService: ConductorService,
+     private conductorCommunicationService: ConductorCommunicationService,
+     private router: Router) { }
 
-    this.qrScannerComponent.getMediaDevices().then(devices =>{
-      console.log(devices);
-      const videoDevices: MediaDeviceInfo[] = [];
-      for(const device of devices){
-        if(device.kind.toString() === 'videoinput'){
-          videoDevices.push(device);
-        }
-      }
-      if(videoDevices.length > 0){
-        let choosenDev;
-        for(const dev of videoDevices){
-          if(dev.label.includes('front')){
-            choosenDev = dev;
-            break;
+  ngOnInit() { 
+    this.conductorCommunicationService.qrCodeScannedEvent.subscribe((result: any) => {
+      this.conductorService.checkTicket(result)
+        .subscribe(data => {         
+          this.conductorCommunicationService.ticketLoaded(data);
+          this.router.navigate(['/conductor/ticket']);
+        },
+        error =>{
+          if(error.status === 0){
+            this.conductorCommunicationService.scanError("Unable to connect to the server...");
+          } else{
+            this.conductorCommunicationService.scanError(error.error.errorMessage);
+          }
+        });
+    });
+
+    this.conductorCommunicationService.checkInEvent.subscribe((vehicleNumber: any) => {
+      this.conductorService.checkIn(vehicleNumber)
+        .subscribe(data => {
+          this.route = data;
+          this.router.navigate(['/conductor/scan']);
+        },
+        error => {
+          if(error.status === 0){
+            this.conductorCommunicationService.checkInError("Unable to connect to the server...");
+          } else{
+            this.conductorCommunicationService.checkInError(error.error.errorMessage);
           }
         }
-        if(choosenDev){
-          this.qrScannerComponent.chooseCamera.next(choosenDev);
-        }else{
-          this.qrScannerComponent.chooseCamera.next(videoDevices[0]);
-        }
-      }
+        );
     });
-
-    this.qrScannerComponent.capturedQr.subscribe(result => {
-      console.log(result);
-    });
-
-  }
-
+   }
 }
