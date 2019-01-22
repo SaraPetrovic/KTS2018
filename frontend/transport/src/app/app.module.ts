@@ -20,7 +20,6 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConductorComponent } from './conductor/conductor.component';
 import { ZoneFormComponent } from './administration-zone/zone-form.component';
 import { ZoneTableComponent } from './administration-zone/zone-table.component';
@@ -58,7 +57,6 @@ import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor
     ReactiveFormsModule,
     HttpClientModule,
     NgxSmartModalModule.forRoot(),
-    NgbModule.forRoot(),
     NgQrScannerModule
   ],
   providers: [
