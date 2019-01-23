@@ -1,19 +1,19 @@
 package ftn.kts.transport.security;
 
-import ftn.kts.transport.exception.DAOException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.AntPathMatcher;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.util.AntPathMatcher;
+
+import ftn.kts.transport.exception.AuthorizationException;
 
 
 public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {
@@ -39,7 +39,7 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
         String header = httpServletRequest.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("JWT Token is missing");
+            throw new AuthorizationException("JWT Token is missing");
         }
 
         String authenticationToken = header.substring(7);

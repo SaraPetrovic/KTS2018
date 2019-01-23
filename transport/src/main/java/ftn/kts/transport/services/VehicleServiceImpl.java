@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import ftn.kts.transport.dtos.VehicleDTO;
+import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Vehicle;
 import ftn.kts.transport.repositories.VehicleRepository;
 
@@ -50,14 +52,13 @@ public class VehicleServiceImpl implements VehicleService{
 
 
 	@Override
-	public Vehicle deleteVehicle(VehicleDTO vehicle) {
-		Vehicle found = vehicleRepository.findByVehicleName(vehicle.getName());
-		if (found == null) {
-			return null;
-		}
+	public boolean deleteVehicle(long id) {
+		Vehicle found = vehicleRepository.findById(id).orElseThrow(() -> 
+								new DAOException("Vehicle [id=" + id + "] cannot be found!", HttpStatus.NOT_FOUND));
+
 		found.setActive(false);
 		vehicleRepository.save(found);
-		return found;
+		return true;
 	}
 
 	@Override

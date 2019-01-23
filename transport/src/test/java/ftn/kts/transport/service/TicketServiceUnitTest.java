@@ -35,7 +35,7 @@ import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
-import ftn.kts.transport.security.JwtValidator;
+import ftn.kts.transport.services.JwtGeneratorService;
 import ftn.kts.transport.services.PriceListService;
 import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
@@ -54,7 +54,7 @@ public class TicketServiceUnitTest {
 	@MockBean
 	private PriceListService priceListServiceMocked;
 	@MockBean
-	private JwtValidator jwtValidatorMocked;
+	private JwtGeneratorService jwtServiceMocked;
 	
 	
 	private User user = new User();
@@ -85,7 +85,7 @@ public class TicketServiceUnitTest {
 		ticketToBuy.setTransportType(VehicleType.BUS);
 		ticketToBuy.setZone(new Zone(1L, "Zone I", true));
 		
-		Mockito.when(jwtValidatorMocked.validate(TOKEN.substring(7))).thenReturn(user);
+		Mockito.when(jwtServiceMocked.validate(TOKEN.substring(7))).thenReturn(user);
 		Mockito.when(userServiceMocked.findByUsername("user1")).thenReturn(user);
 		Mockito.when(ticketRepositoryMocked.findById(1L)).thenReturn(Optional.of(zoneTicket));
 		Mockito.when(ticketRepositoryMocked.findById(2L)).thenReturn(Optional.of(lineTicket));
@@ -115,7 +115,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test
-	@Transactional
 	public void activateTicket_PASS_Test() {
 		assertFalse(zoneTicket.isActive());
 		Ticket ret = ticketService.activateTicket(zoneTicket);
@@ -125,7 +124,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test
-	@Transactional
 	public void buyTicket_DocumentNotNeeded_PASS_Test() {
 		Mockito.when(priceListServiceMocked.calculateTicketPrice(ticketToBuy)).thenReturn(500.00);
 		Mockito.when(ticketRepositoryMocked.save(ticketToBuy)).thenReturn(ticketToBuy);
@@ -141,7 +139,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentNotFound_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
@@ -151,7 +148,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentVerificationPending_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.PENDING);
@@ -161,7 +157,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentRejected_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.REJECTED);
@@ -171,7 +166,6 @@ public class TicketServiceUnitTest {
 	}	
 	
 	@Test
-	@Transactional
 	public void buyTicket_DocumentApproved_PASS_Test() {
 		Mockito.when(priceListServiceMocked.calculateTicketPrice(ticketToBuy)).thenReturn(500.00);
 		Mockito.when(ticketRepositoryMocked.save(ticketToBuy)).thenReturn(ticketToBuy);

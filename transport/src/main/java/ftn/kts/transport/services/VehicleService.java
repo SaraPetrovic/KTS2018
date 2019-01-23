@@ -14,6 +14,6 @@ public interface VehicleService {
 	List<Vehicle> findAll();
 	Vehicle addVehicle(VehicleDTO vehicle);
 	Vehicle updateVehicle(VehicleDTO vehicle, long id);
-	Vehicle deleteVehicle(VehicleDTO vehicle);
+	boolean deleteVehicle(long id);
 	Vehicle getFreeVehicle(Date time, int duration);
 }
