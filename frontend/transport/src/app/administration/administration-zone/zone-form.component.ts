@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ZoneTableComponent } from './zone-table.component';
 import { Zone } from 'src/app/model/zone';
 import { ZoneService } from 'src/app/_services/zones/zone.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-zone-form',
@@ -17,8 +18,7 @@ export class ZoneFormComponent implements OnInit {
     private zone: Zone = new Zone();
     @Input() zones : Zone[];
     private disabledOption = "";
-    private formLabel : string;
-
+    private zoneClickedSubscription : Subscription;
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }
 
@@ -27,6 +27,10 @@ export class ZoneFormComponent implements OnInit {
             zoneName: ['', Validators.required],
             subzone: ['']
         });
+
+        this.zoneClickedSubscription = this.zoneService.getClickedZone().subscribe(
+            zone => {this.zone = zone;}
+        );
     }
 
     get f(){ return this.addZoneForm.controls; }
@@ -46,7 +50,13 @@ export class ZoneFormComponent implements OnInit {
     }
 
     addZone(): void {
-        this.zoneService.addZone(this.zone).subscribe((zone) => this.zones.push(zone));
+        this.zoneService.addZone(this.zone).subscribe(
+            (zone) => {
+                this.zones.push(zone);
+            },
+            error => {
+                alert(error.error.errorMessage)
+            });
     }
 
     

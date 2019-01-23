@@ -9,25 +9,22 @@ public class UserDTO {
     private String password;
     private String firstName;
     private String lastName;
-    private String repeatedPassword;
 
     public UserDTO() {  }
 
-    public UserDTO(Long id, String username, String password, String firstName, String lastName, String repeatedPassword) {
+    public UserDTO(Long id, String username, String password, String firstName, String lastName) {
         this.id = id;
     	this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.repeatedPassword = repeatedPassword;
     }
     
-    public UserDTO(String username, String password, String firstName, String lastName, String repeatedPassword) {
+    public UserDTO(String username, String password, String firstName, String lastName) {
     	this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.repeatedPassword = repeatedPassword;
     }
     
     public UserDTO(User user) {
@@ -78,12 +75,4 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-	public String getRepeatedPassword() {
-		return repeatedPassword;
-	}
-
-	public void setRepeatedPassword(String repeatedPassword) {
-		this.repeatedPassword = repeatedPassword;
-	}
-    
 }

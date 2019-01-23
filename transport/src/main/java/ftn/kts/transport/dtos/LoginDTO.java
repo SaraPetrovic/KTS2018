@@ -5,19 +5,29 @@ public class LoginDTO {
     private String username;
     private String firstName;
     private String lastName;
+    private String password;
     private String token;
 
     public LoginDTO() {
     }
 
-    public LoginDTO(String username, String firstName, String lastName, String token) {
+    public LoginDTO(String username, String firstName, String lastName, String password, String token) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
         this.token = token;
     }
 
-    public String getUsername() {
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUsername() {
         return username;
     }
 

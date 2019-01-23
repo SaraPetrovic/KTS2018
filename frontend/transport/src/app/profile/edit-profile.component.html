@@ -1,0 +1,81 @@
+
+<form [formGroup]="editProfileForm" role="form" (ngSubmit)="onSubmit()">
+  <div class="container">
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                <h4>
+                    <label value="" class="form-control-label" for="field_name">Change Profile</label>
+                </h4>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                  <input type="text" placeholder="First Name" class="form-control" formControlName="firstName" [(ngModel)]="user.firstName" 
+                      [ngClass]="{'is-invalid': submitError && f.firstName.errors}" required/>
+                  <div *ngIf="submitError && f.firstName.errors" class="invalid-feedback">
+                      <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                  <input type="text" placeholder="Last Name" class="form-control" formControlName="lastName" [(ngModel)]="user.lastName" 
+                      [ngClass]="{'is-invalid': submitError && f.lastName.errors}" required/>
+                  <div *ngIf="submitError && f.lastName.errors" class="invalid-feedback">
+                      <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                  <input type="text" placeholder="Username" class="form-control" formControlName="username" [(ngModel)]="user.username" 
+                      [ngClass]="{'is-invalid': submitError && f.username.errors}" readonly/>
+                  <div *ngIf="submitError && f.username.errors" class="invalid-feedback">
+                      <div *ngIf="f.username.errors.required">Username is required</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                  <input type="password" placeholder="Password" class="form-control" 
+                      formControlName="password" [(ngModel)]="user.password" 
+                      [ngClass]="{'is-invalid': submitError && f.password.errors}" required/>
+                  <div *ngIf="submitError && f.password.errors" class="invalid-feedback">
+                      <div *ngIf="f.password.errors.required">Password is required</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group">
+                  <input type="password" placeholder="Repeated Password" class="form-control" formControlName="repeatedPassword" 
+                        [(ngModel)]="repeatedPass"
+                        [ngClass]="{'is-invalid': submitError && f.repeatedPassword.errors}" required/>
+                  <div *ngIf="submitError && f.repeatedPassword.errors" class="invalid-feedback">
+                      <div *ngIf="f.repeatedPassword.errors.required">Repeated Password is required</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6 col-md-4">
+              <div class="form-group" style="margin-left: 77%">
+                  <button class="btn btn-primary" type="submit"
+                          [disabled]="!editProfileForm.valid" (click)="editProfile()">
+                      <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</form>

@@ -22,6 +22,7 @@ import { AdministrationStationComponent } from './administration/administration-
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ZoneFormComponent } from './administration/administration-zone/zone-form.component';
 import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
+import { EditProfileComponent } from './profile/edit-profile.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ConductorModule } from './modules/conductor/conductor.module';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -21,7 +21,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ftn.kts.transport.dtos.UserDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.services.StationService;
@@ -46,7 +49,7 @@ public class ZoneControllerIntegrationTest {
 	@Test
 	public void getAllTest() {
 		ResponseEntity<ZoneDTO[]> responseEntity = 
-				restTemplate.getForEntity("/zone/all", ZoneDTO[].class);
+				restTemplate.getForEntity("/zone", ZoneDTO[].class);
 		
 		ZoneDTO[] rez = responseEntity.getBody();
 		
@@ -65,7 +68,7 @@ public class ZoneControllerIntegrationTest {
 		ZoneDTO entity= new ZoneDTO("Zona44", null, Long.valueOf(5));
 		
 		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
+				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
 	
 		ZoneDTO rez = responseEntity.getBody();
 
@@ -79,10 +82,10 @@ public class ZoneControllerIntegrationTest {
 	public void addZoneTestOK2() {
 		int size =zoneService.findAll().size();
 		
-		ZoneDTO entity= new ZoneDTO(Long.valueOf(55), "Zona55", null, null);
+		ZoneDTO entity= new ZoneDTO("Zona55", null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
+				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
 		
 		ZoneDTO rez = responseEntity.getBody();
 
@@ -93,16 +96,29 @@ public class ZoneControllerIntegrationTest {
 	}
 	
 	@Test
-	public void addZoneTestZoneNotFound() {
+	public void addZoneTestZoneNotFoundSubZone() {
 		
-		ZoneDTO entity= new ZoneDTO(Long.valueOf(55), "Zona55", null, Long.valueOf(88));
+		ZoneDTO entity= new ZoneDTO("Zona55", null, Long.valueOf(88));
 		
 		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/add", entity, ZoneDTO.class);
+				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
 		
 		responseEntity.getBody();
 
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void addZoneTestZoneBadRequest() {
+		
+		ZoneDTO entity= new ZoneDTO("", null, Long.valueOf(2));
+		
+		ResponseEntity<ZoneDTO> responseEntity = 
+				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
+		
+		responseEntity.getBody();
+
+		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 	
 	@Test
@@ -111,7 +127,7 @@ public class ZoneControllerIntegrationTest {
 		int size = zoneService.findAll().size();
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/zone/delete/" + Long.valueOf(4),
+				restTemplate.exchange("/zone/" + Long.valueOf(4),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		Zone z5 = zoneService.findById(Long.valueOf(5));
@@ -130,56 +146,26 @@ public class ZoneControllerIntegrationTest {
 		Zone zone = zoneService.save(new Zone(Long.valueOf(45), "Naziv", stations, null, true));
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/zone/delete/" + zone.getId(),
+				restTemplate.exchange("/zone/" + zone.getId(),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 	
-	/*
-	@Test
-	public void addStationsInZoneTestNotOK() {
-		
-		ResponseEntity<Void> responseEntity = 
-				restTemplate.postForEntity("/zone/addStations/" + Long.valueOf(66), null, Void.class);
-		
-		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-	}
 	
-	@Test
-	public void addStationsInZoneTestNotOK1() {
-		
-		ResponseEntity<Void> responseEntity = 
-				restTemplate.postForEntity("/zone/addStations/" + Long.valueOf(2), null, Void.class);
-		
-		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-	}
-	
-	@Test
-	public void addStationsInZoneTestOK() {
-		
-		List<StationDTO> stations = new ArrayList<StationDTO>();
-		Station station = stationService.findById(Long.valueOf(3));
-		StationDTO dto = new StationDTO(station.getId(), station.getAddress(), station.getName());
-		stations.add(dto);
-		
-		ResponseEntity<Void> responseEntity =
-				restTemplate.postForEntity("/zone/addStations/" + Long.valueOf(2), stations, Void.class);
-		
-		assertEquals(2, zoneService.findById(Long.valueOf(2)).getStations().size());
-		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-	}
-	*/
 	
 	@Test
 	public void updateZoneTestBadRequest() {
 		
 		Zone zone = zoneService.findById(Long.valueOf(2));
-		zone.setName("");
+		zone.setName(null);
 		
 		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/update", dto, ZoneDTO.class);
+
+		ResponseEntity<ZoneDTO> responseEntity =
+	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto),
+	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
@@ -189,13 +175,14 @@ public class ZoneControllerIntegrationTest {
 		
 		ZoneDTO dto = new ZoneDTO(Long.valueOf(99), null, null, null);
 		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/update", dto, ZoneDTO.class);
+		ResponseEntity<ZoneDTO> responseEntity =
+	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto),
+	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
 	
-	@Ignore
 	@Test
 	public void updateZoneTestOK() {
 		
@@ -203,8 +190,10 @@ public class ZoneControllerIntegrationTest {
 		
 		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
 		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone/update", dto, ZoneDTO.class);
+		ResponseEntity<ZoneDTO> responseEntity =
+	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto),
+	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}

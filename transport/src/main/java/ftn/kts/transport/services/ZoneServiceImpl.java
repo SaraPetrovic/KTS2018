@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
@@ -27,6 +28,9 @@ public class ZoneServiceImpl implements ZoneService{
 	public Zone addZone(Zone zone) {
 //		List<Zone> zones = findAll();
 
+		if(zoneRepository.findByName(zone.getName()) != null) {
+			throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
+		}
 		Zone rez = zoneRepository.save(zone);
 		
 //		for(Zone z : zones) {
@@ -69,7 +73,7 @@ public class ZoneServiceImpl implements ZoneService{
 	}
 
 	@Override
-	public Zone findById(Long id) throws ZoneNotFoundException {
+	public Zone findById(Long id) {
 		Zone zone = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
 		if(!zone.isActive()) {
 			 throw new ZoneNotFoundException(id);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { User } from '../model/user';
@@ -14,6 +14,7 @@ export class AuthenticationService {
   public currentUser: Observable<User>;
 
   private API_URL = 'localhost:9003';
+  private headers = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
 
   constructor(private http: HttpClient) { 
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -31,7 +32,7 @@ export class AuthenticationService {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
       }
-
+      console.log(user);
       return user;
     }));
   }
@@ -39,5 +40,10 @@ export class AuthenticationService {
   logout(){
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  editProfile(user: User): Observable<User>{
+    console.log(this.currentUserValue);
+    return this.http.put<User>('http://localhost:9003/user', this.currentUserValue, this.headers);
   }
 }

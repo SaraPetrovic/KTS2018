@@ -6,7 +6,7 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
-import { ConductorModule } from './modules/conductor/conductor.module';
+import { EditProfileComponent } from './profile/edit-profile.component';
 
 const routes: Routes = [
   {
@@ -21,6 +21,10 @@ const routes: Routes = [
   {
     path: 'conductor',
     loadChildren: './modules/conductor/conductor.module#ConductorModule'
+  },
+  {
+    path: 'profile',
+    component: EditProfileComponent
   },
   {
     path: 'administration',

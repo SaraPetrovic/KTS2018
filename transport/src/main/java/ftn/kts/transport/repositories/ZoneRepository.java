@@ -13,4 +13,5 @@ import ftn.kts.transport.model.Zone;
 public interface ZoneRepository extends JpaRepository<Zone, Long>{
 
 	Set<Zone> findByStationsIn(Collection<Station> stations);
+	Zone findByName(String name);
 }
