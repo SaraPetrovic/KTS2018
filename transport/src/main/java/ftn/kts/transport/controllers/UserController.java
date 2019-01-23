@@ -81,8 +81,9 @@ public class UserController {
     
     @PutMapping(consumes = {"application/json"}, produces="application/json")
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<UserDTO> update(@RequestHeader("Authorization") final String token, @RequestBody UserDTO userDto){
-		
+		System.out.println("USAAAOO!!!!");
     	User u = jwtService.validate(token.substring(7));
     	User user = userService.findByUsername(u.getUsername());
     	
