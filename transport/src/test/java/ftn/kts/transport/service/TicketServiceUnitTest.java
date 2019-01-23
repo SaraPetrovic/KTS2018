@@ -115,7 +115,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test
-	@Transactional
 	public void activateTicket_PASS_Test() {
 		assertFalse(zoneTicket.isActive());
 		Ticket ret = ticketService.activateTicket(zoneTicket);
@@ -125,7 +124,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test
-	@Transactional
 	public void buyTicket_DocumentNotNeeded_PASS_Test() {
 		Mockito.when(priceListServiceMocked.calculateTicketPrice(ticketToBuy)).thenReturn(500.00);
 		Mockito.when(ticketRepositoryMocked.save(ticketToBuy)).thenReturn(ticketToBuy);
@@ -141,7 +139,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentNotFound_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
@@ -151,7 +148,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentVerificationPending_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.PENDING);
@@ -161,7 +157,6 @@ public class TicketServiceUnitTest {
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
-	@Transactional
 	public void buyTicket_DocumentRejected_Test() {
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
 		user.setDocumentVerified(DocumentVerification.REJECTED);
@@ -171,7 +166,6 @@ public class TicketServiceUnitTest {
 	}	
 	
 	@Test
-	@Transactional
 	public void buyTicket_DocumentApproved_PASS_Test() {
 		Mockito.when(priceListServiceMocked.calculateTicketPrice(ticketToBuy)).thenReturn(500.00);
 		Mockito.when(ticketRepositoryMocked.save(ticketToBuy)).thenReturn(ticketToBuy);

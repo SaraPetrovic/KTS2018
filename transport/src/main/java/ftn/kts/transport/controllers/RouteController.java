@@ -1,17 +1,24 @@
 package ftn.kts.transport.controllers;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.RestController;
+
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Route;
 import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.model.Vehicle;
 import ftn.kts.transport.services.LineService;
+import ftn.kts.transport.services.RouteScheduleService;
 import ftn.kts.transport.services.RouteService;
 import ftn.kts.transport.services.VehicleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.*;
 
 @RestController
 public class RouteController {
@@ -25,6 +32,9 @@ public class RouteController {
 
     @Autowired
     private VehicleService vehicleService;
+    
+    @Autowired
+    private RouteScheduleService routeScheduleService;
 
 
     private Date getDate(Date date){
@@ -47,7 +57,7 @@ public class RouteController {
         RouteSchedule rs;
 
         for(Line line : lines) {
-            List<RouteSchedule> routeScheduleList = this.lineService.getScheduleByLine(line.getId());
+            List<RouteSchedule> routeScheduleList = this.routeScheduleService.getScheduleByLine(line.getId());
             if(routeScheduleList.size() == 0)
                 break;
             rs = routeScheduleList.get(0);

@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QrScannerComponent } from 'angular2-qrscanner';
+import { ConductorService } from 'src/app/_services/conductor/conductor.service';
 import { Router } from '@angular/router';
-import { ConductorCommunicationService } from 'src/app/_services/conductor/communication/conductor-communication.service';
+import { ConductorDataService } from '../../services/conductor-data.service';
 
 @Component({
   selector: 'app-conductor-scan',
@@ -15,7 +16,9 @@ export class ConductorScanComponent implements OnInit {
 
   @ViewChild(QrScannerComponent) qrScannerComponent: QrScannerComponent;
 
-  constructor(private conductorCommunicationService: ConductorCommunicationService) { }
+  constructor(private conductorService: ConductorService,
+              private dataService: ConductorDataService,
+              private router: Router) { }
 
   ngOnInit() {
     this.qrScannerComponent.stopAfterScan = false;
@@ -41,19 +44,24 @@ export class ConductorScanComponent implements OnInit {
           this.qrScannerComponent.chooseCamera.next(videoDevices[0]);
         }
       }
-    });    
-
-    this.conductorCommunicationService.scanErrorEvent.subscribe(
-      (error: string) => {
-        this.error = true;
-        this.errorMessage = error;
-        this.qrScannerComponent.startScanning.call;
-      }
-    );
+    });  
 
     this.qrScannerComponent.capturedQr.subscribe((result: any) => {
      
-      this.conductorCommunicationService.qrCodeScanned(result);
+      this.conductorService.checkTicket(result).subscribe(
+        data => {
+          this.dataService.scanTicket(data);
+          this.router.navigate(['conductor/ticket']);
+        },
+        error => {
+          this.error = true;
+          if(error.status === 0){
+            this.errorMessage = "Unable to connect to the server..."
+          }else{
+            this.errorMessage = error.error.errorMessage;
+          }
+        }
+      )
     });
   }
 

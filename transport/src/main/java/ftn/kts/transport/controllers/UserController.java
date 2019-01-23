@@ -1,6 +1,10 @@
 package ftn.kts.transport.controllers;
 
+import java.util.List;
 import java.util.Set;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +18,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ftn.kts.transport.dtos.LoginDTO;
 import ftn.kts.transport.dtos.UserDTO;
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Ticket;
@@ -26,7 +33,7 @@ import ftn.kts.transport.services.JwtGeneratorService;
 import ftn.kts.transport.services.UserService;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "user")
 public class UserController {
 
     @Autowired
@@ -104,5 +111,32 @@ public class UserController {
 
     @GetMapping(path = "/rest/user")
     @PreAuthorize("hasRole('CLIENT')")
-    public String helloClient(){return "Hello World Client";}
+    public String helloClient() {
+    	return "Hello World Client";
+    }
+    
+    @PostMapping(path = "/document")
+    @Consumes("multipart/form-data")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<Boolean> uploadDocumentImage(@RequestParam("file") MultipartFile file, 
+    													@RequestHeader("Authorization") String token) {
+    	boolean ret = userService.saveDocumentImage(file, token);
+    	
+    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+    
+    @PutMapping(path = "/{id}/verify")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Boolean> verifyDocument(@PathVariable("id") long id) {
+    	boolean ret = userService.verifyDocument(id);
+    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+    
+    @GetMapping(path = "/verify")
+    @Produces("application/json")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> getUsersForVerification() {
+    	List<User> toVerify = userService.findUsersByDocumentVerified(DocumentVerification.PENDING);
+    	return new ResponseEntity<>(toVerify, HttpStatus.OK);
+    }
 }

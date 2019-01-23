@@ -20,13 +20,10 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
-import { ConductorComponent } from './conductor/conductor.component';
-import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
-import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
-import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
 import { ZoneFormComponent } from './administration/administration-zone/zone-form.component';
 import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
+import { ConductorModule } from './modules/conductor/conductor.module';
 
 @NgModule({
   declarations: [
@@ -47,20 +44,15 @@ import { EditProfileComponent } from './profile/edit-profile.component';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
-    ConductorComponent,
-    ConductorCheckInComponent,
-    ConductorScanComponent,
-    ConductorTicketComponent,
     EditProfileComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     NgxSmartModalModule.forRoot(),
-    NgQrScannerModule
+    AppRoutingModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

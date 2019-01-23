@@ -13,17 +13,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.DTOconverter.DTOConverter;
 import ftn.kts.transport.dtos.LineDTO;
-import ftn.kts.transport.dtos.RouteScheduleDTO;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.services.LineService;
 
 @RestController
+@RequestMapping(value = "/line")
 public class LineController {
 
 	@Autowired
@@ -33,30 +34,26 @@ public class LineController {
 
 	
 	
-	@GetMapping(value = "/line")
+	@GetMapping
 	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<List<Line>> getLInes(){
 		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
 	}
 
 
-	@PostMapping(value = "/line")
+	@PostMapping
 	@Consumes("application/json")
 	@Produces("application/json")
 	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO lineDTO) {
-		System.out.println("usao sam ovde");
 		Line ret = null;
 		Line l = dtoConverter.convertDTOtoLine(lineDTO);
-
-		ret = lineService.addLine(l);
-
-		ret = lineService.addStationsToLine(ret.getId(), lineDTO);
+		ret = lineService.addLineMethod(l, lineDTO);
 		
 		return new ResponseEntity<Line>(ret, HttpStatus.CREATED);
 	}
 
-	@PostMapping(value = "/line/{id}/update")
+	@PutMapping(path = "/{id}")
 	@Consumes("application/json")
 	@Produces("application/json")
 	public ResponseEntity<Line> updateLine(@RequestBody LineDTO updatedLine, @PathVariable("id") long id) {
@@ -64,7 +61,7 @@ public class LineController {
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/line/{id}/delete")
+	@DeleteMapping(path = "/{id}")
 	@Produces("application/json")
 	public ResponseEntity<Line> deleteLine(@PathVariable("id") long id) {
 		Line ret = lineService.deleteLine(id);
@@ -72,7 +69,7 @@ public class LineController {
 	}
 
 
-	@PostMapping(value = "/line/{id}/updateStations")
+	@PutMapping(path = "/{id}/updateStations")
 	@Consumes("application/json")
 	@Produces("application/json")
 	public ResponseEntity<Line> updateStations(@PathVariable("id") long id, @RequestBody LineDTO newStations) {
@@ -81,41 +78,5 @@ public class LineController {
 	}
 	
 
-	@GetMapping(value = "/line/{id}/schedules")
-	@Produces("application/json")
-	public ResponseEntity<List<RouteSchedule>> getSchedulesForLine(@PathVariable("id") long id) {
-		List<RouteSchedule> schedules = lineService.getScheduleByLine(id);
-		return new ResponseEntity<List<RouteSchedule>>(schedules, HttpStatus.OK);
-	}
-	
-	
-	@PostMapping(value = "/line/{id}/addSchedule")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public ResponseEntity<RouteSchedule> addSchedule(@PathVariable("id") long id, @RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
-		RouteSchedule ret = lineService.addSchedule(schedule, id);
-		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
-	}
-	
-	
-	@PostMapping(value = "/line/{lineId}/schedule/{scheduleId}/update")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public ResponseEntity<RouteSchedule> updateSchedule(@PathVariable("lineId") long lineId, 
-														@PathVariable("scheduleId") long scheduleId,
-														@RequestBody RouteScheduleDTO scheduleDTO) {
-		RouteSchedule schedule = dtoConverter.convertDTOtoRouteSchedule(scheduleDTO);
-		RouteSchedule ret = lineService.updateSchedule(schedule, lineId, scheduleId);
-		
-		return new ResponseEntity<RouteSchedule>(ret, HttpStatus.OK);
-	}
-	
-	@DeleteMapping(value = "/line/{lineId}/schedule/{scheduleId}/delete")
-	public ResponseEntity<Boolean> deleteSchedule(@PathVariable("scheduleId") long scheduleId) {
-		
-		boolean ret = lineService.deleteSchedule(scheduleId);
-		return new ResponseEntity<Boolean>(ret, HttpStatus.OK);
-	}
 	
 }

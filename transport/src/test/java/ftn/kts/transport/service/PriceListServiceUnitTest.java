@@ -151,7 +151,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*3, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Monthly_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -161,7 +160,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*20, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Yearly_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -171,7 +169,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*200, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_OneTime_Student_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -181,7 +178,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*0.8*3, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_OneTime_Senior_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -191,7 +187,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*0.7*3, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Monthly_Student_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -202,7 +197,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*0.8*20, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZone_Monthly_Senior_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -213,7 +207,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*0.7*20, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Yearly_Student_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -224,7 +217,6 @@ public class PriceListServiceUnitTest {
 		assertEquals(100.00*0.8*200, calculatedPrice, 0.001);
 	}
 	
-	@Transactional
 	@Test
 	public void calculatePriceZone_Yearly_Senior_PASS_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
@@ -236,7 +228,6 @@ public class PriceListServiceUnitTest {
 	}
 	
 	
-	@Transactional
 	@Test
 	public void getActivePriceList_PASS_Test() {
 		validPriceList.setActive(true);
@@ -247,7 +238,6 @@ public class PriceListServiceUnitTest {
 		
 	}
 	
-	@Transactional
 	@Test
 	public void getActivePriceList_NoActive_Test() {
 		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.empty());
