@@ -1,0 +1,20 @@
+<div id="wrapper">
+    <div id="error-box" *ngIf="error">
+      {{errorMessage}}
+    </div>
+  
+    
+    <div id="scan-wrapper">
+      <label>Scan QRCode from Ticket!</label>
+      <qr-scanner
+        [debug]="false"
+        [canvasWidth]="200"
+        [canvasHeight]="200"
+        [updateTime]="500">
+  
+      </qr-scanner>
+      
+      <a routerLink="/conductor/checkin" routerLinkActive="active">Back</a>
+    </div>
+  </div>
+  

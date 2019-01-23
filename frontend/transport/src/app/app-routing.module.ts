@@ -6,38 +6,21 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
-import { ConductorComponent } from './conductor/conductor.component';
-import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
-import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
-import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
+import { ConductorModule } from './modules/conductor/conductor.module';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    pathMatch: 'full'
+  },
   {
     path: 'lines',
     component: LinesComponent
   },
   {
     path: 'conductor',
-    component: ConductorComponent,
-    children: [
-      {
-        path: 'checkIn',
-        component: ConductorCheckInComponent
-      },
-      {
-        path: 'scan',
-        component: ConductorScanComponent
-      },
-      {
-        path: 'ticket',
-        component: ConductorTicketComponent
-      },
-      {
-        path: '',
-        redirectTo: 'checkIn',
-        pathMatch: 'full'
-      }
-    ]
+    loadChildren: './modules/conductor/conductor.module#ConductorModule'
   },
   {
     path: 'administration',
@@ -61,11 +44,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    component: HomeComponent,
-    pathMatch: 'full'
   },
   {
     path: '**',

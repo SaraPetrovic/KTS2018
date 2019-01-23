@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConductorCheckInComponent } from './conductor-check-in.component';
+import { ConductorCheckinComponent } from './conductor-checkin.component';
 
-describe('ConductorCheckInComponent', () => {
-  let component: ConductorCheckInComponent;
-  let fixture: ComponentFixture<ConductorCheckInComponent>;
+describe('ConductorCheckinComponent', () => {
+  let component: ConductorCheckinComponent;
+  let fixture: ComponentFixture<ConductorCheckinComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConductorCheckInComponent ]
+      declarations: [ ConductorCheckinComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConductorCheckInComponent);
+    fixture = TestBed.createComponent(ConductorCheckinComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
