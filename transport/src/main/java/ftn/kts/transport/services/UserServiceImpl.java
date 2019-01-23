@@ -1,19 +1,24 @@
 package ftn.kts.transport.services;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.enums.UserTypeDemographic;
+import ftn.kts.transport.exception.AuthorizationException;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.DocumentUploadException;
+import ftn.kts.transport.exception.DocumentVerificationException;
 import ftn.kts.transport.model.Role;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
@@ -21,12 +26,11 @@ import ftn.kts.transport.repositories.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-
+	public final static String  DEFAULT_IMAGE_FOLDER = "src/main/webapp/images/";
+	@Autowired
+	private JwtGeneratorService jwtService;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-	private HttpServletRequest request;
 
     public void addUser(String username, String password, String first_name, String last_name){
     	List<User> users = findAll();
@@ -88,6 +92,61 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public boolean saveDocumentImage(MultipartFile file, String token) {
+		User credentials = jwtService.validate(token.substring(7));
+		User loggedUser = this.findByUsername(credentials.getUsername());
+		if (loggedUser == null) {
+			throw new AuthorizationException("You don't have permission to upload document!");
+		}
+		
+		String fileName = "";
+		if (!file.isEmpty()) {
+            try {
+            	//String newName = UUID.randomUUID().toString() + ".jpg";
+            	fileName = loggedUser.getUsername() + "DOCUMENT.jpg";
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File(DEFAULT_IMAGE_FOLDER  + fileName )));
+                stream.write(bytes);
+                stream.close();
+                
+        		//User newUser = userService.changePicure(user, newName);
+                //return true;
+            } catch (Exception e) {
+                throw new DocumentUploadException("Something went wrong during document upload!");
+            }
+        }
+		loggedUser.setDocument(fileName);
+		loggedUser.setDocumentVerified(DocumentVerification.PENDING);
+		this.save(loggedUser);
+		return true;
+	}
+
+	@Override
+	public List<User> findUsersByDocumentVerified(DocumentVerification documentVerified) {
+		return userRepository.findByDocumentVerified(documentVerified);
+	}
+
+	@Transactional
+	@Override
+	public boolean verifyDocument(Long id) {
+		User toVerify = this.findById(id);
+		if (toVerify.getDocument() == null || toVerify.getDocumentVerified().ordinal() == 0) {
+			throw new DocumentVerificationException("User [username=" + toVerify.getUsername() + "] did not upload personal document!");
+		}
+		
+		if (toVerify.getDocumentVerified().ordinal() == 2) {
+			throw new DocumentVerificationException("Document has been rejected. Please try uploading valid personal document");
+		} else if (toVerify.getDocumentVerified().ordinal() == 3) {
+			throw new DocumentVerificationException("Document has already been approved!");
+		}
+		
+		toVerify.setDocumentVerified(DocumentVerification.APPROVED);
+		this.save(toVerify);
+		return true;
 	}
 
 }

@@ -48,10 +48,7 @@ public class LineController {
 	public ResponseEntity<Line> addLine(@RequestBody LineDTO lineDTO) {
 		Line ret = null;
 		Line l = dtoConverter.convertDTOtoLine(lineDTO);
-
 		ret = lineService.addLineMethod(l, lineDTO);
-//		ret = lineService.addLine(l);
-//		ret = lineService.addStationsToLine(ret.getId(), lineDTO);
 		
 		return new ResponseEntity<Line>(ret, HttpStatus.CREATED);
 	}

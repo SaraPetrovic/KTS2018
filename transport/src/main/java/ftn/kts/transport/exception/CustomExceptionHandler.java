@@ -27,8 +27,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
 	}
 	
+	@ExceptionHandler(DocumentUploadException.class)
+	public ResponseEntity<ExceptionResponse> handleDocumentUploadException(DocumentUploadException e) {
+		ExceptionResponse response = new ExceptionResponse(e.getMessage());
+		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
+	}
+
+	
 	@ExceptionHandler(TicketAlreadyActivatedException.class)
 	public ResponseEntity<ExceptionResponse> handleTicketAlreadyActivated(TicketAlreadyActivatedException e) {
+		ExceptionResponse response = new ExceptionResponse(e.getMessage());
+		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
+	}
+	
+	
+	@ExceptionHandler(DocumentVerificationException.class)
+	public ResponseEntity<ExceptionResponse> handleDocumentAlreadyVerified(DocumentVerificationException e) {
 		ExceptionResponse response = new ExceptionResponse(e.getMessage());
 		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
 	}
