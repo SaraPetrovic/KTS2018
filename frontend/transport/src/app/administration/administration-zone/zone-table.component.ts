@@ -11,17 +11,24 @@ import { ZoneService } from 'src/app/_services/zones/zone.service';
 export class ZoneTableComponent implements OnInit {
 
   @Input() zones: Zone[];
-  
+
   constructor(private zoneService: ZoneService) { }
 
   ngOnInit() {
   }
 
-  deleteZone(zoneId : number) : void {
-    this.zoneService.deleteZone(zoneId).subscribe();
+  deleteZone(zone : Zone) {
+    this.zoneService.deleteZone(zone.id).subscribe(
+      data=>{
+        this.zones = this.zones.filter(obj => obj !== zone);
+      },
+      error => {
+        alert(error.error.errorMessage)
+      }
+    );
   }
 
   zoneEdit(zone : Zone) {
-    
+    this.zoneService.onZoneClick(zone);
   }
 }

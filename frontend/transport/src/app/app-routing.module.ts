@@ -10,6 +10,7 @@ import { ConductorComponent } from './conductor/conductor.component';
 import { ConductorCheckInComponent } from './conductor/conductor-check-in/conductor-check-in.component';
 import { ConductorScanComponent } from './conductor/conductor-scan/conductor-scan.component';
 import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
+import { EditProfileComponent } from './profile/edit-profile.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,10 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: 'profile',
+    component: EditProfileComponent
   },
   {
     path: 'administration',

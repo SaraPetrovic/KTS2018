@@ -26,6 +26,7 @@ import { ConductorScanComponent } from './conductor/conductor-scan/conductor-sca
 import { ConductorTicketComponent } from './conductor/conductor-ticket/conductor-ticket.component';
 import { ZoneFormComponent } from './administration/administration-zone/zone-form.component';
 import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
+import { EditProfileComponent } from './profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ZoneTableComponent } from './administration/administration-zone/zone-ta
     ConductorComponent,
     ConductorCheckInComponent,
     ConductorScanComponent,
-    ConductorTicketComponent
+    ConductorTicketComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

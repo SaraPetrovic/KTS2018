@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Zone } from 'src/app/model/zone';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { retry, catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, Subject } from 'rxjs';
 import { Http } from '@angular/http';
 
 
@@ -14,34 +14,33 @@ export class ZoneService {
 
   private zoneUrl : String ="http://localhost:9003/zone";
   private headers = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
+  private subject = new Subject<any>();
   
   constructor(private http: HttpClient) { }
 
   getZones(): Observable<Zone[]>{
-    return this.http.get<Zone[]>(`${this.zoneUrl}/all`);
+    return this.http.get<Zone[]>(`${this.zoneUrl}`);
   }
 
   getZone(id: number): Observable<Zone>{
     return this.http.get<Zone>(`${this.zoneUrl}/${id}`);
   }
 
-
-
-  deleteZone(zoneId : number): Observable<any>{
-    return this.http.delete<void>(`${this.zoneUrl}/delete/${zoneId}`)
-      .pipe(
-        retry(1),
-        catchError(this.handleError)
-      );
+  deleteZone(zoneId : number): Observable<boolean>{
+    return this.http.delete<boolean>(`${this.zoneUrl}/${zoneId}`);
   }
 
   addZone(zone : Zone) : Observable<Zone>{
-    return this.http.post<Zone>(`${this.zoneUrl}/add`, zone, this.headers)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post<Zone>(`${this.zoneUrl}`, zone, this.headers);
   }
 
+  onZoneClick(zone : Zone){
+    this.subject.next(zone);
+  }
+
+  getClickedZone() : Observable<any>{
+    return this.subject.asObservable();
+  }
 
   handleError(error) {
     let errorMessage = '';

@@ -37,10 +37,10 @@ public class UserControllerIntegrationTest {
 	public void addUserTestOK() {
 		int size = userService.findAll().size();
 		
-		UserDTO dtoUser = new UserDTO("Sara", "12345678", "Sara", "Petrovic", "12345678");
+		UserDTO dtoUser = new UserDTO("Sara", "12345678", "Sara", "Petrovic");
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.postForEntity("/user/add", dtoUser, Void.class);
+				restTemplate.postForEntity("/user", dtoUser, Void.class);
 		
 		assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
 		assertEquals(size + 1, userService.findAll().size());
@@ -50,10 +50,10 @@ public class UserControllerIntegrationTest {
 	public void addUserTestExistsUsername() {
 		int size = userService.findAll().size();
 		
-		UserDTO dtoUser = new UserDTO("user3", "12345678", "Sara", "Petrovic", "12345678");
+		UserDTO dtoUser = new UserDTO("user3", "12345678", "Sara", "Petrovic");
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.postForEntity("/user/add", dtoUser, Void.class);
+				restTemplate.postForEntity("/user", dtoUser, Void.class);
 		
 		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 		assertEquals(size, userService.findAll().size());
@@ -63,24 +63,11 @@ public class UserControllerIntegrationTest {
 	public void addUserTestBadRequest() {
 		int size = userService.findAll().size();
 		
-		UserDTO dtoUser = new UserDTO("Sara", "", "Sara", "Petrovic", "");
+		UserDTO dtoUser = new UserDTO("Sara", "", "Sara", "Petrovic");
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.postForEntity("/user/add", dtoUser, Void.class);
+				restTemplate.postForEntity("/user", dtoUser, Void.class);
 		
-		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-		assertEquals(size, userService.findAll().size());
-	}
-	
-	@Test
-	public void addUserTestInvalidRepeatedPass() {
-		int size = userService.findAll().size();
-		
-		UserDTO dtoUser = new UserDTO("Sara", "123456789", "Sara", "Petrovic", "123456987");
-		
-		ResponseEntity<Void> responseEntity =
-			restTemplate.postForEntity("/user/add", dtoUser, Void.class);
-
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 		assertEquals(size, userService.findAll().size());
 	}
@@ -89,10 +76,10 @@ public class UserControllerIntegrationTest {
 	public void addUserTestInvalidPass() {
 		int size = userService.findAll().size();
 		
-		UserDTO dtoUser = new UserDTO("Sara", "12345", "Sara", "Petrovic", "12345");
+		UserDTO dtoUser = new UserDTO("Sara", "12345", "Sara", "Petrovic");
 		
 		ResponseEntity<Void> responseEntity =
-				restTemplate.postForEntity("/user/add", dtoUser, Void.class);
+				restTemplate.postForEntity("/user", dtoUser, Void.class);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 		assertEquals(size, userService.findAll().size());
@@ -103,8 +90,8 @@ public class UserControllerIntegrationTest {
 	public void updateTestNotFoundUser() {
 		
 		ResponseEntity<UserDTO> responseEntity =
-	            restTemplate.exchange("/user/update", HttpMethod.PUT, 
-	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(13), "Sara", "12345", "Sara", "Petrovic", "12345")),
+	            restTemplate.exchange("/user/" + Long.valueOf(13), HttpMethod.PUT, 
+	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(13), "Sara", "12345", "Sara", "Petrovic")),
 	            		UserDTO.class);
 		
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -114,10 +101,13 @@ public class UserControllerIntegrationTest {
 	public void updateTestOK() {
 		
 		ResponseEntity<UserDTO> responseEntity =
-	            restTemplate.exchange("/user/update", HttpMethod.PUT, 
-	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(2), "SaraPetrovic", "123456789", "Sara", "Petrovic", "123456789")),
+	            restTemplate.exchange("/user/" + Long.valueOf(2), HttpMethod.PUT, 
+	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(2), "SaraPetrovic", "123456789", "Sara", "Petrovic")),
 	            		UserDTO.class);
 		
+		UserDTO rez = responseEntity.getBody();
+		
+		assertEquals("Sara", rez.getFirstName());
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}
 	

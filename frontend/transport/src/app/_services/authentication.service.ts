@@ -31,7 +31,7 @@ export class AuthenticationService {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
       }
-
+      console.log(user);
       return user;
     }));
   }
@@ -39,5 +39,10 @@ export class AuthenticationService {
   logout(){
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  editProfile(user: User): Observable<User>{
+    console.log(this.currentUserValue);
+    return this.http.put<User>('http://localhost:9003/user', this.currentUserValue);
   }
 }
