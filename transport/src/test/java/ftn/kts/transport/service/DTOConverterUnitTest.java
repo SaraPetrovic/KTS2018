@@ -231,6 +231,20 @@ public class DTOConverterUnitTest {
 	
 	@Transactional
 	@Test
+	public void convertToTicket_LineTicket_Monthly_PASS_Test() {
+		ticketDTO.setLineId(1L);
+		ticketDTO.setTicketTemporal(1);
+		LineTicket ret = (LineTicket) converter.convertDTOtoTicket(ticketDTO);
+		assertNotNull(ret);
+		assertEquals(ticketDTO.getLineId(), ret.getLine().getId());
+		assertTrue(ret.isActive());
+		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
+		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
+	}
+	
+	
+	@Transactional
+	@Test
 	public void convertToTicket_RouteTicket_PASS_Test() {
 		ticketDTO.setRouteId(1L);
 		RouteTicket ret = (RouteTicket) converter.convertDTOtoTicket(ticketDTO);
