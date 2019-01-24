@@ -5,6 +5,7 @@ import { ZoneTableComponent } from './zone-table.component';
 import { Zone } from 'src/app/model/zone';
 import { ZoneService } from 'src/app/_services/zones/zone.service';
 import { Subscription } from 'rxjs';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-zone-form',
@@ -19,6 +20,7 @@ export class ZoneFormComponent implements OnInit {
     @Input() zones : Zone[];
     private disabledOption = "";
     private zoneClickedSubscription : Subscription;
+    private formLabel: String = "Add zone";
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }
 
@@ -29,7 +31,16 @@ export class ZoneFormComponent implements OnInit {
         });
 
         this.zoneClickedSubscription = this.zoneService.getClickedZone().subscribe(
-            zone => {this.zone = zone;}
+            zone => {
+                this.zone = zone;
+                this.formLabel = "Edit Zone";
+                console.log(this.formLabel);
+                this.zones.forEach(element => {
+                    if(element.id === zone.subZoneId){
+                        this.disabledOption = zone.name;
+                    }
+                }); 
+            }
         );
     }
 
@@ -50,14 +61,31 @@ export class ZoneFormComponent implements OnInit {
     }
 
     addZone(): void {
-        this.zoneService.addZone(this.zone).subscribe(
-            (zone) => {
-                this.zones.push(zone);
-            },
-            error => {
-                alert(error.error.errorMessage)
-            });
+        if(this.formLabel === "Add Zone"){
+            this.zoneService.addZone(this.zone).subscribe(
+                (zone) => {
+                    this.zones.push(zone);
+                },
+                error => {
+                    alert(error.error.errorMessage)
+                }
+            );
+        }else if(this.formLabel === "Edit Zone"){
+            this.zoneService.editZone(this.zone).subscribe(
+                (zone) => {
+                    this.zones.forEach(function (value){
+                        if(zone.id === value.id){
+                            value = zone;
+                        }
+                    });
+                }
+            );
+        }
     }
-
+ 
+    clearForm(){
+        this.formLabel = "Add Zone";
+        this.disabledOption = "";
+    }
     
 }

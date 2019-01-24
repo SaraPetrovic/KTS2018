@@ -16,6 +16,7 @@ export class EditProfileComponent implements OnInit {
   submitError = false;
   private loggedUserSubscription : Subscription;
   private repeatedPass: String;
+  passwordError = false;
 
   constructor(private formBuilder: FormBuilder,
               private userService: AuthenticationService) { }
@@ -25,8 +26,8 @@ export class EditProfileComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required, MinLengthValidator.length > 8],
-      repeatedPassword: ['', Validators.required, MinLengthValidator.length > 8]
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      repeatedPassword: ['', [Validators.required, Validators.minLength(8)]]
     });
 
     this.user = this.userService.currentUserValue;
@@ -39,7 +40,9 @@ export class EditProfileComponent implements OnInit {
 
   onSubmit(){
     this.submitError = true;
+  
     if(this.repeatedPass !== this.user.password){
+      this.passwordError = true;
       return;
     }
     if(this.editProfileForm.invalid){

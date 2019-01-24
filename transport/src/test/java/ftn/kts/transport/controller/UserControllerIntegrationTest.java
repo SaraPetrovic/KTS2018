@@ -90,7 +90,7 @@ public class UserControllerIntegrationTest {
 	public void updateTestNotFoundUser() {
 		
 		ResponseEntity<UserDTO> responseEntity =
-	            restTemplate.exchange("/user/" + Long.valueOf(13), HttpMethod.PUT, 
+	            restTemplate.exchange("/user", HttpMethod.PUT, 
 	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(13), "Sara", "12345", "Sara", "Petrovic")),
 	            		UserDTO.class);
 		
@@ -101,7 +101,7 @@ public class UserControllerIntegrationTest {
 	public void updateTestOK() {
 		
 		ResponseEntity<UserDTO> responseEntity =
-	            restTemplate.exchange("/user/" + Long.valueOf(2), HttpMethod.PUT, 
+	            restTemplate.exchange("/user", HttpMethod.PUT, 
 	            		new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(2), "SaraPetrovic", "123456789", "Sara", "Petrovic")),
 	            		UserDTO.class);
 		

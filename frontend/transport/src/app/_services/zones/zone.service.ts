@@ -26,19 +26,23 @@ export class ZoneService {
     return this.http.get<Zone>(`${this.zoneUrl}/${id}`);
   }
 
-  deleteZone(zoneId : number): Observable<boolean>{
+  deleteZone(zoneId: number): Observable<boolean>{
     return this.http.delete<boolean>(`${this.zoneUrl}/${zoneId}`);
   }
 
-  addZone(zone : Zone) : Observable<Zone>{
+  addZone(zone: Zone): Observable<Zone>{
     return this.http.post<Zone>(`${this.zoneUrl}`, zone, this.headers);
   }
 
-  onZoneClick(zone : Zone){
+  editZone(zone: Zone): Observable<Zone>{
+    return this.http.post<Zone>(`${this.zoneUrl}/${zone.id}`, zone, this.headers);
+  }
+
+  onZoneClick(zone: Zone){
     this.subject.next(zone);
   }
 
-  getClickedZone() : Observable<any>{
+  getClickedZone(): Observable<any>{
     return this.subject.asObservable();
   }
 
