@@ -28,7 +28,7 @@ public class ZoneServiceImpl implements ZoneService{
 	public Zone addZone(Zone zone) {
 //		List<Zone> zones = findAll();
 
-		if(zoneRepository.findByName(zone.getName()) != null) {
+		if((zoneRepository.findByName(zone.getName())) != null) {
 			throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
 		}
 		Zone rez = zoneRepository.save(zone);

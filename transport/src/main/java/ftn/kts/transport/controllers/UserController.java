@@ -73,12 +73,6 @@ public class UserController {
         }
     }
     
-    @GetMapping(path="/tickets/{id}", produces="application/json")
-    public ResponseEntity<Set<Ticket>> getTickets(@PathVariable long id){
-		Set<Ticket> tickets = userService.getTickets(id);
-		return new ResponseEntity<>(tickets, HttpStatus.OK);
-    }
-    
     @PutMapping(consumes = {"application/json"}, produces="application/json")
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @CrossOrigin( origins = "http://localhost:4200")
