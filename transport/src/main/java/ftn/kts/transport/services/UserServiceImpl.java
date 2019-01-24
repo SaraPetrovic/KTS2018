@@ -96,11 +96,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean saveDocumentImage(MultipartFile file, String token) {
+		// throws AuthorizationException ako ne moze da otpakuje token dobro
 		User credentials = jwtService.validate(token.substring(7));
+		// throws DAOException if not found!
 		User loggedUser = this.findByUsername(credentials.getUsername());
-		if (loggedUser == null) {
-			throw new AuthorizationException("You don't have permission to upload document!");
-		}
+//		if (loggedUser == null) {
+//			throw new AuthorizationException("You don't have permission to upload document!");
+//		}
 		
 		String fileName = "";
 		if (!file.isEmpty()) {
@@ -113,8 +115,7 @@ public class UserServiceImpl implements UserService {
                 stream.write(bytes);
                 stream.close();
                 
-        		//User newUser = userService.changePicure(user, newName);
-                //return true;
+        		
             } catch (Exception e) {
                 throw new DocumentUploadException("Something went wrong during document upload!");
             }

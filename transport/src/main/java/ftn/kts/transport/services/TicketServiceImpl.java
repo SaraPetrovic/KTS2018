@@ -40,15 +40,15 @@ public class TicketServiceImpl implements TicketService{
 		if (ticket.getTicketTemporal().ordinal() != 0 && ticket.getTicketTemporal().ordinal() != 3) {
 			if (logged.getDocumentVerified().ordinal() == 0) {
 				throw new InvalidInputDataException("User's personal document is not uploaded! Only"
-						+ " One-hour ticket can be purchased if User hasn't uploaded personal document!", 
+						+ " One-hour/One-time ticket can be purchased if User hasn't uploaded personal document!", 
 						HttpStatus.FORBIDDEN);
 			} else if (logged.getDocumentVerified().ordinal() == 1) {
 				throw new InvalidInputDataException("User's personal document has not been verified yet! Only"
-						+ " One-hour ticket can be purchased if personal document is not verified!", 
+						+ " One-hour/One-time ticket can be purchased if personal document is not verified!", 
 						HttpStatus.FORBIDDEN);
 			} else if (logged.getDocumentVerified().ordinal() == 2) {
 				throw new InvalidInputDataException("User's personal document has been rejected! Try"
-						+ " uploading document again! One-hour tickets can be purchased without personal document", 
+						+ " uploading document again! One-hour/One-time tickets can be purchased without personal document", 
 						HttpStatus.FORBIDDEN);
 			} 
 		}

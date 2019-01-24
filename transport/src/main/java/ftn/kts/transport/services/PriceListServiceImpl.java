@@ -95,7 +95,6 @@ public class PriceListServiceImpl implements PriceListService {
 			zoneId = ((ZoneTicket) ticket).getZone().getId();
 			finalPrice = oneTimePrices.get(zoneId);
 			if (ticketType.ordinal() == 0) {
-				// ostaje ista - nepotreban IF
 				finalPrice *= oneHourCoeff;
 			} else if (ticketType.ordinal() == 1) {
 				finalPrice *= monthlyCoeff;
@@ -106,7 +105,7 @@ public class PriceListServiceImpl implements PriceListService {
 			zoneId = lineService.getZoneForLine(((LineTicket) ticket).getLine()).getId();
 			finalPrice = oneTimePrices.get(zoneId);
 			if (ticketType.ordinal() == 0) {
-				// ovo ni ne moze - ne postoji ONE_TIME za LINE, samo za zonu!!!
+				// ovo ni ne moze - ne postoji ONE_HOUR za LINE, samo za zonu!!!
 			} else if (ticketType.ordinal() == 1) {
 				finalPrice *= monthlyCoeff * lineDisc;
 			} else if (ticketType.ordinal() == 2) {
