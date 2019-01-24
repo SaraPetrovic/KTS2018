@@ -10,6 +10,7 @@ public class LineDTO {
 	private HashMap<Integer, Long> stations;
 	private int vehicleType;
 	private Set<String> streetPath;
+	private int duration;
 	
 	public LineDTO() {
 		this.stations = new HashMap<Integer, Long>();
@@ -42,6 +43,15 @@ public class LineDTO {
 		this.stations = stations;
 		this.vehicleType = vehicleType;
 		this.streetPath = streetPath;
+	}
+
+	
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 	public String getName() {

@@ -48,12 +48,16 @@ public class DTOConverterImpl implements DTOConverter{
 		if (vehicle != 0 && vehicle != 1 && vehicle != 2) {
 			throw new InvalidInputDataException("VehicleType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
 		}
+		if (lineDTO.getDuration() < 0) {
+			throw new InvalidInputDataException("Duraion has to be above 0!");
+		}
 		
 		// =========== CONVERT =============
 		Line l = new Line();
 		l.setName(lineDTO.getName());
 		l.setTransportType(VehicleType.values()[lineDTO.getVehicleType()]);
 		l.setStreetPath(lineDTO.getStreetPath());
+		l.setDuration(lineDTO.getDuration());
 		return l;
 	}
 	

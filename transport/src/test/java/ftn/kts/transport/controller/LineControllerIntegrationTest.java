@@ -105,17 +105,15 @@ public class LineControllerIntegrationTest {
 	@Test
 	public void addLine_InvalidStations_Test() {
 		HashMap<Integer, Long> stations = new HashMap<Integer, Long>();
-		stations.put(2, DB_STATIONID_INVALID);
+		stations.put(1, DB_STATIONID_INVALID);
 		LineDTO dto = new LineDTO("Nova linija", stations, DB_TRANSPORT_TYPE);
 		
 		int countBefore = lineService.getAllLines().size();
 		ResponseEntity<Line> response = restTemplate.postForEntity("/line", dto, Line.class);
 		assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 		int countAfter = lineService.getAllLines().size();
-		//assertEquals(countBefore, countAfter);
-		Line found = lineService.findByName("Nova linija");
-		assertEquals("Nova linija", found.getName());
-		// WTF? Ovde dodaje liniju i ako treba da pukne jer prosledjujem STATION_ID_INVALID........
+		assertEquals(countBefore, countAfter);
+		
 	}
 	
 	
