@@ -25,6 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
@@ -77,6 +78,7 @@ public class ZoneServiceUnitTest {
 	public void addZoneTestOK1() {
 		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(null);
 		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
 		
 		Zone rez = zoneService.save(zone2);
@@ -91,17 +93,23 @@ public class ZoneServiceUnitTest {
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
 		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska 2", null, zone2, true);
 		Zone zone4 = new Zone(Long.valueOf(4), "Prigradska 3", null, zone2, true);
-//		List<Zone> zones = new ArrayList<Zone>();
-//		zones.add(zone1);
-//		zones.add(zone2);
-//		zones.add(zone3);
-//		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+
+		Mockito.when(zoneRepository.findByName(zone4.getName())).thenReturn(null);
 		Mockito.when(zoneRepository.save(zone4)).thenReturn(zone4);
 		
 		Zone rez = zoneService.addZone(zone4);
 		
 		assertNotNull(rez);
 		assertEquals(zone4, rez);
+	}
+	
+	@Test(expected=InvalidInputDataException.class)
+	public void addZoneTestConflict() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(zone2);
+
+		zoneService.addZone(zone2);
 	}
 	
 	@Test

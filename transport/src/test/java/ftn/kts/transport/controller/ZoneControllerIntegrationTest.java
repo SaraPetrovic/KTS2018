@@ -47,6 +47,25 @@ public class ZoneControllerIntegrationTest {
 	private StationService stationService;
 	
 	@Test
+	public void getZoneTestOK() {
+		ResponseEntity<ZoneDTO> responseEntity = 
+				restTemplate.getForEntity("/zone/" + Long.valueOf(2), ZoneDTO.class);
+	
+		ZoneDTO rez = responseEntity.getBody();
+		
+		assertNotNull(rez);
+		assertEquals("Zona II", rez.getName());
+	}
+	
+	@Test
+	public void getZoneTestNotFound() {
+		ResponseEntity<ZoneDTO> responseEntity = 
+				restTemplate.getForEntity("/zone/" + Long.valueOf(52), ZoneDTO.class);
+	
+		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+	}
+	
+	@Test
 	public void getAllTest() {
 		ResponseEntity<ZoneDTO[]> responseEntity = 
 				restTemplate.getForEntity("/zone", ZoneDTO[].class);
@@ -110,6 +129,17 @@ public class ZoneControllerIntegrationTest {
 	
 	@Test
 	public void addZoneTestZoneBadRequest() {
+		
+		ZoneDTO entity= new ZoneDTO("Zona II", null, Long.valueOf(1));
+		
+		ResponseEntity<ZoneDTO> responseEntity = 
+				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
+		
+		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void addZoneTestConflict() {
 		
 		ZoneDTO entity= new ZoneDTO("", null, Long.valueOf(2));
 		
