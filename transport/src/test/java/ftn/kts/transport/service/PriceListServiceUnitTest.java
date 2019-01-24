@@ -233,6 +233,29 @@ public class PriceListServiceUnitTest {
 	
 	@Transactional
 	@Test
+	public void calculatePriceLineTicket_Monthly_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		lineTicket.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
+		double calculatedPrice = spyService.calculateTicketPrice(lineTicket);
+		// user je obican, ticket type = MONTHLY, lineTicket disc = 0.5 --> nova cena
+		assertEquals(100.00*20*0.5, calculatedPrice, 0.001);
+	}
+	
+	@Transactional
+	@Test
+	public void calculatePriceLineTicket_Yearly_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		lineTicket.setTicketTemporal(TicketTypeTemporal.YEARLY_PASS);
+		double calculatedPrice = spyService.calculateTicketPrice(lineTicket);
+		// user je obican, ticket type = MONTHLY, lineTicket disc = 0.5 --> nova cena
+		assertEquals(100.00*200*0.5, calculatedPrice, 0.001);
+	}
+
+	
+	@Transactional
+	@Test
 	public void calculatePriceZoneTicket_Yearly_PASS_Test() {
 		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
 		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
