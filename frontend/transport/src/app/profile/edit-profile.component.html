@@ -51,27 +51,30 @@
                       [ngClass]="{'is-invalid': submitError && f.password.errors}" required/>
                   <div *ngIf="submitError && f.password.errors" class="invalid-feedback">
                       <div *ngIf="f.password.errors.required">Password is required</div>
+                      <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters long.</div>
                   </div>
               </div>
           </div>
       </div>
       <div class="row">
-          <div class="col-6 col-md-4">
-              <div class="form-group">
-                  <input type="password" placeholder="Repeated Password" class="form-control" formControlName="repeatedPassword" 
-                        [(ngModel)]="repeatedPass"
-                        [ngClass]="{'is-invalid': submitError && f.repeatedPassword.errors}" required/>
-                  <div *ngIf="submitError && f.repeatedPassword.errors" class="invalid-feedback">
-                      <div *ngIf="f.repeatedPassword.errors.required">Repeated Password is required</div>
-                  </div>
-              </div>
-          </div>
+            <div class="col-6 col-md-4">
+                <div class="form-group">
+                    <input type="password" placeholder="Repeated Password" class="form-control" formControlName="repeatedPassword" 
+                        [(ngModel)]="repeatedPass" [ngClass]="{'is-invalid': submitError && f.repeatedPassword.errors}" required/>
+                    <div *ngIf="submitError && f.repeatedPassword.errors" class="invalid-feedback">
+                        <div *ngIf="f.repeatedPassword.errors.required">Repeated Password is required</div>
+                        <div *ngIf="f.repeatedPassword.errors.minlength">Password must be at least 8 characters long</div>
+                    </div>
+                    <div *ngIf="passwordError">
+                        <label style="color: red">Repeated password is wrong</label>
+                    </div>
+                </div>
+            </div>
       </div>
       <div class="row">
           <div class="col-6 col-md-4">
               <div class="form-group" style="margin-left: 77%">
-                  <button class="btn btn-primary" type="submit"
-                          [disabled]="!editProfileForm.valid" (click)="editProfile()">
+                  <button class="btn btn-primary" type="submit" (click)="editProfile()">
                       <span class="fa fa-save"></span>&nbsp;<span>Save</span>
                   </button>
               </div>
