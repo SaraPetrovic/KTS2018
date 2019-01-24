@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -28,6 +29,7 @@ import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.exception.TicketAlreadyActivatedException;
 import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.Role;
 import ftn.kts.transport.model.Ticket;
@@ -121,6 +123,13 @@ public class TicketServiceUnitTest {
 		assertTrue(ret.isActive());
 		assertNotNull(ret.getStartTime());
 		assertNotNull(ret.getEndTime());
+	}
+	
+	@Transactional
+	@Test(expected = TicketAlreadyActivatedException.class)
+	public void activateTicket_AlreadyActivated_Test() {
+		this.zoneTicket.setStartTime(new Date());
+		ticketService.activateTicket(zoneTicket);
 	}
 	
 	@Test
