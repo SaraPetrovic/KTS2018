@@ -9,11 +9,12 @@ import { AdministrationZoneComponent } from './administration/administration-zon
 import { EditProfileComponent } from './profile/edit-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: RegistrationComponent,
     pathMatch: 'full'
   },
   {
