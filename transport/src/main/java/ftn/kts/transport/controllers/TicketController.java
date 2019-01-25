@@ -43,10 +43,11 @@ public class TicketController {
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping(path = "/activate/{id}")
-	public ResponseEntity<Ticket> activateTicket(@PathVariable Long id){
+	@CrossOrigin( origins = "http://localhost:4200")
+	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
-		ticketService.activateTicket(ticket);
-		return new ResponseEntity<Ticket>(HttpStatus.OK);
+		Ticket rez = ticketService.activateTicket(ticket);
+		return new ResponseEntity<TicketDTO>(new TicketDTO(rez), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -87,6 +88,7 @@ public class TicketController {
 
     @GetMapping(path = "/me")
     @Produces("application/json")
+    @CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<TicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token){
 
 	    try {

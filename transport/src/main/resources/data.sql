@@ -194,7 +194,7 @@ insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 
 
 INSERT INTO users(id, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (1, 0, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
 INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0) 
-insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, null, 'Sara')
+insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
 INSERT INTO users(id, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (4, 0, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)
 
 insert into zones_stations(zone_id, stations_id) values (1,1)
@@ -212,3 +212,5 @@ insert into saturday_schedule(route_schedule_id, saturday) values (1, '11:40:00'
 insert into saturday_schedule(route_schedule_id, saturday) values (1, '16:40:00')
 insert into sunday_schedule(route_schedule_id, sunday) values (1, '10:00:00')
 
+insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (1, false, null, null, 100, 'zone_ticket', 0, 0, 3, null, 1)
+insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (2, false, null, null, 60, 'zone_ticket', 3, 0, 3, null, 2)

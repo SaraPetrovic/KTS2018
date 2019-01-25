@@ -123,7 +123,7 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
-	public Set<Station> checkStations(Set<StationDTO> dtoStations){
+	/*public Set<Station> checkStations(Set<StationDTO> dtoStations){
 		Set<Station> stations = new HashSet<Station>();
 		
 		for(StationDTO dtoStation : dtoStations) {
@@ -132,6 +132,6 @@ public class ZoneController {
 		}
 		return stations;
 		
-	}
+	}*/
 	
 }

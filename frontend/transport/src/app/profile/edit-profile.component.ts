@@ -52,7 +52,6 @@ export class EditProfileComponent implements OnInit {
   }
 
   editProfile(){
-    this.userService.editProfile(this.user).subscribe();
-    console.log("TS");
+    this.userService.editProfile(this.user);
   }
 }

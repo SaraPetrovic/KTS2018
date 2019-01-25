@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { User } from '../model/user';
 import { map } from 'rxjs/operators';
+import { Ticket } from '../model/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,13 @@ export class AuthenticationService {
   editProfile(user: User): Observable<User>{
     console.log(this.currentUserValue);
     return this.http.put<User>('http://localhost:9003/user', this.currentUserValue, this.headers);
+  }
+
+  getTickets(): Observable<Ticket[]>{
+    return this.http.get<Ticket[]>('http://localhost:9003/rest/ticket/me', this.headers);
+  }
+
+  activateTicket(ticketId: number): Observable<Ticket>{
+    return this.http.put<Ticket>('http://localhost:9003/rest/ticket/activate/' + ticketId, this.headers);
   }
 }
