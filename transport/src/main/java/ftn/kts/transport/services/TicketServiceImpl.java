@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.enums.TicketActivationType;
+import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.TicketAlreadyActivatedException;
+import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
@@ -68,7 +71,7 @@ public class TicketServiceImpl implements TicketService{
 		if (ticket.getStartTime() != null) {
 			throw new TicketAlreadyActivatedException("Ticket had been already activated!");
 		}
-		ticket.setActive(true);
+		ticket.setActive(TicketActivationType.ACTIVE);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date currentDate = new Date();
 		Date endDate = Date.from(currentDate.toInstant().plus(Duration.ofHours(1)));
@@ -81,7 +84,8 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Ticket findById(Long id) {
 		Optional<Ticket> ticket = ticketRepository.findById(id);
-		return ticket.orElseThrow(() -> new DAOException("Ticket [id=" + id + "] not found!", HttpStatus.NOT_FOUND));
+		Ticket t = ticket.orElseThrow(() -> new DAOException("Ticket [id=" + id + "] not found!", HttpStatus.NOT_FOUND));	
+		return checkTicket(t);
 	}
 
 	@Override
@@ -94,6 +98,31 @@ public class TicketServiceImpl implements TicketService{
 
 	@Override
     public List<Ticket> getTickets(User user){
-	    return this.ticketRepository.findByUser(user);
+		List<Ticket> tickets = this.ticketRepository.findByUser(user);
+		
+		for(Ticket t : tickets) {
+			t = checkTicket(t);
+		}
+		
+		return tickets;
+	}
+	
+	public Ticket checkTicket(Ticket t) {
+		Date currentTime = new Date();
+		if(t.getTicketTemporal().equals(TicketTypeTemporal.ONE_HOUR_PASS)) {
+			if(t.getEndTime() != null && t.getEndTime().before(currentTime)) {
+				t.setActive(TicketActivationType.EXPIRED);
+				ticketRepository.save(t);
+			}
+		}
+		if(t.getTicketTemporal().equals(TicketTypeTemporal.ONE_TIME_PASS)) {
+			int duration = ((RouteTicket) t).getRoute().getLine().getDuration();
+			Date endDateOfRoute = Date.from(((RouteTicket) t).getRoute().getDate().toInstant().plus(Duration.ofMinutes(duration)));
+			if(endDateOfRoute.before(currentTime)) {
+				t.setActive(TicketActivationType.EXPIRED);
+				ticketRepository.save(t);
+			}
+		}
+		return t;
 	}
 }

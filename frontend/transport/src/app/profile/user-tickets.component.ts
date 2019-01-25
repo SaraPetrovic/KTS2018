@@ -10,6 +10,7 @@ import { Ticket } from '../model/ticket';
 export class UserTicketsComponent implements OnInit {
 
   private tickets: Ticket[];
+  private currentDate: String;
   constructor(private userService: AuthenticationService) { }
 
   ngOnInit() {
@@ -17,6 +18,10 @@ export class UserTicketsComponent implements OnInit {
       (tickets) => {
         this.tickets = tickets;
         console.log(tickets);
+        this.tickets.forEach(element => {
+          console.log(element.startDate);
+          console.log(element.endTime);
+          });
       });
   }
 

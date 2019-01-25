@@ -1,17 +1,20 @@
 package ftn.kts.transport.dtos;
 
+import ftn.kts.transport.enums.TicketActivationType;
+import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Enumeration;
 
 public class TicketDTO {
 
 	private Long id;
-	private int transportType;
-	private int ticketTemporal;
+	private VehicleType transportType;
+	private TicketTypeTemporal ticketTemporal;
 	private Long routeId;
 	private Long zoneId;
 	private Long lineId;
@@ -19,15 +22,15 @@ public class TicketDTO {
 	private Date startTime;
 	private Date endTime;
 	private String qrCode;
-	private boolean active;
+	private TicketActivationType active;
 	private double price;
 	
 	public TicketDTO() {
 		
 	}
 
-	public TicketDTO(Long id, int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user,
-			Date startDate, Date endTime, String qrCode, boolean active, double price) {
+	public TicketDTO(Long id, VehicleType transportType, TicketTypeTemporal ticketTemporal, Long routeId, Long zoneId, Long lineId, User user,
+			Date startDate, Date endTime, String qrCode, TicketActivationType active, double price) {
 		super();
 		this.id = id;
 		this.transportType = transportType;
@@ -44,7 +47,7 @@ public class TicketDTO {
 	}
 
 
-	public TicketDTO(int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
+	public TicketDTO(VehicleType transportType, TicketTypeTemporal ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
 		this.transportType = transportType;
 		this.ticketTemporal = ticketTemporal;
 		this.routeId = routeId;
@@ -63,7 +66,7 @@ public class TicketDTO {
 		this.routeId = routeId;
 	}
 
-	public TicketDTO(int transportType, int ticketTemporal, Long zoneId, Long lineId) {
+	public TicketDTO(VehicleType transportType, TicketTypeTemporal ticketTemporal, Long zoneId, Long lineId) {
 		super();
 		this.transportType = transportType;
 		this.ticketTemporal = ticketTemporal;
@@ -76,11 +79,12 @@ public class TicketDTO {
 		this.user = ticket.getUser();
 		this.startTime = ticket.getStartTime();
 		this.endTime = ticket.getEndTime();
-		this.transportType = ticket.getTransportType().ordinal();
-		this.ticketTemporal = ticket.getTicketTemporal().ordinal();
+		this.transportType = ticket.getTransportType();
+		this.ticketTemporal = ticket.getTicketTemporal();
 		this.qrCode = qrCode;
 		this.price = ticket.getPrice();
-		this.active = ticket.isActive();
+		this.active = ticket.getActive();
+		System.out.println("START DATE" + ticket.getStartTime() + " END DATE: " + ticket.getEndTime());
 	}
 
 	public TicketDTO(Ticket ticket) {
@@ -97,19 +101,19 @@ public class TicketDTO {
 		this.id = id;
 	}
 
-	public int getTransportType() {
+	public VehicleType getTransportType() {
 		return transportType;
 	}
 
-	public void setTransportType(int transportType) {
+	public void setTransportType(VehicleType transportType) {
 		this.transportType = transportType;
 	}
 
-	public int getTicketTemporal() {
+	public TicketTypeTemporal getTicketTemporal() {
 		return ticketTemporal;
 	}
 
-	public void setTicketTemporal(int ticketTemporal) {
+	public void setTicketTemporal(TicketTypeTemporal ticketTemporal) {
 		this.ticketTemporal = ticketTemporal;
 	}
 
@@ -161,11 +165,11 @@ public class TicketDTO {
 		this.startTime = startDate;
 	}
 
-	public boolean isActive() {
+	public TicketActivationType getActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(TicketActivationType active) {
 		this.active = active;
 	}
 

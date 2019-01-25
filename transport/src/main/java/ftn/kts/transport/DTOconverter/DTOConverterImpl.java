@@ -13,6 +13,7 @@ import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.dtos.PriceListDTO;
 import ftn.kts.transport.dtos.RouteScheduleDTO;
 import ftn.kts.transport.dtos.TicketDTO;
+import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
@@ -77,8 +78,8 @@ public class DTOConverterImpl implements DTOConverter{
 		
 		// ========= CHECK DATA =============
 		
-		int ticketTemporal = ticketDTO.getTicketTemporal();
-		int transportType = ticketDTO.getTransportType();
+		int ticketTemporal = ticketDTO.getTicketTemporal().ordinal();
+		int transportType = ticketDTO.getTransportType().ordinal();
 		
 		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
 			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
@@ -133,13 +134,13 @@ public class DTOConverterImpl implements DTOConverter{
 			ticket.setLine(l);
 			// ako je one_time -> potrebna je aktivacija
 			if (ticketTemporal == 0) {
-				ticket.setActive(false);	
+				ticket.setActive(TicketActivationType.NOT_ACTIVE);	
 				// ako je monthly/yearly -> aktiviraj odmah
 			} else {
-				ticket.setActive(true);
+				ticket.setActive(TicketActivationType.ACTIVE);
 			}
-			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
-			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
+			ticket.setTicketTemporal(ticketDTO.getTicketTemporal());
+			ticket.setTransportType(ticketDTO.getTransportType());
 			return ticket;
 			
 			
@@ -156,12 +157,12 @@ public class DTOConverterImpl implements DTOConverter{
 			ticket.setZone(z);
 			// ista prica
 			if (ticketTemporal == 0) {
-				ticket.setActive(false);	
+				ticket.setActive(TicketActivationType.NOT_ACTIVE);	
 			} else {
-				ticket.setActive(true);
+				ticket.setActive(TicketActivationType.ACTIVE);
 			}
-			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
-			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
+			ticket.setTicketTemporal(ticketDTO.getTicketTemporal());
+			ticket.setTransportType(ticketDTO.getTransportType());
 			return ticket;
 		
 		} else if(ticketDTO.getRouteId() != null){
@@ -170,9 +171,9 @@ public class DTOConverterImpl implements DTOConverter{
 
             Route route = this.routeService.getRoute(ticketDTO.getRouteId());
             ticket.setRoute(route);
-            ticket.setActive(true);
+            ticket.setActive(TicketActivationType.ACTIVE);
             ticket.setTicketTemporal(TicketTypeTemporal.ONE_TIME_PASS);
-            ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
+            ticket.setTransportType(ticketDTO.getTransportType());
 
             return ticket;
 

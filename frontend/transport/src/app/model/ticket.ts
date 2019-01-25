@@ -4,9 +4,9 @@ export class Ticket{
     id: number;
     price: number;
     user: User;
-    active: boolean;
-    transportType: number;
-    ticketTemporal: number;
-    startTime: Date;
+    transportType: String;
+    ticketTemporal: String;
+    startDate: Date;
     endTime: Date;
+    active: String;
 }
