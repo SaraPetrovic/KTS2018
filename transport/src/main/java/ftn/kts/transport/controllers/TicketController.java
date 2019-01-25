@@ -41,13 +41,13 @@ public class TicketController {
 	@Autowired
 	private DTOConverter dtoConverter;
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_CLIENT')")
 	@PutMapping(path = "/activate/{id}")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		Ticket rez = ticketService.activateTicket(ticket);
-		return new ResponseEntity<TicketDTO>(new TicketDTO(rez), HttpStatus.OK);
+		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")

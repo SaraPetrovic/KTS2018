@@ -212,5 +212,5 @@ insert into saturday_schedule(route_schedule_id, saturday) values (1, '11:40:00'
 insert into saturday_schedule(route_schedule_id, saturday) values (1, '16:40:00')
 insert into sunday_schedule(route_schedule_id, sunday) values (1, '10:00:00')
 
-insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (1, false, null, null, 100, 'zone_ticket', 0, 0, 3, null, 1)
-insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (2, false, null, null, 60, 'zone_ticket', 3, 0, 3, null, 2)
+insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (1, 1, null, null, 100, 'zone_ticket', 0, 0, 3, null, 1)
+insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (2, 1, null, null, 60, 'zone_ticket', 3, 0, 3, null, 2)

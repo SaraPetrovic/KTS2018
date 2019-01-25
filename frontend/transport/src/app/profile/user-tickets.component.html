@@ -3,17 +3,17 @@
     <div class="card" style="margin-top: 1%">
       <div class="card-header">
         Ticket type: {{ticket.ticketTemporal}}
+        {{ticket.startTime}}
         {{ticket.endTime}}
       </div>
       <div class="card-body">
-        <p class="card-text" *ngIf="ticket.active === true" style="color: red">Ticket is valid</p>
-        <p class="card-text" *ngIf="ticket.active === false" style="color: red">Ticket is not valid</p>
+        <p class="card-text">Active: {{ticket.active}}</p>
         <div class="row">
           <div class="col-6"><p class="card-text">Start time: {{ticket.startTime}}</p></div>
           <div class="col-6"><p class="card-text">End time: {{ticket.endTime}}</p></div>
         </div>
         <p class="card-text">Transport type: {{ticket.transportType}}</p>
-        <button *ngIf="ticket.ticketTemporal === 0 && ticket.active === false && ticket.endTime === null" class="btn btn-primary" 
+        <button *ngIf="ticket.ticketTemporal === 'ONE_HOUR_PASS' && ticket.active === 'NOT_ACTIVE' && ticket.endTime === null" class="btn btn-primary" 
                 (click)="activateTicket(ticket.id)">Activate ticket</button>
       </div>
     </div>

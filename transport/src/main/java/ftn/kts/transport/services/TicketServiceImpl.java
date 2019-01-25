@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.TicketAlreadyActivatedException;
@@ -68,7 +69,7 @@ public class TicketServiceImpl implements TicketService{
 		if (ticket.getStartTime() != null) {
 			throw new TicketAlreadyActivatedException("Ticket had been already activated!");
 		}
-		ticket.setActive(true);
+		ticket.setActive(TicketActivationType.ACTIVE);
 		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date currentDate = new Date();
 		Date endDate = Date.from(currentDate.toInstant().plus(Duration.ofHours(1)));

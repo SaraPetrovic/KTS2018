@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
 
@@ -55,7 +56,7 @@ public abstract class Ticket implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
 	@Column
-	private boolean active;	//atribut za aktivaciju karte od strane user-a
+	private TicketActivationType active;	//atribut za aktivaciju karte od strane user-a
 
 	
 	public Ticket() {
@@ -103,11 +104,11 @@ public abstract class Ticket implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public boolean isActive() {
+	public TicketActivationType getActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(TicketActivationType active) {
 		this.active = active;
 	}
 

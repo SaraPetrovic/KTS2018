@@ -10,9 +10,12 @@ import { Ticket } from '../model/ticket';
 export class UserTicketsComponent implements OnInit {
 
   private tickets: Ticket[];
+  private currentDate: Date;
   constructor(private userService: AuthenticationService) { }
 
   ngOnInit() {
+    this.currentDate = new Date();
+
     this.userService.getTickets().subscribe(
       (tickets) => {
         this.tickets = tickets;
