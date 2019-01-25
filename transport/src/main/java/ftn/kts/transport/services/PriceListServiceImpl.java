@@ -22,13 +22,7 @@ public class PriceListServiceImpl implements PriceListService {
 	private PriceListRepository priceListRepository;
 
 	@Autowired
-	private ZoneService zoneService;
-
-	@Autowired
 	private LineService lineService;
-
-	@Autowired
-	private RouteService routeService;
 
 	@Override
 	public PriceList addPriceList(PriceList newPriceList) {
