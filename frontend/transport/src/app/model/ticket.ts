@@ -5,4 +5,8 @@ export class Ticket{
     price: number;
     user: User;
     active: boolean;
+    transportType: number;
+    ticketTemporal: number;
+    startTime: Date;
+    endTime: Date;
 }

@@ -24,6 +24,9 @@ import { ZoneFormComponent } from './administration/administration-zone/zone-for
 import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
+import { ProfileComponent } from './profile/profile.component';
+import { UserTicketsComponent } from './profile/user-tickets.component';
+
 
 @NgModule({
   declarations: [
@@ -44,7 +47,9 @@ import { ConductorModule } from './modules/conductor/conductor.module';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    ProfileComponent,
+    UserTicketsComponent
   ],
   imports: [
     BrowserModule,

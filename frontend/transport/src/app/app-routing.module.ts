@@ -7,6 +7,8 @@ import { AdministrationLineComponent } from './administration/administration-lin
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserTicketsComponent } from './profile/user-tickets.component';
 
 const routes: Routes = [
   {
@@ -24,7 +26,17 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: EditProfileComponent
+    component: ProfileComponent,
+    children: [
+      {
+        path: 'edit',
+        component: EditProfileComponent
+      },
+      {
+        path: 'tickets',
+        component: UserTicketsComponent
+      }
+    ]
   },
   {
     path: 'administration',

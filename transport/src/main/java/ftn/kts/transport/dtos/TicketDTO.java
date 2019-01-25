@@ -9,18 +9,40 @@ import java.util.Date;
 
 public class TicketDTO {
 
+	private Long id;
 	private int transportType;
 	private int ticketTemporal;
 	private Long routeId;
 	private Long zoneId;
 	private Long lineId;
 	private User user;
+	private Date startTime;
 	private Date endTime;
 	private String qrCode;
+	private boolean active;
+	private double price;
 	
 	public TicketDTO() {
 		
 	}
+
+	public TicketDTO(Long id, int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user,
+			Date startDate, Date endTime, String qrCode, boolean active, double price) {
+		super();
+		this.id = id;
+		this.transportType = transportType;
+		this.ticketTemporal = ticketTemporal;
+		this.routeId = routeId;
+		this.zoneId = zoneId;
+		this.lineId = lineId;
+		this.user = user;
+		this.startTime = startDate;
+		this.endTime = endTime;
+		this.qrCode = qrCode;
+		this.active = active;
+		this.price = price;
+	}
+
 
 	public TicketDTO(int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
 		this.transportType = transportType;
@@ -50,17 +72,29 @@ public class TicketDTO {
 	}
 
 	public TicketDTO(Ticket ticket, String qrCode){
+		this.id = ticket.getId();
 		this.user = ticket.getUser();
+		this.startTime = ticket.getStartTime();
 		this.endTime = ticket.getEndTime();
 		this.transportType = ticket.getTransportType().ordinal();
 		this.ticketTemporal = ticket.getTicketTemporal().ordinal();
 		this.qrCode = qrCode;
+		this.price = ticket.getPrice();
+		this.active = ticket.isActive();
 	}
 
 	public TicketDTO(Ticket ticket) {
 		this.user = ticket.getUser();
 		this.endTime = ticket.getEndTime();
 
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public int getTransportType() {
@@ -118,4 +152,29 @@ public class TicketDTO {
 	public void setQrCode(String qrCode) {
 		this.qrCode = qrCode;
 	}
+
+	public Date getStartDate() {
+		return startTime;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startTime = startDate;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	
 }
