@@ -96,10 +96,9 @@ public class TicketController {
             User user = this.ticketService.getUser(token);
 
             List<Ticket> tickets = this.ticketService.getTickets(user);
-
+            System.out.println(tickets.size());
             for (Ticket t : tickets) {
             	System.out.println(generateQrCode(t.getId()));
-            	
                 ret.add(new TicketDTO(t, generateQrCode(t.getId()).getPath()));
             }
 
@@ -108,6 +107,7 @@ public class TicketController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 	}
+    
 
     private File generateQrCode(Long id) {
 

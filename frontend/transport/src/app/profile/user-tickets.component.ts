@@ -10,16 +10,18 @@ import { Ticket } from '../model/ticket';
 export class UserTicketsComponent implements OnInit {
 
   private tickets: Ticket[];
-  private currentDate: Date;
+  private currentDate: String;
   constructor(private userService: AuthenticationService) { }
 
   ngOnInit() {
-    this.currentDate = new Date();
-
     this.userService.getTickets().subscribe(
       (tickets) => {
         this.tickets = tickets;
         console.log(tickets);
+        this.tickets.forEach(element => {
+          console.log(element.startDate);
+          console.log(element.endTime);
+          });
       });
   }
 

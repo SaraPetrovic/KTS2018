@@ -6,7 +6,12 @@ import javax.persistence.*;
 @DiscriminatorValue("route_ticket")
 public class RouteTicket extends Ticket {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
     private Route route;
 
 

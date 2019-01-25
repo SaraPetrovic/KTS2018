@@ -84,6 +84,7 @@ public class TicketDTO {
 		this.qrCode = qrCode;
 		this.price = ticket.getPrice();
 		this.active = ticket.getActive();
+		System.out.println("START DATE" + ticket.getStartTime() + " END DATE: " + ticket.getEndTime());
 	}
 
 	public TicketDTO(Ticket ticket) {

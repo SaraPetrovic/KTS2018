@@ -6,7 +6,7 @@ export class Ticket{
     user: User;
     transportType: String;
     ticketTemporal: String;
-    startTime: Date;
+    startDate: Date;
     endTime: Date;
     active: String;
 }
