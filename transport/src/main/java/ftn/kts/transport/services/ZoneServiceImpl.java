@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
@@ -129,6 +130,7 @@ public class ZoneServiceImpl implements ZoneService{
 		
 		return parent;
 	}
+
 
 
 }

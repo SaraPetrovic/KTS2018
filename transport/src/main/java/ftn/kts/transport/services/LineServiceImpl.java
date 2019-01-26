@@ -152,12 +152,14 @@ public class LineServiceImpl implements LineService {
 
 
 	@Override
-	public Set<Line> getAllLinesByZone(Zone zone) {
+	public Set<Line> getAllLinesByZoneAndTransportType(Zone zone, VehicleType type) {
 		Set<Line> ret = new HashSet<Line>();
 		Collection<Line> lines = new ArrayList<Line>();
 		for (Station s : zone.getStations()) {
 			for (LineAndStation ls : s.getLineSet()) {
-				lines.add(ls.getLine());
+				if (ls.getLine().getTransportType().ordinal() == type.ordinal()) {
+					lines.add(ls.getLine());
+				}	
 			}
 		}
 		

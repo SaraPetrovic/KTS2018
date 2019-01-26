@@ -1,6 +1,7 @@
 package ftn.kts.transport.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -20,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.DTOconverter.DTOConverter;
 import ftn.kts.transport.dtos.LineDTO;
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.services.LineService;
+import ftn.kts.transport.services.ZoneService;
 
 @RestController
 @RequestMapping(value = "/line")
@@ -31,13 +35,31 @@ public class LineController {
 	private LineService lineService;
 	@Autowired
 	private DTOConverter dtoConverter;
+	@Autowired
+	private ZoneService zoneService;
 
 	
 	
 	@GetMapping
 	@CrossOrigin(origins = "http://localhost:4200")
-	public ResponseEntity<List<Line>> getLInes(){
+	public ResponseEntity<List<Line>> getLines(){
 		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
+	}
+	
+	@GetMapping(path = "/zone/{id}/{type}")
+	@Produces("application/json")
+	public ResponseEntity<Set<Line>> getLinesByZoneAndTransportType(@PathVariable("id") Long id, @PathVariable("type") String type) {
+		VehicleType v;
+		try {
+			v = VehicleType.valueOf(type);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		Zone z = zoneService.findById(id);
+		
+		return ResponseEntity.ok(this.lineService.getAllLinesByZoneAndTransportType(z, v));
+		
+		
 	}
 
 

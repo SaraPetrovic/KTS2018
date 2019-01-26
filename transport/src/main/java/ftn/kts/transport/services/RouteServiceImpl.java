@@ -1,6 +1,7 @@
 package ftn.kts.transport.services;
 
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Route;
 import ftn.kts.transport.repositories.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -30,5 +32,10 @@ public class RouteServiceImpl implements RouteService {
 
         return this.routeRepository.findById(id).orElseThrow(() -> new DAOException("Route {id=" + id + "} can not be found", HttpStatus.NOT_FOUND));
     }
+
+	@Override
+	public Set<Route> findByLine(Line l) {
+		return this.routeRepository.findByLine(l);
+	}
 
 }
