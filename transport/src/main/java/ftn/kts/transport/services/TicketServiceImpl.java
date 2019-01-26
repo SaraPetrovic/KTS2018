@@ -1,6 +1,5 @@
 package ftn.kts.transport.services;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -10,7 +9,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.io.BaseEncoding;
 
@@ -36,6 +37,8 @@ public class TicketServiceImpl implements TicketService{
 	private PriceListService priceListService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private StorageService storageService;
 	
 	@Override
 	public Ticket buyTicket(Ticket ticket, String token) {
@@ -123,14 +126,16 @@ public class TicketServiceImpl implements TicketService{
 	}
 	
 	@Override
-    public File generateQrCode(Long id) {
+    public String generateQrCode(Long id) {
 
         String encodedID = BaseEncoding.base64()
                 .encode(("TicketID=" + id.toString()).getBytes());
 
-        File qrCode = QRCode.from(encodedID).to(ImageType.JPG).withSize(250, 250).file();
-
-        return qrCode;
+        MultipartFile qrCode = new MockMultipartFile("file", id.toString() + ".jpg", "image/jpeg", QRCode.from(encodedID).to(ImageType.JPG).withSize(250, 250).stream().toByteArray());
+       
+        this.storageService.store(qrCode);
+        
+        return qrCode.getOriginalFilename();
     }
 
 	@Override

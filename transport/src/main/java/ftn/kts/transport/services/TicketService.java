@@ -14,7 +14,7 @@ public interface TicketService {
 	Ticket activateTicket(Ticket ticket);
 	Ticket buyTicket(Ticket ticket, String token);
 	List<Ticket> getTickets(User user);
-	File generateQrCode(Long id);
+	String generateQrCode(Long id);
 	Long decodeId(String encodedID);
 	Ticket checkTicket(Ticket t);
 

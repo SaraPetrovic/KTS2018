@@ -46,7 +46,7 @@ public class TicketController {
 	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		Ticket rez = ticketService.activateTicket(ticket);
-		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, ticketService.generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
+		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, ticketService.generateQrCode(rez.getId())), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -100,8 +100,8 @@ public class TicketController {
             for (Ticket t : tickets) {
 
             	System.out.println(ticketService.generateQrCode(t.getId()));
-            	String qrcode = ticketService.generateQrCode(t.getId()).getPath();
-            	qrcode = qrcode.substring(qrcode.lastIndexOf("\\")+1);
+            	String qrcode = ticketService.generateQrCode(t.getId());
+            	//qrcode = qrcode.substring(qrcode.lastIndexOf("\\")+1);
                 ret.add(new MyTicketDTO(t, qrcode));
 
 
