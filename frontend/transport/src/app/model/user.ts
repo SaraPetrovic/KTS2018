@@ -5,5 +5,5 @@ export class User{
     lastName: string;
     password: string;
     token?: string;
-
+    document: string;
 }
