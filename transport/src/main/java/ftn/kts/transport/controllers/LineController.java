@@ -48,10 +48,11 @@ public class LineController {
 	
 	@GetMapping(path = "/zone/{id}/{type}")
 	@Produces("application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Set<Line>> getLinesByZoneAndTransportType(@PathVariable("id") Long id, @PathVariable("type") String type) {
 		VehicleType v;
 		try {
-			v = VehicleType.valueOf(type);
+			v = VehicleType.valueOf(type.toUpperCase());
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(null);
 		}
