@@ -3,6 +3,7 @@ package ftn.kts.transport.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
@@ -43,10 +44,10 @@ public class TicketController {
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
 	@PutMapping(path = "/activate/{id}")
 	@CrossOrigin( origins = "http://localhost:4200")
-	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
+	public ResponseEntity<MyTicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		Ticket rez = ticketService.activateTicket(ticket);
-		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, ticketService.generateQrCode(rez.getId())), HttpStatus.OK);
+		return new ResponseEntity<MyTicketDTO>(new MyTicketDTO(rez), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -88,7 +89,7 @@ public class TicketController {
     @GetMapping(path = "/me")
     @Produces("application/json")
     @CrossOrigin( origins = "http://localhost:4200")
-	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token){
+	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token, HttpServletRequest request){
 
 	    try {
 
@@ -99,9 +100,7 @@ public class TicketController {
             System.out.println(tickets.size());
             for (Ticket t : tickets) {
 
-            	System.out.println(ticketService.generateQrCode(t.getId()));
             	String qrcode = ticketService.generateQrCode(t.getId());
-            	//qrcode = qrcode.substring(qrcode.lastIndexOf("\\")+1);
                 ret.add(new MyTicketDTO(t, qrcode));
 
 
