@@ -26,7 +26,6 @@ import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
-import ftn.kts.transport.services.ConductorService;
 import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
 
@@ -39,8 +38,6 @@ public class TicketController {
 	@Autowired
 	private DTOConverter dtoConverter;
 	@Autowired
-	private ConductorService conductorService;
-	@Autowired
 	private UserService userService;
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -49,7 +46,7 @@ public class TicketController {
 	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		Ticket rez = ticketService.activateTicket(ticket);
-		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, conductorService.generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
+		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, ticketService.generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -80,7 +77,7 @@ public class TicketController {
     public ResponseEntity<Ticket> checkTicket(@PathVariable String id){
 
 	    try{
-            Ticket ret = this.ticketService.findById(conductorService.decodeId(id));
+            Ticket ret = this.ticketService.findById(ticketService.decodeId(id));
 
             return ResponseEntity.ok(ret);
         }catch(Exception e){
@@ -102,10 +99,11 @@ public class TicketController {
             System.out.println(tickets.size());
             for (Ticket t : tickets) {
 
-            	System.out.println(conductorService.generateQrCode(t.getId()));
-            	String qrcode = conductorService.generateQrCode(t.getId()).getPath();
+            	System.out.println(ticketService.generateQrCode(t.getId()));
+            	String qrcode = ticketService.generateQrCode(t.getId()).getPath();
             	qrcode = qrcode.substring(qrcode.lastIndexOf("\\")+1);
                 ret.add(new MyTicketDTO(t, qrcode));
+
 
             }
 

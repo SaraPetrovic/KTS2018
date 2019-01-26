@@ -78,17 +78,17 @@ public class DTOConverterImpl implements DTOConverter{
 		
 		// ========= CHECK DATA =============
 		
-		int ticketTemporal = ticketDTO.getTicketTemporal().ordinal();
-		//int transportType = ticketDTO.getTransportType().ordinal();
+		int ticketTemporal = ticketDTO.getTicketTemporal();
+		int transportType = ticketDTO.getTransportType();
 		
 		// OVE PROVERE VISE NEMAJU SMISLA JER DTO PRIMA BAS ENUM ?? nzm kako to onda
-		//if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
-		//	throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
-		//}
+		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
+			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
+		}
 		
-//		if (transportType != 0 && transportType != 1 && transportType != 2) {
-//			throw new InvalidInputDataException("TransportType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
-//		}
+		if (transportType != 0 && transportType != 1 && transportType != 2) {
+			throw new InvalidInputDataException("TransportType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
+		}
 		
 		// =========== CONVERT =============
 		
@@ -140,8 +140,8 @@ public class DTOConverterImpl implements DTOConverter{
 			} else {
 				ticket.setActive(TicketActivationType.ACTIVE);
 			}
-			ticket.setTicketTemporal(ticketDTO.getTicketTemporal());
-			ticket.setTransportType(ticketDTO.getTransportType());
+			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
+			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
 			
 			
@@ -162,8 +162,8 @@ public class DTOConverterImpl implements DTOConverter{
 			} else {
 				ticket.setActive(TicketActivationType.ACTIVE);
 			}
-			ticket.setTicketTemporal(ticketDTO.getTicketTemporal());
-			ticket.setTransportType(ticketDTO.getTransportType());
+			ticket.setTicketTemporal(TicketTypeTemporal.values()[ticketDTO.getTicketTemporal()]);
+			ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 			return ticket;
 		
 		} else if(ticketDTO.getRouteId() != null){
@@ -174,7 +174,7 @@ public class DTOConverterImpl implements DTOConverter{
             ticket.setRoute(route);
             ticket.setActive(TicketActivationType.ACTIVE);
             ticket.setTicketTemporal(TicketTypeTemporal.ONE_TIME_PASS);
-            ticket.setTransportType(ticketDTO.getTransportType());
+            ticket.setTransportType(VehicleType.values()[ticketDTO.getTransportType()]);
 
             return ticket;
 

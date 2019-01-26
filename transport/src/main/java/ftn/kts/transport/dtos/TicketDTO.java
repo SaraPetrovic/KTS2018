@@ -1,58 +1,26 @@
 package ftn.kts.transport.dtos;
 
-import ftn.kts.transport.enums.TicketActivationType;
-import ftn.kts.transport.enums.TicketTypeTemporal;
-import ftn.kts.transport.enums.VehicleType;
-import ftn.kts.transport.model.Route;
-import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
 import java.util.Date;
-import java.util.Enumeration;
 
 public class TicketDTO {
 
-	private Long id;
-	private VehicleType transportType;
-	private TicketTypeTemporal ticketTemporal;
+	private int transportType;
+	private int ticketTemporal;
 	private Long routeId;
 	private Long zoneId;
 	private Long lineId;
 	private User user;
-	private Date startTime;
 	private Date endTime;
 	private String qrCode;
-	private TicketActivationType active;
-	private double price;
-	private Route route;
 	
 	public TicketDTO() {
 		
 	}
 
-	public TicketDTO(Long id, VehicleType transportType, TicketTypeTemporal ticketTemporal, Long routeId, Long zoneId, Long lineId, User user,
-			Date startDate, Date endTime, String qrCode, TicketActivationType active, double price) {
-		super();
-		this.id = id;
-		this.transportType = transportType;
-		this.ticketTemporal = ticketTemporal;
-		this.routeId = routeId;
-		this.zoneId = zoneId;
-		this.lineId = lineId;
-		this.user = user;
-		this.startTime = startDate;
-		this.endTime = endTime;
-		this.qrCode = qrCode;
-		this.active = active;
-		this.price = price;
-	}
-
-
-	public TicketDTO(VehicleType transportType, TicketTypeTemporal ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
+	public TicketDTO(int transportType, int ticketTemporal, Long routeId, Long zoneId, Long lineId, User user, Date endTime, String qrCode) {
 		this.transportType = transportType;
 		this.ticketTemporal = ticketTemporal;
 		this.routeId = routeId;
@@ -71,7 +39,7 @@ public class TicketDTO {
 		this.routeId = routeId;
 	}
 
-	public TicketDTO(VehicleType transportType, TicketTypeTemporal ticketTemporal, Long zoneId, Long lineId) {
+	public TicketDTO(int transportType, int ticketTemporal, Long zoneId, Long lineId) {
 		super();
 		this.transportType = transportType;
 		this.ticketTemporal = ticketTemporal;
@@ -80,22 +48,11 @@ public class TicketDTO {
 	}
 
 	public TicketDTO(Ticket ticket, String qrCode){
-		this.id = ticket.getId();
 		this.user = ticket.getUser();
-		this.startTime = ticket.getStartTime();
 		this.endTime = ticket.getEndTime();
-		this.transportType = ticket.getTransportType();
-		this.ticketTemporal = ticket.getTicketTemporal();
+		this.transportType = ticket.getTransportType().ordinal();
+		this.ticketTemporal = ticket.getTicketTemporal().ordinal();
 		this.qrCode = qrCode;
-		this.price = ticket.getPrice();
-		this.active = ticket.getActive();
-		if(ticket instanceof RouteTicket) {
-			this.route = ((RouteTicket) ticket).getRoute();
-			System.out.println("TICKET DTO ROUTEEEEEE!!!!!!!!");
-		}else {
-			this.route = null;
-		}
-		System.out.println("START DATE" + ticket.getStartTime() + " END DATE: " + ticket.getEndTime());
 	}
 
 	public TicketDTO(Ticket ticket) {
@@ -104,27 +61,19 @@ public class TicketDTO {
 
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public VehicleType getTransportType() {
+	public int getTransportType() {
 		return transportType;
 	}
 
-	public void setTransportType(VehicleType transportType) {
+	public void setTransportType(int transportType) {
 		this.transportType = transportType;
 	}
 
-	public TicketTypeTemporal getTicketTemporal() {
+	public int getTicketTemporal() {
 		return ticketTemporal;
 	}
 
-	public void setTicketTemporal(TicketTypeTemporal ticketTemporal) {
+	public void setTicketTemporal(int ticketTemporal) {
 		this.ticketTemporal = ticketTemporal;
 	}
 
@@ -167,45 +116,4 @@ public class TicketDTO {
 	public void setQrCode(String qrCode) {
 		this.qrCode = qrCode;
 	}
-
-	public Date getStartDate() {
-		return startTime;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startTime = startDate;
-	}
-
-	public TicketActivationType getActive() {
-		return active;
-	}
-
-	public void setActive(TicketActivationType active) {
-		this.active = active;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public Route getRoute() {
-		return route;
-	}
-
-	public void setRoute(Route route) {
-		this.route = route;
-	}
-	
 }
