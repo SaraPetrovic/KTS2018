@@ -103,7 +103,9 @@ public class TicketController {
             for (Ticket t : tickets) {
 
             	System.out.println(conductorService.generateQrCode(t.getId()));
-                ret.add(new MyTicketDTO(t, conductorService.generateQrCode(t.getId()).getPath()));
+            	String qrcode = conductorService.generateQrCode(t.getId()).getPath();
+            	qrcode = qrcode.substring(qrcode.lastIndexOf("\\")+1);
+                ret.add(new MyTicketDTO(t, qrcode));
 
             }
 
