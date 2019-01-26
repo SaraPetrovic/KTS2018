@@ -3,6 +3,7 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -16,16 +17,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
+import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.ZoneRepository;
@@ -41,6 +46,9 @@ public class ZoneServiceUnitTest {
 	
 	@MockBean
 	private ZoneRepository zoneRepository;
+	
+	@SpyBean
+	private ZoneService spyZoneService;
 	
 	@Before
 	public void setUp() {
@@ -77,6 +85,7 @@ public class ZoneServiceUnitTest {
 	public void addZoneTestOK1() {
 		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(null);
 		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
 		
 		Zone rez = zoneService.save(zone2);
@@ -91,17 +100,23 @@ public class ZoneServiceUnitTest {
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
 		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska 2", null, zone2, true);
 		Zone zone4 = new Zone(Long.valueOf(4), "Prigradska 3", null, zone2, true);
-//		List<Zone> zones = new ArrayList<Zone>();
-//		zones.add(zone1);
-//		zones.add(zone2);
-//		zones.add(zone3);
-//		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+
+		Mockito.when(zoneRepository.findByName(zone4.getName())).thenReturn(null);
 		Mockito.when(zoneRepository.save(zone4)).thenReturn(zone4);
 		
 		Zone rez = zoneService.addZone(zone4);
 		
 		assertNotNull(rez);
 		assertEquals(zone4, rez);
+	}
+	
+	@Test(expected=InvalidInputDataException.class)
+	public void addZoneTestConflict() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(zone2);
+
+		zoneService.addZone(zone2);
 	}
 	
 	@Test
@@ -199,5 +214,47 @@ public class ZoneServiceUnitTest {
 		assertEquals(zones.size() - 2, rez.size());
 		assertNotEquals(zones, rez);
 	}
+	
+	@Transactional
+	@Test
+	public void getZoneForLine_PASS_Test() {
+		Line l = new Line();
+		l.setId(1L);
+		l.setName("1A");
+		l.setTransportType(VehicleType.BUS);
+		Station s = new Station();
+		s.setId(1L);
+		s.setName("Stanica 1");
+		Zone z1 = new Zone();
+		Zone z2 = new Zone();
+		z1.setActive(true);
+		z1.setId(1L);
+		z1.setName("Zone I");
+		z1.setSubZone(null);
+		z2.setActive(true);
+		z2.setId(2L);
+		z2.setName("Zone II");
+		z2.setSubZone(z1);
+		Set<Zone> foundZones = new HashSet<Zone>();
+		foundZones.add(z1);
+		foundZones.add(z2);
+		
+		//Mockito.when(zoneServiceMocked.getZonesByStations(Mockito.anyCollection())).thenReturn(foundZones);
+		Mockito.doReturn(foundZones).when(spyZoneService).getZonesByStations(Mockito.anyCollection());
+		
+		LineAndStation ls = new LineAndStation();
+		ls.addStation(l, s, 1);
+		Set<LineAndStation> stationSet = new HashSet<LineAndStation>();
+		stationSet.add(ls);
+		l.setStationSet(stationSet);
+		
+		// jel ok spy?? 
+		Zone retParent = spyZoneService.getZoneForLine(l);
+		assertNotNull(retParent);
+		assertSame(z2, retParent);
+		assertEquals(z2.getId(), retParent.getId());
+		assertEquals(z2.getSubZone().getId(), retParent.getSubZone().getId());
+	}
+
 	
 }

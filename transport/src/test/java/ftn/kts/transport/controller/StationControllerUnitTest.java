@@ -26,6 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.LineAndStation;
@@ -80,7 +81,7 @@ public class StationControllerUnitTest {
 	@Test
 	public void getAllTest() {
 		ResponseEntity<StationDTO[]> responseEntity = 
-				restTemplate.getForEntity("/station/all", StationDTO[].class);
+				restTemplate.getForEntity("/station", StationDTO[].class);
 		
 		StationDTO[] rez = responseEntity.getBody();
 		
@@ -93,7 +94,7 @@ public class StationControllerUnitTest {
 	@Test
 	public void addTestOK() {
 		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/add", dtoStation, StationDTO.class);
+				restTemplate.postForEntity("/station", dtoStation, StationDTO.class);
 
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	}
@@ -103,7 +104,7 @@ public class StationControllerUnitTest {
 		StationDTO dto = new StationDTO(Long.valueOf(5), null, null, null);
 		
 		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/add", dto, StationDTO.class);
+				restTemplate.postForEntity("/station", dto, StationDTO.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
@@ -112,7 +113,7 @@ public class StationControllerUnitTest {
 	public void deleteStationTestOK() {
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + Long.valueOf(1),
+				restTemplate.exchange("/station/" + Long.valueOf(1),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -122,7 +123,7 @@ public class StationControllerUnitTest {
 	public void deleteStationTestBadRequest() {
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + Long.valueOf(98),
+				restTemplate.exchange("/station/" + Long.valueOf(98),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -132,33 +133,52 @@ public class StationControllerUnitTest {
 	public void deleteStationTestNotFound() {
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + Long.valueOf(99),
+				restTemplate.exchange("/station/" + Long.valueOf(99),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 		
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
 	
 	@Test
-	public void updateZoneTestOK() {
+	public void updateStationTestOK() {
 		
-		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/update", new StationDTO(s3), StationDTO.class);
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + Long.valueOf(3), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(new StationDTO(Long.valueOf(3), "Bul. Oslobodjenja 56", "Bul. Oslobodjenja - Al zgrada", null)),
+	            		StationDTO.class);
 		
 		StationDTO rez = responseEntity.getBody();
-		
+
+		assertNotNull(rez);
+		assertEquals("Bul. Oslobodjenja - Al zgrada", rez.getName());
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertEquals("Bul. Oslobodjenja - Futoska", rez.getName());
 	}
 	
 	@Test
-	public void updateZoneTest() {
+	public void updateStationTestNotFound() {
 		
-		Station s = new Station(Long.valueOf(53), "", "", true);
+		Station s = new Station(Long.valueOf(53), "Adresa", "Ime", true);
 		Mockito.when(stationService.findById(Long.valueOf(53))).thenThrow(StationNotFoundException.class);
 		
-		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/update", new StationDTO(s), StationDTO.class);
-
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + Long.valueOf(53), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(new StationDTO(s)),
+	            		StationDTO.class);
+		
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+	}
+	
+	@Test
+	public void updateStationTestBadRequest() {
+		
+		Station s = new Station(Long.valueOf(53), "", "", true);
+		Mockito.when(stationService.findById(Long.valueOf(53))).thenReturn(s);
+		
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + Long.valueOf(3), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(new StationDTO(s)),
+	            		StationDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 }

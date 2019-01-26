@@ -1,9 +1,12 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, ChildActivationEnd, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ZoneTableComponent } from './zone-table.component';
 import { Zone } from 'src/app/model/zone';
 import { ZoneService } from 'src/app/_services/zones/zone.service';
+import { Subscription } from 'rxjs';
+import { forEach } from '@angular/router/src/utils/collection';
+import { AdministrationZoneComponent } from './administration-zone.component';
 
 @Component({
   selector: 'app-zone-form',
@@ -17,8 +20,9 @@ export class ZoneFormComponent implements OnInit {
     private zone: Zone = new Zone();
     @Input() zones : Zone[];
     private disabledOption = "";
-    private formLabel : string;
-
+    private zoneClickedSubscription : Subscription;
+    private formLabel: String = "Add zone"; 
+    @Output() addButton = new EventEmitter();
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }
 
@@ -27,6 +31,22 @@ export class ZoneFormComponent implements OnInit {
             zoneName: ['', Validators.required],
             subzone: ['']
         });
+        
+        this.zoneClickedSubscription = this.zoneService.getClickedZone().subscribe(
+            zoneId => {
+                this.zoneService.getZone(zoneId).subscribe(
+                    zone => {this.zone = zone;}
+                );
+                this.formLabel = "Edit Zone";
+                
+                // this.zones.forEach(element => {
+                //     if(element.id === zone.subZoneId){
+                //         this.disabledOption = zone.name;
+                //     }
+                // }); 
+            }
+        );
+        
     }
 
     get f(){ return this.addZoneForm.controls; }
@@ -41,13 +61,38 @@ export class ZoneFormComponent implements OnInit {
         this.disabledOption = "";
     }
 
+
     onSelect(zoneId : number){
         this.zone.subZoneId = zoneId;
     }
-
-    addZone(): void {
-        this.zoneService.addZone(this.zone).subscribe((zone) => this.zones.push(zone));
+/*
+    addEditZone(): void {
+        if(this.formLabel === "Add Zone"){
+            this.zoneService.addZone(this.zone).subscribe(
+                (zone) => {
+                    this.zones.push(zone);
+                },
+                error => {
+                    alert(error.error.errorMessage)
+                }
+            );
+        }else if(this.formLabel === "Edit Zone"){
+            this.zoneService.editZone(this.zone).subscribe(
+                (zone) => {
+                    this.zones.forEach(function (value){
+                        if(zone.id === value.id){
+                            value = zone;
+                        }
+                    });
+                }
+            );
+        }
     }
-
-    
+   */
+    clearForm(){
+        this.formLabel = "Add Zone";
+        this.disabledOption = "";
+        this.zone = new Zone();
+    }
+  
 }

@@ -17,13 +17,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
 import ftn.kts.transport.model.Station;
@@ -40,6 +43,8 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
+
+	
 	@GetMapping("/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Produces("application/json")
@@ -50,7 +55,7 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
-	@GetMapping("/all")
+	@GetMapping
 	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
@@ -65,15 +70,16 @@ public class ZoneController {
 		return new ResponseEntity<>(dtoZones, HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/add")
+	@PostMapping()
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
 		
 		if(zoneDTO.getName() == null || zoneDTO.getName() == "") {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
 		}
+	
 		Zone subZone = null;
 		if(zoneDTO.getSubZoneId() != null && zoneDTO.getSubZoneId() != 0) {
 			subZone = zoneService.findById(zoneDTO.getSubZoneId());
@@ -86,45 +92,29 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@CrossOrigin( origins = "http://localhost:4200")
-	public ResponseEntity<Void> deleteZone(@PathVariable Long id) {
+	public ResponseEntity<Boolean> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
 		
-		return new ResponseEntity<>(HttpStatus.OK);	
+		return new ResponseEntity<>(true, HttpStatus.OK);	
 	}
 	
-	@PostMapping(path="/addStations/{id}") //id zone
+	@PutMapping("/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
-	public ResponseEntity<Void> addStationsInZone(@PathVariable Long id, @RequestBody List<StationDTO> dtoStations){
-		
-		Zone zone = zoneService.findById(id);
-		
-		if(dtoStations == null || dtoStations.size() == 0) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		Set<Station> stations = checkStations(new HashSet<StationDTO>(dtoStations));
-				
-		zone.setStations(stations);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-	@PostMapping(path="/update")
-	//@PreAuthorize("hasRole('ADMIN')")
-	@Consumes("applications/json")
-	@Produces("applications/json")
-	public ResponseEntity<ZoneDTO> updateZone(@RequestBody ZoneDTO dtoZone){
+	@CrossOrigin( origins = "http://localhost:4200")
+	public ResponseEntity<ZoneDTO> updateZone(@PathVariable Long id, @RequestBody ZoneDTO dtoZone){
 		
 //		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
 		
-		Zone zone = zoneService.findById(dtoZone.getId());
+		Zone zone = zoneService.findById(id);
 		
 		if(dtoZone.getName() == null || dtoZone.getName() == "") {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
 		}
 		
 		zone.setName(dtoZone.getName());
@@ -136,7 +126,7 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
-	public Set<Station> checkStations(Set<StationDTO> dtoStations){
+	/*public Set<Station> checkStations(Set<StationDTO> dtoStations){
 		Set<Station> stations = new HashSet<Station>();
 		
 		for(StationDTO dtoStation : dtoStations) {
@@ -145,6 +135,6 @@ public class ZoneController {
 		}
 		return stations;
 		
-	}
+	}*/
 	
 }

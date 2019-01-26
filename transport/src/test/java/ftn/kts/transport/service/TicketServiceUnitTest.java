@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -23,11 +24,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.enums.DocumentVerification;
+import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.exception.TicketAlreadyActivatedException;
 import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.Role;
 import ftn.kts.transport.model.Ticket;
@@ -35,7 +38,7 @@ import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
-import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.PriceListService;
 import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
@@ -54,7 +57,7 @@ public class TicketServiceUnitTest {
 	@MockBean
 	private PriceListService priceListServiceMocked;
 	@MockBean
-	private JwtGeneratorService jwtServiceMocked;
+	private JwtService jwtServiceMocked;
 	
 	
 	private User user = new User();
@@ -79,7 +82,7 @@ public class TicketServiceUnitTest {
 		zoneTicket.setUser(user);
 		lineTicket.setUser(user);
 		zoneTicket.setZone(new Zone(1L, "Zone I", true));
-		zoneTicket.setActive(false);
+		zoneTicket.setActive(TicketActivationType.ACTIVE);
 		
 		ticketToBuy.setTicketTemporal(TicketTypeTemporal.ONE_HOUR_PASS);
 		ticketToBuy.setTransportType(VehicleType.BUS);
@@ -87,21 +90,14 @@ public class TicketServiceUnitTest {
 		
 		Mockito.when(jwtServiceMocked.validate(TOKEN.substring(7))).thenReturn(user);
 		Mockito.when(userServiceMocked.findByUsername("user1")).thenReturn(user);
+		Mockito.when(userServiceMocked.getUser(TOKEN)).thenReturn(user);
 		Mockito.when(ticketRepositoryMocked.findById(1L)).thenReturn(Optional.of(zoneTicket));
 		Mockito.when(ticketRepositoryMocked.findById(2L)).thenReturn(Optional.of(lineTicket));
 		Mockito.when(ticketRepositoryMocked.findById(-1L)).thenThrow(new DAOException("Ticket [id=-1L] cannot be found!"));
 		Mockito.when(ticketRepositoryMocked.save(zoneTicket)).thenReturn(zoneTicket);
 	}
 
-	
-	// ovo ni ne treba da bude ovde nego u UserService
-	@Test
-	public void getUserByToken_PASS_Test() {
-		User found = ticketService.getUser(TOKEN);
-		assertNotNull(found);
-		assertEquals(user.getUsername(), found.getUsername());
-	}
-	
+		
 	@Test
 	public void getTicketById_PASS_Test() {
 		Ticket found = ticketService.findById(1L);
@@ -116,11 +112,18 @@ public class TicketServiceUnitTest {
 	
 	@Test
 	public void activateTicket_PASS_Test() {
-		assertFalse(zoneTicket.isActive());
+		//assertFalse(zoneTicket.isActive());
 		Ticket ret = ticketService.activateTicket(zoneTicket);
-		assertTrue(ret.isActive());
+		//assertTrue(ret.isActive());
 		assertNotNull(ret.getStartTime());
 		assertNotNull(ret.getEndTime());
+	}
+	
+	@Transactional
+	@Test(expected = TicketAlreadyActivatedException.class)
+	public void activateTicket_AlreadyActivated_Test() {
+		this.zoneTicket.setStartTime(new Date());
+		ticketService.activateTicket(zoneTicket);
 	}
 	
 	@Test

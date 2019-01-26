@@ -4,15 +4,20 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
-import ftn.kts.transport.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.model.LineTicket;
+import ftn.kts.transport.model.PriceList;
+import ftn.kts.transport.model.RouteTicket;
+import ftn.kts.transport.model.Ticket;
+import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.PriceListRepository;
 
 @Service
@@ -24,12 +29,6 @@ public class PriceListServiceImpl implements PriceListService {
 	@Autowired
 	private ZoneService zoneService;
 
-	@Autowired
-	private LineService lineService;
-
-	@Autowired
-	private RouteService routeService;
-
 	@Override
 	public PriceList addPriceList(PriceList newPriceList) {
 	
@@ -39,6 +38,7 @@ public class PriceListServiceImpl implements PriceListService {
 
 	// OVDE BI TREBALO @TRANSACTIONAL, ne sme niko da pristupi
 	// priceList repository dok se ne sacuvaju oba
+	@Transactional
 	@Override
 	public boolean activatePriceList(Long id) {
 		
@@ -95,7 +95,6 @@ public class PriceListServiceImpl implements PriceListService {
 			zoneId = ((ZoneTicket) ticket).getZone().getId();
 			finalPrice = oneTimePrices.get(zoneId);
 			if (ticketType.ordinal() == 0) {
-				// ostaje ista - nepotreban IF
 				finalPrice *= oneHourCoeff;
 			} else if (ticketType.ordinal() == 1) {
 				finalPrice *= monthlyCoeff;
@@ -103,17 +102,17 @@ public class PriceListServiceImpl implements PriceListService {
 				finalPrice *= yearlyCoeff;
 			}
 		} else if (ticket instanceof LineTicket) {
-			zoneId = lineService.getZoneForLine(((LineTicket) ticket).getLine()).getId();
+			zoneId = zoneService.getZoneForLine(((LineTicket) ticket).getLine()).getId();
 			finalPrice = oneTimePrices.get(zoneId);
 			if (ticketType.ordinal() == 0) {
-				// ovo ni ne moze - ne postoji ONE_TIME za LINE, samo za zonu!!!
+				// ovo ni ne moze - ne postoji ONE_HOUR za LINE, samo za zonu!!!
 			} else if (ticketType.ordinal() == 1) {
 				finalPrice *= monthlyCoeff * lineDisc;
 			} else if (ticketType.ordinal() == 2) {
 				finalPrice *= yearlyCoeff * lineDisc;
 			}
 		} else if(ticket instanceof RouteTicket){
-			zoneId = lineService.getZoneForLine(((RouteTicket) ticket).getRoute().getLine()).getId();
+			zoneId = zoneService.getZoneForLine(((RouteTicket) ticket).getRoute().getLine()).getId();
 			finalPrice = oneTimePrices.get(zoneId);
 		}
 		

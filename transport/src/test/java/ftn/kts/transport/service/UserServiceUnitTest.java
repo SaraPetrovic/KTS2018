@@ -3,7 +3,9 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.DocumentVerificationException;
+import ftn.kts.transport.exception.TokenValidationException;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.UserRepository;
+import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.UserService;
 
 @RunWith(SpringRunner.class)
@@ -33,16 +41,43 @@ public class UserServiceUnitTest {
 	private UserService userService;
 	@MockBean
 	private UserRepository userRepository;
+	@MockBean
+	private JwtService jwtServiceMocked;
+	//@SpyBean
+	//private UserService userServiceSpy;		// za mockovanje metode iz servisa koji se testira
+	
+	private String token, invalidToken;
+	private User credentials = new User();
+	private User logged = new User();
+	private String imageFolder = "src/main/webapp/images/";
 	
 	@Before
 	public void setUp() {
+		
+		this.token = "Bearer VALID Token";
+		this.invalidToken = "aaaaaaaaaaaaaaa";
+		this.credentials.setUsername("user1");
+		this.credentials.setPassword("1234");
+		this.logged.setUsername("user1");
+		this.logged.setFirstName("Sara");
+		this.logged.setPassword("1234");
+		this.logged.setDocument(null);
+		
 		User user = new User("sarapetrovic", "123456789", "Sara", "Petrovic");
 		Mockito.when(userRepository.findByUsername("sarapetrovic")).thenReturn(user);
 		Mockito.when(userRepository.findByUsername("sarapetrov")).thenReturn(null);
 		Mockito.when(userRepository.findByUsername("sara")).thenReturn(null);
+		Mockito.when(userRepository.findByUsername("user1")).thenReturn(this.logged);
 		Mockito.when(userRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(user));
 		Mockito.when(userRepository.findById(Long.valueOf(2))).thenThrow(DAOException.class);
-		
+		Mockito.when(userRepository.findById(-1L)).thenThrow(new DAOException("User [id=-1] cannot be found!"));
+		Mockito.when(userRepository.save(this.logged)).thenReturn(this.logged);
+		Mockito.when(jwtServiceMocked.validate(token.substring(7))).thenReturn(this.credentials);
+		Mockito.when(jwtServiceMocked.validate(invalidToken.substring(7))).thenThrow(new TokenValidationException("Invalid token! You don't have permission to upload document!"));
+		//Mockito.doReturn(this.logged).when(userServiceSpy).findByUsername("user1");
+		//Mockito.doReturn(this.logged).when(userServiceSpy).save(this.logged);
+		//Mockito.doReturn(this.logged).when(userServiceSpy).findById(1L);
+		//Mockito.doThrow(new DAOException("User [id=-1L] cannot be found!")).when(userServiceSpy).findById(-1L);
 	}
 	
 	@Test(expected=DAOException.class)
@@ -119,4 +154,172 @@ public class UserServiceUnitTest {
 		assertEquals("Petrovic", user.getLastName());
 		assertEquals("123456789", user.getPassword());
 	}
+	
+	@Transactional
+	@Test
+	public void saveDocument_PASS_Test() {
+		
+		boolean ret = false;
+		try {
+			FileInputStream inputFile = new FileInputStream(imageFolder + "document-test.jpg"); 
+			MockMultipartFile mf = new MockMultipartFile("file", "document-test.jpg", "multipart/form-data", inputFile);
+			ret = userService.saveDocumentImage(mf, this.token);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		assertTrue(ret);
+		//Mockito.verify(userServiceSpy, Mockito.times(1)).findByUsername("user1");
+		//Mockito.verify(userServiceSpy, Mockito.times(1)).save(logged);
+	}
+	
+	@Test
+	public void saveDocument_UnauthorizedAttempt_Test() {
+		
+		try {
+			FileInputStream inputFile = new FileInputStream(imageFolder + "document-test.jpg"); 
+			MockMultipartFile mf = new MockMultipartFile("file", "document-test.jpg", "multipart/form-data", inputFile);
+			userService.saveDocumentImage(mf, this.invalidToken);
+
+		} catch (Exception e) {
+			assertTrue(e instanceof TokenValidationException);
+		}
+	}
+	
+	@Test
+	public void saveDocument_UserDoesntExist_Test() {
+		String validTokenInvalidUser = "Bearer ok format ali los user";
+		User invalidCredentials = new User();
+		invalidCredentials.setUsername("123userNotExist");
+		
+		Mockito.when(jwtServiceMocked.validate(validTokenInvalidUser.substring(7))).thenReturn(invalidCredentials);
+		Mockito.when(userRepository.findByUsername("123userNotExist")).thenThrow(new DAOException("User [username=123userNotExist] doesn't exist!"));
+		//Mockito.doThrow(new DAOException("User [username=123userNotExist] doesn't exist!")).when(userServiceSpy).findByUsername("123userNotExist");
+		try {
+			FileInputStream inputFile = new FileInputStream(imageFolder + "document-test.jpg"); 
+			MockMultipartFile mf = new MockMultipartFile("file", "document-test.jpg", "multipart/form-data", inputFile);
+			userService.saveDocumentImage(mf, validTokenInvalidUser);
+
+		} catch (Exception e) {
+			assertTrue(e instanceof DAOException);
+		}
+	}
+	
+	@Test
+	public void findUsersByDocumentsVerified_PASS_Test() {
+		User u1Approved = new User();
+		User u2NoDocument = new User();
+		User u3Pending = new User();
+		User u4Rejected = new User();
+		User u5Pending = new User();
+		u1Approved.setDocumentVerified(DocumentVerification.APPROVED);
+		u2NoDocument.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+		u3Pending.setDocumentVerified(DocumentVerification.PENDING);
+		u4Rejected.setDocumentVerified(DocumentVerification.REJECTED);
+		u5Pending.setDocumentVerified(DocumentVerification.PENDING);
+		
+		List<User> approved = new ArrayList<User>();
+		approved.add(u1Approved);
+		List<User> noDocument = new ArrayList<User>();
+		noDocument.add(u2NoDocument);
+		List<User> pending = new ArrayList<User>();
+		pending.add(u5Pending);
+		pending.add(u3Pending);
+		List<User> rejected = new ArrayList<User>();
+		rejected.add(u4Rejected);
+		
+		Mockito.when(userRepository.findByDocumentVerified(DocumentVerification.APPROVED)).thenReturn(approved);
+		Mockito.when(userRepository.findByDocumentVerified(DocumentVerification.REJECTED)).thenReturn(rejected);
+		Mockito.when(userRepository.findByDocumentVerified(DocumentVerification.NO_DOCUMENT)).thenReturn(noDocument);
+		Mockito.when(userRepository.findByDocumentVerified(DocumentVerification.PENDING)).thenReturn(pending);
+		
+		List<User> found = new ArrayList<User>();
+		found = userService.findUsersByDocumentVerified(DocumentVerification.APPROVED);
+		assertEquals(1, found.size());
+		assertEquals(DocumentVerification.APPROVED.ordinal(), found.get(0).getDocumentVerified().ordinal());
+		
+		found = userService.findUsersByDocumentVerified(DocumentVerification.REJECTED);
+		assertEquals(1, found.size());
+		assertEquals(DocumentVerification.REJECTED.ordinal(), found.get(0).getDocumentVerified().ordinal());
+		
+		found = userService.findUsersByDocumentVerified(DocumentVerification.NO_DOCUMENT);
+		assertEquals(1, found.size());
+		assertEquals(DocumentVerification.NO_DOCUMENT.ordinal(), found.get(0).getDocumentVerified().ordinal());
+		
+		found = userService.findUsersByDocumentVerified(DocumentVerification.PENDING);
+		assertEquals(2, found.size());
+		assertEquals(DocumentVerification.PENDING.ordinal(), found.get(0).getDocumentVerified().ordinal());
+		assertEquals(DocumentVerification.PENDING.ordinal(), found.get(1).getDocumentVerified().ordinal());
+	}
+	
+	@Transactional
+	@Test
+	public void verifyDocument_PASS_Test() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.PENDING);
+		
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		Mockito.when(userRepository.save(this.logged)).thenReturn(this.logged);
+		
+		//boolean ret = userService.verifyDocument(1L);
+		//assertTrue(ret);
+		
+		//Mockito.verify(userServiceSpy, Mockito.times(1)).findById(1L);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentIsNull_Test() {
+		this.logged.setDocument(null);
+		this.logged.setDocumentVerified(DocumentVerification.PENDING);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		//userService.verifyDocument(1L);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumenVerificationEnumIsZero_Test() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		//userService.verifyDocument(1L);
+	}
+	
+	@Transactional
+	@Test(expected = DAOException.class)
+	public void verifyDocument_UserNotFound_Test() {
+		//userService.verifyDocument(-1L);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentAlreadyRejected_Test() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.REJECTED);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		//userService.verifyDocument(1L);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentAlreadyApproved() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.APPROVED);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		//userService.verifyDocument(1L);
+	}
+	
+	
+	@Test
+	public void getUserByToken_PASS_Test() {
+		User found = userService.getUser(this.token);
+		assertNotNull(found);
+		assertEquals(this.logged.getUsername(), found.getUsername());
+	}
+
 }

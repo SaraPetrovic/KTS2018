@@ -9,11 +9,16 @@ import { AdministrationZoneComponent } from './administration/administration-zon
 import { ConductorModule } from './modules/conductor/conductor.module';
 import { TicketComponent } from './ticket/ticket.component';
 import { HostComponent } from './host/host.component';
+import { EditProfileComponent } from './profile/edit-profile.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserTicketsComponent } from './profile/user-tickets.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: RegistrationComponent,
     pathMatch: 'full'
   },
   {
@@ -33,6 +38,20 @@ const routes: Routes = [
     loadChildren: './modules/conductor/conductor.module#ConductorModule'
   },
   {
+    path: 'profile',
+    component: ProfileComponent,
+    children: [
+      {
+        path: 'edit',
+        component: EditProfileComponent
+      },
+      {
+        path: 'tickets',
+        component: UserTicketsComponent
+      }
+    ]
+  },
+  {
     path: 'administration',
     component: AdministrationComponent,
     children: [
@@ -47,6 +66,10 @@ const routes: Routes = [
       {
         path: 'zones',
         component: AdministrationZoneComponent,
+      },
+      {
+        path: 'documents',
+        component: AdministrationDocumentAcceptanceComponent
       },
       {
         path: '',

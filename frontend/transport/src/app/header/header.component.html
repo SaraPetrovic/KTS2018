@@ -23,7 +23,7 @@
 
       
       <li style="float: right; margin-right: 20px;">
-        <a *ngIf="userLogged">
+        <a *ngIf="userLogged" routerLink="/profile" routerLinkActive="active">
           {{authenticationService.currentUserValue.username}}
         </a>
       </li>

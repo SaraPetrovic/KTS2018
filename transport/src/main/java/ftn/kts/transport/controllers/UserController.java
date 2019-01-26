@@ -26,9 +26,10 @@ import ftn.kts.transport.dtos.LoginDTO;
 import ftn.kts.transport.dtos.UserDTO;
 import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
-import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.UserService;
 
 @RestController
@@ -39,21 +40,19 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private JwtGeneratorService jwtService;
+    private JwtService jwtService;
 
-    @PostMapping( path = "/add" ,consumes = {"application/json"} )
+    @PostMapping(consumes = {"application/json"} )
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
-    	if(userDTO.getUsername() == "" || userDTO.getPassword() == "" || userDTO.getRepeatedPassword() == "" || userDTO.getFirstName() == "" || userDTO.getLastName() == ""
-    			|| userDTO.getUsername() == null || userDTO.getPassword() == null || userDTO.getRepeatedPassword() == null || userDTO.getFirstName() == null || userDTO.getLastName() == null) {
-    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	if(userDTO.getUsername() == "" || userDTO.getPassword() == "" || userDTO.getFirstName() == "" || userDTO.getLastName() == ""
+    			|| userDTO.getUsername() == null || userDTO.getPassword() == null || userDTO.getFirstName() == null || userDTO.getLastName() == null) {
+    		throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
     	}
-    	if(userDTO.getPassword().equals(userDTO.getRepeatedPassword()) && userDTO.getPassword().length() >= 8) {
+    	if(userDTO.getPassword().length() >= 8) {
     		userService.addUser(userDTO.getUsername(), userDTO.getPassword(), userDTO.getFirstName(), userDTO.getLastName());
-    	}else if(!userDTO.getPassword().equals(userDTO.getRepeatedPassword())){
-    		throw new DAOException("Invalid repeated password", HttpStatus.BAD_REQUEST);
-    	}else if(userDTO.getPassword().length() < 8) {
-    		throw new DAOException("Password must contain at least eight characters ", HttpStatus.BAD_REQUEST);
+    	}else{
+    		throw new InvalidInputDataException("Password must contain at least eight characters", HttpStatus.BAD_REQUEST);
     	}
         
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -66,7 +65,7 @@ public class UserController {
 
         try {
             User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), jwtService.generate(user));
+            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPassword(), jwtService.generate(user));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseBody);
         }
         catch(DAOException e){
@@ -74,48 +73,31 @@ public class UserController {
         }
     }
     
-    @GetMapping(path="/tickets/{id}", produces="application/json")
-    public ResponseEntity<Set<Ticket>> getTickets(@PathVariable long id){
-		Set<Ticket> tickets = userService.getTickets(id);
-		return new ResponseEntity<>(tickets, HttpStatus.OK);
-    }
-    
-    @PutMapping( path = "/update", consumes = {"application/json"}, produces="application/json")
+    @PutMapping(consumes = {"application/json"}, produces="application/json")
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDto){
-		
-    	User user = userService.findById(userDto.getId());
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<UserDTO> update(@RequestHeader("Authorization") final String token, @RequestBody UserDTO userDto){
+		System.out.println("USAAAOO!!!!");
+    	User u = jwtService.validate(token.substring(7));
+    	User user = userService.findByUsername(u.getUsername());
     	
     	if(userDto.getUsername() == "" || userDto.getPassword() == "" || userDto.getFirstName() == "" || userDto.getLastName() == ""
     			|| userDto.getUsername() == null || userDto.getPassword() == null || userDto.getFirstName() == null || userDto.getLastName() == null) {
-    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    		throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
     	}
-    	
-    	if(userDto.getPassword().equals(userDto.getRepeatedPassword()) && userDto.getPassword().length() >= 8) {
+    	System.out.println(userDto.getFirstName() + " AAAAAAAAAAA " + userDto.getLastName());
+    	if(userDto.getPassword().length() >= 8) {
     		user.setUsername(userDto.getUsername());
     		user.setPassword(userDto.getPassword());
     		user.setFirstName(userDto.getFirstName());
     		user.setLastName(userDto.getLastName());
-    	}else if(!userDto.getPassword().equals(userDto.getRepeatedPassword())){
-    		throw new DAOException("Invalid repeated password", HttpStatus.BAD_REQUEST);
     	}else if(userDto.getPassword().length() < 8) {
-    		throw new DAOException("Password must contain at least eight characters ", HttpStatus.BAD_REQUEST);
+    		throw new InvalidInputDataException("Password must contain at least eight characters", HttpStatus.BAD_REQUEST);
     	}
     	userService.save(user);
     	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
     
-    @GetMapping(path = "/rest/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String helloAdmin(){
-        return "Hello World";
-    }
-
-    @GetMapping(path = "/rest/user")
-    @PreAuthorize("hasRole('CLIENT')")
-    public String helloClient() {
-    	return "Hello World Client";
-    }
     
     @PostMapping(path = "/document")
     @Consumes("multipart/form-data")
@@ -127,16 +109,26 @@ public class UserController {
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/verify")
+    @PutMapping(path = "/{id}/accept")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> verifyDocument(@PathVariable("id") long id) {
-    	boolean ret = userService.verifyDocument(id);
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> acceptDocument(@PathVariable("id") long id) {
+    	boolean ret = userService.verifyDocument(id, DocumentVerification.APPROVED);
+    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+    
+    @PutMapping(path = "/{id}/decline")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> declineDocument(@PathVariable("id") long id) {
+    	boolean ret = userService.verifyDocument(id, DocumentVerification.REJECTED);
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
     @GetMapping(path = "/verify")
     @Produces("application/json")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<List<User>> getUsersForVerification() {
     	List<User> toVerify = userService.findUsersByDocumentVerified(DocumentVerification.PENDING);
     	return new ResponseEntity<>(toVerify, HttpStatus.OK);

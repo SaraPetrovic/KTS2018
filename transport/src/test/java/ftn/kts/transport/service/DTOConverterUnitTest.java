@@ -3,7 +3,6 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,16 +28,20 @@ import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.dtos.PriceListDTO;
 import ftn.kts.transport.dtos.RouteScheduleDTO;
 import ftn.kts.transport.dtos.TicketDTO;
+import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.PriceList;
+import ftn.kts.transport.model.Route;
 import ftn.kts.transport.model.RouteSchedule;
+import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.services.LineService;
+import ftn.kts.transport.services.RouteService;
 import ftn.kts.transport.services.ZoneService;
 
 @RunWith(SpringRunner.class)
@@ -52,9 +55,12 @@ public class DTOConverterUnitTest {
 	private LineService lineServiceMocked;
 	@MockBean
 	private ZoneService zoneServiceMocked;
+	@MockBean
+	private RouteService routeServiceMocked;
 	
 	private Line line = new Line();
 	private Zone zone = new Zone();
+	private Route route = new Route();
 	private LineDTO lineDTO = new LineDTO();
 	private RouteScheduleDTO rsDTO = new RouteScheduleDTO();
 	private PriceListDTO plDTO = new PriceListDTO();
@@ -67,6 +73,7 @@ public class DTOConverterUnitTest {
 		line.setActive(true);
 		line.setName("7A");
 		line.setTransportType(VehicleType.BUS);
+		line.setDuration(10000);
 		Mockito.when(lineServiceMocked.findById(1L)).thenReturn(line);
 		Mockito.when(lineServiceMocked.findById(-1L)).thenThrow(new DAOException("Line [id=-1] cannot be found!"));
 		Mockito.when(lineServiceMocked.findByName("7A")).thenReturn(line);
@@ -79,10 +86,16 @@ public class DTOConverterUnitTest {
 		Mockito.when(zoneServiceMocked.findById(1L)).thenReturn(zone);
 		Mockito.when(zoneServiceMocked.findById(-1L)).thenThrow(new DAOException("Station [id=-1] cannot be found!"));
 		
+		route.setId(1L);
+		route.setLine(line);
+		Mockito.when(routeServiceMocked.getRoute(1L)).thenReturn(route);
+		Mockito.when(routeServiceMocked.getRoute(-1L)).thenThrow(new DAOException("Route [id=-1] cannot be found!"));
+		
 		lineDTO.setName("8A");
 		lineDTO.setVehicleType(0);
 		lineDTO.setStreetPath(new HashSet<String>());
 		lineDTO.getStreetPath().add("path1");
+		lineDTO.setDuration(10000);
 		
 		rsDTO.setSaturday(new HashSet<Date>());
 		rsDTO.setSunday(new HashSet<Date>());
@@ -109,6 +122,8 @@ public class DTOConverterUnitTest {
 		plDTO.getZonePrices().put(1L, 100.00);
 		
 		
+		//ticketDTO.setTicketTemporal(TicketTypeTemporal.ONE_HOUR_PASS);
+		//ticketDTO.setTransportType(VehicleType.BUS);
 		ticketDTO.setTicketTemporal(0);
 		ticketDTO.setTransportType(0);
 		
@@ -122,12 +137,14 @@ public class DTOConverterUnitTest {
 		assertEquals(lineDTO.getVehicleType(), ret.getTransportType().ordinal());
 		assertEquals(lineDTO.getStreetPath().size(), ret.getStreetPath().size());
 		assertEquals(lineDTO.getStreetPath().iterator().next(), ret.getStreetPath().iterator().next());
+		assertEquals(lineDTO.getDuration(), ret.getDuration());
 	}
 	
 	@Test(expected = DAOException.class)
 	public void convertToLine_LineAlreadyExists_Test() {
 		lineDTO.setName("7A");
 		converter.convertDTOtoLine(lineDTO);
+		lineDTO.setName("8A");
 	}
 	
 	@Test(expected = InvalidInputDataException.class)
@@ -135,6 +152,14 @@ public class DTOConverterUnitTest {
 		// transport type = {0, 1, 2}
 		lineDTO.setVehicleType(5);
 		converter.convertDTOtoLine(lineDTO);
+		lineDTO.setVehicleType(0);
+	}
+	
+	@Test(expected = InvalidInputDataException.class)
+	public void convertToLine_InvalidDuration_Test() {
+		lineDTO.setDuration(-5000);
+		converter.convertDTOtoLine(lineDTO);
+		lineDTO.setDuration(10000);	// vrati na staro
 	}
 	
 	@Test
@@ -149,10 +174,6 @@ public class DTOConverterUnitTest {
 
 	}
 	
-	@Test
-	public void convertToTicket_PASS_Test() {
-		
-	}
 	
 	@Transactional
 	@Test(expected = InvalidInputDataException.class)
@@ -179,30 +200,64 @@ public class DTOConverterUnitTest {
 		converter.convertDTOtoTicket(ticketDTO);
 	}
 	
+	@Test(expected = DAOException.class)
+	public void convertToTicket_RouteNotFound_Test() {
+		ticketDTO.setRouteId(-1L);
+		converter.convertDTOtoTicket(ticketDTO);
+	}
 	
+	@Transactional
 	@Test
 	public void convertToTicket_ZoneTicket_PASS_Test() {
 		ticketDTO.setZoneId(1L);
 		ZoneTicket ret = (ZoneTicket) converter.convertDTOtoTicket(ticketDTO);
 		assertNotNull(ret);
 		assertEquals(ticketDTO.getZoneId(), ret.getZone().getId());
-		assertFalse(ret.isActive());
+		//assertFalse(ret.isActive());
 		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
 		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
 	}
 	
-	
+	@Transactional
 	@Test
 	public void convertToTicket_LineTicket_PASS_Test() {
 		ticketDTO.setLineId(1L);
 		LineTicket ret = (LineTicket) converter.convertDTOtoTicket(ticketDTO);
 		assertNotNull(ret);
 		assertEquals(ticketDTO.getLineId(), ret.getLine().getId());
-		assertFalse(ret.isActive());
+		//assertFalse(ret.isActive());
 		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
 		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
 	}
 	
+	@Transactional
+	@Test
+	public void convertToTicket_LineTicket_Monthly_PASS_Test() {
+		ticketDTO.setLineId(1L);
+		ticketDTO.setTicketTemporal(1);
+		LineTicket ret = (LineTicket) converter.convertDTOtoTicket(ticketDTO);
+		assertNotNull(ret);
+		assertEquals(ticketDTO.getLineId(), ret.getLine().getId());
+		//assertTrue(ret.isActive());
+		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
+		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
+	}
+	
+	
+	@Transactional
+	@Test
+	public void convertToTicket_RouteTicket_PASS_Test() {
+		ticketDTO.setRouteId(1L);
+		ticketDTO.setTicketTemporal(3);
+		RouteTicket ret = (RouteTicket) converter.convertDTOtoTicket(ticketDTO);
+		assertNotNull(ret);
+		assertEquals(ticketDTO.getRouteId(), ret.getRoute().getId());
+		//assertTrue(ret.isActive());
+		assertEquals(TicketTypeTemporal.ONE_TIME_PASS, ret.getTicketTemporal());
+		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
+	}
+	
+	@Transactional
 	@Test
 	public void convertToTicket_ZoneTicket_Monthly_PASS_Test() {
 		ticketDTO.setZoneId(1L);
@@ -210,15 +265,30 @@ public class DTOConverterUnitTest {
 		ZoneTicket ret = (ZoneTicket) converter.convertDTOtoTicket(ticketDTO);
 		assertNotNull(ret);
 		assertEquals(ticketDTO.getZoneId(), ret.getZone().getId());
-		assertTrue(ret.isActive());
+		//assertTrue(ret.isActive());
 		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
 		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
-		
-		// posto su mesecne karte
-		assertNotNull(ret.getEndTime());
 		assertNotNull(ret.getStartTime());
-		
+		assertNotNull(ret.getEndTime());
 	}
+	
+
+	@Transactional
+	@Test
+	public void converToTicket_ZoneTicket_Yearly_PASS_Test() {
+		ticketDTO.setZoneId(1L);
+		ticketDTO.setTicketTemporal(2);
+		ZoneTicket ret = (ZoneTicket) converter.convertDTOtoTicket(ticketDTO);
+		assertNotNull(ret);
+		assertEquals(ticketDTO.getZoneId(), ret.getZone().getId());
+		//assertTrue(ret.isActive());
+		assertEquals(ticketDTO.getTicketTemporal(), ret.getTicketTemporal().ordinal());
+		assertEquals(ticketDTO.getTransportType(), ret.getTransportType().ordinal());
+		assertNotNull(ret.getStartTime());
+		assertNotNull(ret.getEndTime());
+	}
+	
+	
 	
 	
 	@Test

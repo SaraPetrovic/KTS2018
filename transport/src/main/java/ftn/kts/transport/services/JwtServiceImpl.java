@@ -9,7 +9,7 @@ import ftn.kts.transport.security.JwtGenerator;
 import ftn.kts.transport.security.JwtValidator;
 
 @Service
-public class JwtGeneratorServiceImpl implements JwtGeneratorService {
+public class JwtServiceImpl implements JwtService {
 
 	@Autowired
 	private JwtGenerator jwtGenerator;
@@ -23,11 +23,11 @@ public class JwtGeneratorServiceImpl implements JwtGeneratorService {
 
 	@Override
 	public User validate(String token) {
-		User ret = jwtValidator.validate(token);
-		if (ret == null) {
-			throw new TokenValidationException("Sorry! Token cannot be validated");
-		}
-		return ret;
+		return jwtValidator.validate(token);
+//		if (ret == null) {
+//			throw new TokenValidationException("Sorry! Token cannot be validated");
+//		}
+//		return ret;
 	}
 
 	

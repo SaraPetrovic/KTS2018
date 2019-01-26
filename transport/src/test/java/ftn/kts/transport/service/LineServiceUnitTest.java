@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -37,6 +38,7 @@ import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.RouteScheduleRepository;
 import ftn.kts.transport.repositories.StationRepository;
 import ftn.kts.transport.services.LineService;
+import ftn.kts.transport.services.ZoneService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -57,6 +59,9 @@ public class LineServiceUnitTest {
 	
 	@MockBean
 	private RouteScheduleRepository routeRepoMocked;
+	
+	@MockBean
+	private ZoneService zoneServiceMocked;
 	
 	private Line l, l2;
 	private RouteSchedule sch;
@@ -165,6 +170,16 @@ public class LineServiceUnitTest {
 		service.addLine(l);
 	}
 	
+	@Test(expected = DAOException.class)
+	public void addLine_AlreadyExists_Test() {
+		Line duplicate = new Line();
+		duplicate.setName("1A");
+		Mockito.when(lineRepoMocked.save(duplicate)).thenThrow(new DataIntegrityViolationException("Duplicate entry!"));
+		
+		service.addLine(duplicate);
+	
+	}
+	
 	@Test
 	public void addStationsToLine_PASS_Test() {
 		HashMap<Integer, Long> stations = new HashMap<Integer, Long>();
@@ -252,27 +267,29 @@ public class LineServiceUnitTest {
 		service.deleteLine(-1);
 	}
 	
-	
-	
 	@Test
-	public void getZoneForLine_PASS_Test() {
-		/*
-		ArrayList<Long> stationIds = new ArrayList<Long>();
-		stationIds.add(s.getId());
-		ArrayList<Station> foundStations = new ArrayList<Station>();
-		foundStations.add(s);		
-		Mockito.when(stationRepoMocked.findByIdIn(stationIds)).thenReturn(foundStations);
+	public void updateLineStations_PASS_Test() {
+		Mockito.doReturn(this.l).when(spyService).findById(1L);
+		Mockito.when(lineRepoMocked.save(this.l)).thenReturn(this.l);
 		
+		LineDTO dto = new LineDTO();
+		HashMap<Integer, Long> stations = new HashMap<Integer, Long>();
+		stations.put(1, 1L);
+		dto.setStations(stations);
+		
+		HashSet<LineAndStation> stationSet = new HashSet<LineAndStation>();
 		LineAndStation ls = new LineAndStation();
-		ls.addStation(l, s, 1);
-		Set<LineAndStation> setOfStations = new HashSet<LineAndStation>();
-		setOfStations.add(ls);
-		l.setStationSet(setOfStations);
-		*/
+		ls.addStation(this.l, this.s, 1);
+		stationSet.add(ls);
+		this.l.setStationSet(stationSet);
+		Mockito.doReturn(this.l).when(spyService).addStationsToLine(1L, dto);
 		
-		// NE MOZE NI OVO JER SE U METODI PRAVI NOVI OBJEKAT Collection<Station> i onda nmg da mokujem
-		
+		Line ret = spyService.updateLineStations(1L, dto);
+		assertNotNull(ret);
+		assertEquals(this.l.getStationSet().size(), ret.getStationSet().size());
 	}
+	
+	
 	
 	@Test
 	public void addLineMethod_PASS_Test() {

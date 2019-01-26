@@ -1,12 +1,13 @@
 package ftn.kts.transport.security;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import ftn.kts.transport.exception.TokenValidationException;
 import ftn.kts.transport.model.Role;
 import ftn.kts.transport.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class JwtValidator {
@@ -31,6 +32,7 @@ public class JwtValidator {
         }
         catch (Exception e) {
             System.out.println(e);
+            throw new TokenValidationException("Token is invalid or missing!");
         }
 
         return user;

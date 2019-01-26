@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 import ftn.kts.transport.dtos.StationDTO;
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.services.StationService;
@@ -38,7 +39,7 @@ public class StationControllerIntegrationTest {
 	@Test
 	public void getAllTest() {
 		ResponseEntity<StationDTO[]> responseEntity = 
-				restTemplate.getForEntity("/station/all", StationDTO[].class);
+				restTemplate.getForEntity("/station", StationDTO[].class);
 		
 		StationDTO[] rez = responseEntity.getBody();
 		
@@ -53,7 +54,7 @@ public class StationControllerIntegrationTest {
 		StationDTO entity= new StationDTO(Long.valueOf(44), "Jevrejska 55", "Centar2");
 		
 		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/add", entity, StationDTO.class);
+				restTemplate.postForEntity("/station", entity, StationDTO.class);
 	
 		responseEntity.getBody();
 
@@ -67,7 +68,7 @@ public class StationControllerIntegrationTest {
 		StationDTO entity= new StationDTO(Long.valueOf(44), null, "Centar2");
 		
 		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/add", entity, StationDTO.class);
+				restTemplate.postForEntity("/station", entity, StationDTO.class);
 	
 		responseEntity.getBody();
 
@@ -80,7 +81,7 @@ public class StationControllerIntegrationTest {
 		StationDTO entity= new StationDTO(Long.valueOf(44), "Jevrejska", null);
 		
 		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/add", entity, StationDTO.class);
+				restTemplate.postForEntity("/station", entity, StationDTO.class);
 	
 		
 		responseEntity.getBody();
@@ -95,7 +96,7 @@ public class StationControllerIntegrationTest {
 		int size = stationService.findAll().size();
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + station.getId(),
+				restTemplate.exchange("/station/" + station.getId(),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -108,7 +109,7 @@ public class StationControllerIntegrationTest {
 		int size = stationService.findAll().size();
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + Long.valueOf(1),
+				restTemplate.exchange("/station/" + Long.valueOf(1),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -119,7 +120,7 @@ public class StationControllerIntegrationTest {
 	public void deleteStationTestNotFound() {
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/station/delete/" + Long.valueOf(75),
+				restTemplate.exchange("/station/" + Long.valueOf(75),
 						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
 	
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -133,9 +134,11 @@ public class StationControllerIntegrationTest {
 		station.setName("Futoska");
 		station.setLineSet(null);
 		
-		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/update", new StationDTO(station), StationDTO.class);
-		
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + station.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(new StationDTO(station)),
+	            		StationDTO.class);
+
 		StationDTO rez = responseEntity.getBody();
 		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -147,9 +150,12 @@ public class StationControllerIntegrationTest {
 		
 		Station station = stationService.findById(Long.valueOf(53));
 		
-		restTemplate.postForEntity("/station/update", new StationDTO(station), StationDTO.class);
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + station.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(new StationDTO(station)),
+	            		StationDTO.class);
 	}
-
+	
 	@Test
 	public void updateStationTestBadREquest() {
 		
@@ -158,9 +164,12 @@ public class StationControllerIntegrationTest {
 		station.setAddress(null);
 		
 		StationDTO dto = new StationDTO(Long.valueOf(2), null, "");
-		ResponseEntity<StationDTO> responseEntity = 
-				restTemplate.postForEntity("/station/update", dto, StationDTO.class);
-
+		
+		ResponseEntity<StationDTO> responseEntity =
+	            restTemplate.exchange("/station/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<StationDTO>(dto),
+	            		StationDTO.class);
+		
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 

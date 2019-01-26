@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
+import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.ZoneNotFoundException;
+import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.ZoneRepository;
@@ -27,6 +30,9 @@ public class ZoneServiceImpl implements ZoneService{
 	public Zone addZone(Zone zone) {
 //		List<Zone> zones = findAll();
 
+		if((zoneRepository.findByName(zone.getName())) != null) {
+			throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
+		}
 		Zone rez = zoneRepository.save(zone);
 		
 //		for(Zone z : zones) {
@@ -69,7 +75,7 @@ public class ZoneServiceImpl implements ZoneService{
 	}
 
 	@Override
-	public Zone findById(Long id) throws ZoneNotFoundException {
+	public Zone findById(Long id) {
 		Zone zone = zoneRepository.findById(id).orElseThrow(() -> new ZoneNotFoundException(id));
 		if(!zone.isActive()) {
 			 throw new ZoneNotFoundException(id);
@@ -94,5 +100,37 @@ public class ZoneServiceImpl implements ZoneService{
 		Set<Zone> found = zoneRepository.findByStationsIn(stations);
 		return found;
 	}
+	
+	@Override
+	public Zone getZoneForLine(Line line) {
+		Collection<Station> stations = new HashSet<Station>();
+		for (LineAndStation ls : line.getStationSet()) {
+			stations.add(ls.getStation());
+		}
+		
+		// zone kojima pripadaju stanice
+		Set<Zone> zones = getZonesByStations(stations);
+		Zone parent = null;
+		boolean flag;
+		for (Zone potentialParent : zones) {
+			flag = false;
+			for (Zone zone : zones) {
+				if(zone.getSubZone() != null) {
+					if (zone.getSubZone().equals(potentialParent)) {
+						flag = true;
+						break;
+					}
+				}
+			}
+			if (flag) {
+				continue;
+			}
+			parent = potentialParent;
+		}
+		
+		return parent;
+	}
+
+
 
 }

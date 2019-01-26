@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,13 +29,16 @@ import ftn.kts.transport.enums.UserTypeDemographic;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
+import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.PriceList;
-import ftn.kts.transport.model.Ticket;
+import ftn.kts.transport.model.Route;
+import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.PriceListRepository;
+import ftn.kts.transport.services.LineService;
 import ftn.kts.transport.services.PriceListService;
 import ftn.kts.transport.services.ZoneService;
 
@@ -50,7 +54,13 @@ public class PriceListServiceUnitTest {
 	private PriceListRepository plRepoMocked;
 	
 	@MockBean
+	private LineService lineServiceMocked;
+	
+	@MockBean
 	private ZoneService zoneServiceMocked;
+	
+	@SpyBean
+	private PriceListService spyService;
 	
 	private PriceList validPriceList = new PriceList();
 	private PriceList invalidPriceList = new PriceList();
@@ -58,6 +68,10 @@ public class PriceListServiceUnitTest {
 	private User user = new User();
 	private ZoneTicket zoneTicket = new ZoneTicket();
 	private LineTicket lineTicket = new LineTicket();
+	private RouteTicket routeTicket = new RouteTicket();
+	private Line line = new Line();
+	private Zone zone = new Zone();
+	private Route route = new Route();
 	
 	@Before
 	public void setUp() {
@@ -90,10 +104,22 @@ public class PriceListServiceUnitTest {
 		Optional<PriceList> optValid = Optional.of(validPriceList);
 		Optional<PriceList> optInvalid2 = Optional.of(invalidPricesPL);
 		
-		Mockito.when(zoneServiceMocked.findById(1L)).thenReturn(new Zone(1L, "Zone I", true));
-		Mockito.when(zoneServiceMocked.findById(2L)).thenReturn(new Zone(2L, "Zone II", true));
-		Mockito.when(zoneServiceMocked.findById(3L)).thenThrow(new DAOException("Zone not found!", HttpStatus.NOT_FOUND));
+		line.setId(1L);
+		line.setName("7A");
+		line.setActive(true);
+		line.setDuration(10000);
+		line.setTransportType(VehicleType.BUS);
 		
+		zone.setId(1L);
+		zone.setActive(true);
+		zone.setName("Zone I");
+		zone.setSubZone(null);
+		
+		route.setId(1L);
+		route.setLine(line);
+		
+		Mockito.when(zoneServiceMocked.getZoneForLine(line)).thenReturn(zone);
+				
 		Mockito.when(plRepoMocked.findById(1L)).thenReturn(optValid);
 		Mockito.when(plRepoMocked.findById(2L)).thenThrow(new DAOException("Price List [id=2] not found!", HttpStatus.NOT_FOUND));
 		Mockito.when(plRepoMocked.findById(3L)).thenReturn(optInvalid2);
@@ -108,9 +134,13 @@ public class PriceListServiceUnitTest {
 		lineTicket.setTransportType(VehicleType.BUS);
 		zoneTicket.setUser(user);
 		lineTicket.setUser(user);
-		zoneTicket.setZone(new Zone(1L, "Zone I", true));
+		zoneTicket.setZone(zone);
+		lineTicket.setLine(line);
 		
-		
+		routeTicket.setTicketTemporal(TicketTypeTemporal.ONE_TIME_PASS);
+		routeTicket.setTransportType(VehicleType.BUS);
+		routeTicket.setUser(user);
+		routeTicket.setRoute(route);
 		
 	}
 	
@@ -133,7 +163,7 @@ public class PriceListServiceUnitTest {
 	
 	@Test(expected = DAOException.class)
 	public void activatePriceList_throwsDAO_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.empty());
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.empty());
 		service.activatePriceList(2L);
 	}
 	
@@ -143,96 +173,176 @@ public class PriceListServiceUnitTest {
 		service.activatePriceList(3L);
 	}
 	
+	@Transactional
 	@Test
-	public void calculatePriceZoneTicket_OneTime_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
-		// user je obican, ticket type = one_time --> cena ostaje ista
-		assertEquals(100.00*3, calculatedPrice, 0.001);
+	public void activatePriceList_ActiveAlreadyExists_PASS_Test() {
+		PriceList alreadyActive = new PriceList();
+		alreadyActive.setId(5L);
+		alreadyActive.setLineDiscount(0.5);
+		alreadyActive.setMonthlyCoeffitient(20);
+		alreadyActive.setOneTimePrices(validPriceList.getOneTimePrices());
+		alreadyActive.setSeniorDiscount(0.7);
+		alreadyActive.setStudentDiscount(0.8);
+		alreadyActive.setYearlyCoeffitient(200);
+		alreadyActive.setOneHourCoeffitient(3);
+		
+		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(alreadyActive));
+		Mockito.when(plRepoMocked.findById(5L)).thenReturn(Optional.of(alreadyActive));
+		Mockito.when(plRepoMocked.save(alreadyActive)).thenReturn(alreadyActive);
+		
+		boolean ret = service.activatePriceList(1L);
+		assertTrue(ret);
+		
+	}
+	
+	@Transactional
+	@Test(expected = DAOException.class)
+	public void calculatePrice_NoActivePriceList_Test() {
+		Mockito.doReturn(null).when(spyService).getActivePriceList();
+		spyService.calculateTicketPrice(routeTicket);
+	}
+
+	
+	@Test
+	public void calculatePriceRouteTicket_OneTime_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		double calculatedPrice = spyService.calculateTicketPrice(routeTicket);
+		assertEquals(100.00, calculatedPrice, 0.001);
 	}
 	
 	@Test
+	public void calculatePriceZoneTicket_OneHour_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
+		// user je obican, ticket type = one_hour --> one_time*one_hour_coeff (3)
+		assertEquals(100.00*3, calculatedPrice, 0.001);
+	}
+	
+	@Transactional
+	@Test
 	public void calculatePriceZoneTicket_Monthly_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user je obican, ticket type = MONTHLY --> nova cena
 		assertEquals(100.00*20, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
+	@Test
+	public void calculatePriceLineTicket_Monthly_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		lineTicket.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
+		double calculatedPrice = spyService.calculateTicketPrice(lineTicket);
+		// user je obican, ticket type = MONTHLY, lineTicket disc = 0.5 --> nova cena
+		assertEquals(100.00*20*0.5, calculatedPrice, 0.001);
+	}
+	
+	@Transactional
+	@Test
+	public void calculatePriceLineTicket_Yearly_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		lineTicket.setTicketTemporal(TicketTypeTemporal.YEARLY_PASS);
+		double calculatedPrice = spyService.calculateTicketPrice(lineTicket);
+		// user je obican, ticket type = MONTHLY, lineTicket disc = 0.5 --> nova cena
+		assertEquals(100.00*200*0.5, calculatedPrice, 0.001);
+	}
+
+	
+	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Yearly_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.YEARLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user je obican, ticket type = YEARLY --> nova cena
 		assertEquals(100.00*200, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
-	public void calculatePriceZoneTicket_OneTime_Student_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+	public void calculatePriceZoneTicket_OneHour_Student_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.STUDENT);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
-		// user = STUDENT, ticket type = ONE_TIME --> cena nova
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
+		// user = STUDENT, ticket type = ONE_HOUR --> ONE_TIME * ONE_HOUR_COEFF (3)
 		assertEquals(100.00*0.8*3, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
-	public void calculatePriceZoneTicket_OneTime_Senior_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+	public void calculatePriceZoneTicket_OneHour_Senior_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.SENIOR);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
-		// user = SENIOR, ticket type = ONE_TIME --> cena nova
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
+		// user = SENIOR, ticket type = ONE_TIME --> ONE_TIME*ONE_HOUR(3)
 		assertEquals(100.00*0.7*3, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Monthly_Student_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.STUDENT);
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user = STUDENT, ticket type = MONTHLY --> cena nova
 		assertEquals(100.00*0.8*20, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
-	public void calculatePriceZone_Monthly_Senior_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+	public void calculatePriceZoneTicket_Monthly_Senior_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.SENIOR);
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.MONTHLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user = SENIOR, ticket type = MONTHLY --> cena nova
 		assertEquals(100.00*0.7*20, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
 	public void calculatePriceZoneTicket_Yearly_Student_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.STUDENT);
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.YEARLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user = STUDENT, ticket type = YEARLY --> cena nova
 		assertEquals(100.00*0.8*200, calculatedPrice, 0.001);
 	}
 	
+	@Transactional
 	@Test
-	public void calculatePriceZone_Yearly_Senior_PASS_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+	public void calculatePriceZoneTicket_Yearly_Senior_PASS_Test() {
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
 		zoneTicket.getUser().setUserTypeDemo(UserTypeDemographic.SENIOR);
 		zoneTicket.setTicketTemporal(TicketTypeTemporal.YEARLY_PASS);
-		double calculatedPrice = service.calculateTicketPrice(zoneTicket);
+		double calculatedPrice = spyService.calculateTicketPrice(zoneTicket);
 		// user = SENIOR, ticket type = YEARLY --> cena nova
 		assertEquals(100.00*0.7*200, calculatedPrice, 0.001);
 	}
 	
-	
+	@Transactional
 	@Test
 	public void getActivePriceList_PASS_Test() {
 		validPriceList.setActive(true);
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
-		PriceList found = service.getActivePriceList();
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.of(validPriceList));
+		Mockito.doReturn(validPriceList).when(spyService).getActivePriceList();
+		
+		PriceList found = spyService.getActivePriceList();
 		assertNotNull(found);
 		assertTrue(found.isActive());
 		
@@ -240,8 +350,10 @@ public class PriceListServiceUnitTest {
 	
 	@Test
 	public void getActivePriceList_NoActive_Test() {
-		Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.empty());
-		PriceList notFound = service.getActivePriceList();
+		//Mockito.when(plRepoMocked.findByActive(true)).thenReturn(Optional.empty());
+		Mockito.doReturn(null).when(spyService).getActivePriceList();
+		
+		PriceList notFound = spyService.getActivePriceList();
 		assertNull(notFound);
 	}
 }

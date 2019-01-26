@@ -1,10 +1,8 @@
 package ftn.kts.transport.dtos;
 
-import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 
-import java.io.File;
 import java.util.Date;
 
 public class TicketDTO {

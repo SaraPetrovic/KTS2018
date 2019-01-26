@@ -25,6 +25,13 @@ import { TicketComponent } from './ticket/ticket.component';
 import { MaterialModule } from './modules/shared/material.module';
 import { LineTableComponent } from './line-table/line-table.component';
 import { HostComponent } from './host/host.component';
+import { EditProfileComponent } from './profile/edit-profile.component';
+import { ConductorModule } from './modules/conductor/conductor.module';
+import { ProfileComponent } from './profile/profile.component';
+import { UserTicketsComponent } from './profile/user-tickets.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
+
 
 @NgModule({
   declarations: [
@@ -48,6 +55,11 @@ import { HostComponent } from './host/host.component';
     TicketComponent,
     LineTableComponent,
     HostComponent,
+    EditProfileComponent,
+    ProfileComponent,
+    UserTicketsComponent,
+    RegistrationComponent,
+    AdministrationDocumentAcceptanceComponent
   ],
   imports: [
     BrowserModule,

@@ -30,8 +30,6 @@ public class LineServiceImpl implements LineService {
 	private LineRepository lineRepository;
 	@Autowired
 	private StationRepository stationRepository;
-	@Autowired
-	private ZoneService zoneService;
 	
 	public static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
@@ -143,44 +141,29 @@ public class LineServiceImpl implements LineService {
 		
 	}
 
-	
-
-	@Override
-	public Zone getZoneForLine(Line line) {
-		Collection<Station> stations = new HashSet<Station>();
-		for (LineAndStation ls : line.getStationSet()) {
-			stations.add(ls.getStation());
-		}
-		
-		// zone kojima pripadaju stanice
-		Set<Zone> zones = zoneService.getZonesByStations(stations);
-		Zone parent = null;
-		boolean flag;
-		for (Zone potentialParent : zones) {
-			flag = false;
-			for (Zone zone : zones) {
-				if(zone.getSubZone() != null) {
-					if (zone.getSubZone().equals(potentialParent)) {
-						flag = true;
-						break;
-					}
-				}
-			}
-			if (flag) {
-				continue;
-			}
-			parent = potentialParent;
-		}
-		
-		return parent;
-	}
-
 
 	@Transactional
 	@Override
 	public Line addLineMethod(Line line, LineDTO lineDTO) {
 		Line ret = addLine(line);
 		ret = addStationsToLine(ret.getId(), lineDTO);
+		return ret;
+	}
+
+
+	@Override
+	public Set<Line> getAllLinesByZoneAndTransportType(Zone zone, VehicleType type) {
+		Set<Line> ret = new HashSet<Line>();
+		Collection<Line> lines = new ArrayList<Line>();
+		for (Station s : zone.getStations()) {
+			for (LineAndStation ls : s.getLineSet()) {
+				if (ls.getLine().getTransportType().ordinal() == type.ordinal()) {
+					lines.add(ls.getLine());
+				}	
+			}
+		}
+		
+		ret.addAll(lines);
 		return ret;
 	}
 	

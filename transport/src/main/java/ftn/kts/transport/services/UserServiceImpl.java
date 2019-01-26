@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.enums.UserTypeDemographic;
-import ftn.kts.transport.exception.AuthorizationException;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.DocumentUploadException;
 import ftn.kts.transport.exception.DocumentVerificationException;
@@ -28,7 +27,7 @@ import ftn.kts.transport.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
 	public final static String  DEFAULT_IMAGE_FOLDER = "src/main/webapp/images/";
 	@Autowired
-	private JwtGeneratorService jwtService;
+	private JwtService jwtService;
     @Autowired
     private UserRepository userRepository;
 
@@ -43,6 +42,7 @@ public class UserServiceImpl implements UserService {
     	User user = new User(username, password, first_name, last_name);
 
     	user.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+    	user.setDocument(null);
     	user.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	user.setTickets(new HashSet<Ticket>());
     	user.setRoles(Role.ROLE_CLIENT);
@@ -96,11 +96,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean saveDocumentImage(MultipartFile file, String token) {
+		// throws AuthorizationException ako ne moze da otpakuje token dobro
 		User credentials = jwtService.validate(token.substring(7));
+		// throws DAOException if not found!
 		User loggedUser = this.findByUsername(credentials.getUsername());
-		if (loggedUser == null) {
-			throw new AuthorizationException("You don't have permission to upload document!");
-		}
+//		if (loggedUser == null) {
+//			throw new AuthorizationException("You don't have permission to upload document!");
+//		}
 		
 		String fileName = "";
 		if (!file.isEmpty()) {
@@ -113,8 +115,7 @@ public class UserServiceImpl implements UserService {
                 stream.write(bytes);
                 stream.close();
                 
-        		//User newUser = userService.changePicure(user, newName);
-                //return true;
+        		
             } catch (Exception e) {
                 throw new DocumentUploadException("Something went wrong during document upload!");
             }
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public boolean verifyDocument(Long id) {
+	public boolean verifyDocument(Long id, DocumentVerification typeVerification) {
 		User toVerify = this.findById(id);
 		if (toVerify.getDocument() == null || toVerify.getDocumentVerified().ordinal() == 0) {
 			throw new DocumentVerificationException("User [username=" + toVerify.getUsername() + "] did not upload personal document!");
@@ -144,9 +145,17 @@ public class UserServiceImpl implements UserService {
 			throw new DocumentVerificationException("Document has already been approved!");
 		}
 		
-		toVerify.setDocumentVerified(DocumentVerification.APPROVED);
+		toVerify.setDocumentVerified(typeVerification);
 		this.save(toVerify);
 		return true;
 	}
+	
+	@Override
+	public User getUser(String token) {
+		User credentials = jwtService.validate(token.substring(7));
+		User ret = findByUsername(credentials.getUsername());
+		return ret;
+	}
+
 
 }

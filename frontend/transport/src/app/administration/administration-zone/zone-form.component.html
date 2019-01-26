@@ -1,14 +1,13 @@
-
 <form [formGroup]="addZoneForm" role="form" (ngSubmit)="onSubmit()">
     <div class="container">
         <div class="row">
             <div class="col-6 col-md-4">
                 <div class="form-group">
                     <h4>
-                        <label value="" class="form-control-label" for="field_name" [(ngModel)]="formLabel">Add zone</label>
+                        <label class="form-control-label" [(ngModel)]="formLabel" for="field_name">{{formLabel}}</label>
                     </h4>
-                    <input type="text" placeholder="Name" class="form-control" formControlName="zoneName" [(ngModel)]="zone.name" 
-                        [ngClass]="{'is-invalid': submitError && f.zoneName.errors}"/>
+                    <input type="text" placeholder="Name" class="form-control" formControlName="zoneName" 
+                            [(ngModel)]="zone.name"  [ngClass]="{'is-invalid': submitError && f.zoneName.errors}"/>
                     <div *ngIf="submitError && f.zoneName.errors" class="invalid-feedback">
                         <div *ngIf="f.zoneName.errors.required">Zone Name is required</div>
                     </div>
@@ -18,7 +17,8 @@
         <div class="row">
             <div class="col-6 col-md-4">
                 <div class="form-group" *ngIf="zones">
-                    <select [(ngModel)]="disabledOption" (change)="onSelect($event.target.value)" class="form-control" formControlName="subzone">
+                    <select [(ngModel)]="disabledOption" (change)="onSelect($event.target.value)"
+                            class="form-control" formControlName="subzone">
                         <option value="" disabled>Select a Subzone</option>
                         <option *ngFor="let zone of zones" [value]="zone.id">
                             {{zone.name}}
@@ -28,13 +28,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6 col-md-4">
-                <div class="form-group" style="margin-left: 77%">
-                    <button class="btn btn-primary" type="submit"
-                            [disabled]="!addZoneForm.valid" (click)="addZone()">
-                        <span class="fa fa-save"></span>&nbsp;<span>Save</span>
-                    </button>
-                </div>
+            <div class="form-group" style="margin-left: 19%">
+                <button class="btn btn-primary" type="submit"
+                        (click)="addButton.emit(zone)">
+                    <span class="fa fa-save"></span>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        
+            <div class="form-group" style="margin-left: 1%">
+                <button class="btn btn-primary" type="reset"
+                        (click)="clearForm()">
+                    <span class="fa fa-save"></span>&nbsp;<span>Cancel</span>
+                </button>
             </div>
         </div>
     </div>
