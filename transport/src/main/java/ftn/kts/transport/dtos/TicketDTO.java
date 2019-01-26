@@ -3,8 +3,12 @@ package ftn.kts.transport.dtos;
 import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.enums.VehicleType;
+import ftn.kts.transport.model.Route;
+import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
+
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.util.Date;
@@ -24,6 +28,7 @@ public class TicketDTO {
 	private String qrCode;
 	private TicketActivationType active;
 	private double price;
+	private Route route;
 	
 	public TicketDTO() {
 		
@@ -84,6 +89,12 @@ public class TicketDTO {
 		this.qrCode = qrCode;
 		this.price = ticket.getPrice();
 		this.active = ticket.getActive();
+		if(ticket instanceof RouteTicket) {
+			this.route = ((RouteTicket) ticket).getRoute();
+			System.out.println("TICKET DTO ROUTEEEEEE!!!!!!!!");
+		}else {
+			this.route = null;
+		}
 		System.out.println("START DATE" + ticket.getStartTime() + " END DATE: " + ticket.getEndTime());
 	}
 
@@ -179,6 +190,22 @@ public class TicketDTO {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Route getRoute() {
+		return route;
+	}
+
+	public void setRoute(Route route) {
+		this.route = route;
 	}
 	
 }

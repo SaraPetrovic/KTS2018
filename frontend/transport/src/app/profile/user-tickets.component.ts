@@ -19,7 +19,7 @@ export class UserTicketsComponent implements OnInit {
         this.tickets = tickets;
         console.log(tickets);
         this.tickets.forEach(element => {
-          console.log(element.startDate);
+          console.log(element.startTime);
           console.log(element.endTime);
           });
       });
@@ -41,6 +41,7 @@ export class UserTicketsComponent implements OnInit {
             element = ticket;
           }
         });
+        this.getTickets();
       }
     );
   }

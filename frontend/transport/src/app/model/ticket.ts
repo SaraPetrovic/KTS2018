@@ -1,4 +1,5 @@
 import { User } from "./user";
+import { Route } from "./route";
 
 export class Ticket{
     id: number;
@@ -6,7 +7,8 @@ export class Ticket{
     user: User;
     transportType: String;
     ticketTemporal: String;
-    startDate: Date;
+    startTime: Date;
     endTime: Date;
     active: String;
+    route: Route;
 }

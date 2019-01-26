@@ -202,7 +202,7 @@ insert into zones_stations(zone_id, stations_id) values (1,2)
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
 
-insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-01-01 00:00:00', 1, 1)
+insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-02-02 00:00:00', 1, 1)
 
 insert into route_schedule(id, active, active_from, line_id) values (1, true, '2019-02-01 00:00:00', 1)
 insert into weekday_schedule(route_schedule_id, weekday) values (1, '07:00:00')
