@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Zone } from 'src/app/model/zone';
 import { ZoneService } from 'src/app/_services/zones/zone.service';
+import { AdministrationZoneComponent } from './administration-zone.component';
 
 
 @Component({
@@ -11,24 +12,18 @@ import { ZoneService } from 'src/app/_services/zones/zone.service';
 export class ZoneTableComponent implements OnInit {
 
   @Input() zones: Zone[];
-
+  @Output() deleteButton = new EventEmitter();
+  
   constructor(private zoneService: ZoneService) { }
 
   ngOnInit() {
   }
 
-  deleteZone(zone : Zone) {
-    this.zoneService.deleteZone(zone.id).subscribe(
-      data=>{
-        this.zones = this.zones.filter(obj => obj !== zone);
-      },
-      error => {
-        alert(error.error.errorMessage)
-      }
-    );
-  }
+  
 
   zoneEdit(zone : Zone) {
-    this.zoneService.onZoneClick(zone);
+    this.zoneService.onZoneClick(zone.id);
   }
+  
+
 }

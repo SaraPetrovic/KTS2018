@@ -6,7 +6,7 @@
       </div>
       <div class="card-body">
         <p class="card-text">Active: {{ticket.active}}</p>
-        <p class="card-text" *ngIf="ticket.startDate !== null && ticket.startDate !== undefined">Start time: {{ticket.startTime}}</p>
+        <p class="card-text" *ngIf="ticket.startTime !== null && ticket.startTime !== undefined">Start time: {{ticket.startTime}}</p>
         <p class="card-text" *ngIf="ticket.endTime !== null && ticket.endTime !== undefined">End time: {{ticket.endTime}}</p>
         <p class="card-text" *ngIf="ticket.route !== null && ticket.route !== undefined">Start time: {{ticket.route.date}}</p>
         <p class="card-text">Transport type: {{ticket.transportType}}</p>

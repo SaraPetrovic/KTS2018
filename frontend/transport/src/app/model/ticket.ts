@@ -1,5 +1,7 @@
 import { User } from "./user";
 import { Route } from "./route";
+import { Line } from "./line";
+import { Zone } from "./zone";
 
 export class Ticket{
     id: number;
@@ -11,4 +13,6 @@ export class Ticket{
     endTime: Date;
     active: String;
     route: Route;
+    line: Line;
+    zone: Zone;
 }

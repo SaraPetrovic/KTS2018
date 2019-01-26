@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.DTOconverter.DTOConverter;
+import ftn.kts.transport.dtos.MyTicketDTO;
 import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.model.Ticket;
@@ -87,17 +88,18 @@ public class TicketController {
     @GetMapping(path = "/me")
     @Produces("application/json")
     @CrossOrigin( origins = "http://localhost:4200")
-	public ResponseEntity<List<TicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token){
+	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token){
 
 	    try {
-            List<TicketDTO> ret = new ArrayList<>();
+
+            List<MyTicketDTO> ret = new ArrayList<>();
             User user = this.userService.getUser(token);
 
             List<Ticket> tickets = this.ticketService.getTickets(user);
             System.out.println(tickets.size());
             for (Ticket t : tickets) {
             	System.out.println(ticketService.generateQrCode(t.getId()));
-                ret.add(new TicketDTO(t, ticketService.generateQrCode(t.getId()).getPath()));
+                ret.add(new MyTicketDTO(t, ticketService.generateQrCode(t.getId()).getPath()));
             }
 
             return ResponseEntity.ok(ret);

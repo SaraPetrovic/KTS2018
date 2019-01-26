@@ -35,11 +35,11 @@ export class ZoneService {
   }
 
   editZone(zone: Zone): Observable<Zone>{
-    return this.http.post<Zone>(`${this.zoneUrl}/${zone.id}`, zone, this.headers);
+    return this.http.put<Zone>(`${this.zoneUrl}/${zone.id}`, zone, this.headers);
   }
 
-  onZoneClick(zone: Zone){
-    this.subject.next(zone);
+  onZoneClick(zoneId: number){
+    this.subject.next(zoneId);
   }
 
   getClickedZone(): Observable<any>{
