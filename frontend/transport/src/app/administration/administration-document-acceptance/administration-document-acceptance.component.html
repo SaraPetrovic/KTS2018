@@ -1,0 +1,16 @@
+<div *ngIf="users">
+  <div *ngFor="let user of users">
+    <div class="card" style="margin-top: 1%">
+      <div class="card-header">
+        User: {{user.firstName}} {{user.lastName}}
+      </div>
+      <div class="card-body">
+        <p class="card-text"></p>
+        <button class="btn btn-primary" 
+                (click)="accept(user)">Accept</button>&nbsp;
+        <button class="btn btn-primary" 
+                (click)="decline(user)">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>

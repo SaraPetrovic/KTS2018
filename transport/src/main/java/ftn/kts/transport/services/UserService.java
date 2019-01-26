@@ -20,6 +20,6 @@ public interface UserService  {
 	List<User> findAll();
 	boolean saveDocumentImage(MultipartFile file, String token);
 	List<User> findUsersByDocumentVerified(DocumentVerification documentVerified);
-	boolean verifyDocument(Long id);
+	boolean verifyDocument(Long id, DocumentVerification type);
 	User getUser(String token);
 }

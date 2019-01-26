@@ -10,6 +10,7 @@ import { EditProfileComponent } from './profile/edit-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,10 @@ const routes: Routes = [
       {
         path: 'zones',
         component: AdministrationZoneComponent,
+      },
+      {
+        path: 'documents',
+        component: AdministrationDocumentAcceptanceComponent
       },
       {
         path: '',

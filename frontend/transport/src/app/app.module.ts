@@ -27,6 +27,7 @@ import { ConductorModule } from './modules/conductor/conductor.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { RegistrationComponent } from './registration/registration.component';
     EditProfileComponent,
     ProfileComponent,
     UserTicketsComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    AdministrationDocumentAcceptanceComponent
   ],
   imports: [
     BrowserModule,

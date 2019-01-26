@@ -55,4 +55,16 @@ export class AuthenticationService {
   activateTicket(ticketId: number): Observable<Ticket>{
     return this.http.put<Ticket>('http://localhost:9003/rest/ticket/activate/' + ticketId, this.headers);
   }
+
+  getUsersForVerification(): Observable<User[]>{
+    return this.http.get<User[]>('http://localhost:9003/user/verify', this.headers);
+  }
+
+  accept(userId : number): Observable<boolean>{
+    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/accept", this.headers);
+  }
+
+  decline(userId : number): Observable<boolean>{
+    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/decline", this.headers);
+  }
 }
