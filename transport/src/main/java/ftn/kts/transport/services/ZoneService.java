@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.model.Zone;

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.dtos.ZoneDTO;
+import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.StationNotFoundException;
@@ -42,6 +43,8 @@ public class ZoneController {
 	@Autowired
 	private StationService stationService;
 	
+
+	
 	@GetMapping("/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Produces("application/json")
@@ -52,7 +55,7 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
-	@GetMapping()
+	@GetMapping
 	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")

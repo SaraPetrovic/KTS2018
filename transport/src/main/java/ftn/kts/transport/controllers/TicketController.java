@@ -100,7 +100,9 @@ public class TicketController {
             System.out.println(tickets.size());
             for (Ticket t : tickets) {
 
-                ret.add(new MyTicketDTO(t, ticketService.generateQrCode(t.getId()).getPath()));
+            	String qrcode = ticketService.generateQrCode(t.getId());
+                ret.add(new MyTicketDTO(t, qrcode));
+
 
             }
 

@@ -1,10 +1,13 @@
 package ftn.kts.transport.repositories;
 
-import ftn.kts.transport.model.Route;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import ftn.kts.transport.model.Line;
+import ftn.kts.transport.model.Route;
 
 public interface RouteRepository extends JpaRepository<Route, Long> {
 
+	Set<Route> findByLine(Line l);
 }
