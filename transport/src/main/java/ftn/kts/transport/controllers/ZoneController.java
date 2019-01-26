@@ -101,7 +101,7 @@ public class ZoneController {
 	@PutMapping("/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
-	@Produces("applications/json")
+	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> updateZone(@PathVariable Long id, @RequestBody ZoneDTO dtoZone){
 		
 //		if(dtoZone.getSubZoneId() == null || dtoZone.getStations().size() == 0) {

@@ -24,4 +24,41 @@ export class AdministrationZoneComponent implements OnInit {
           this.zones = data;
         });
     }
+
+    deleteZone(zone : Zone) {
+      this.zoneService.deleteZone(zone.id).subscribe(
+        data=>{
+          this.zones = this.zones.filter(obj => obj !== zone);
+        },
+        error => {
+          alert(error.error.errorMessage)
+        }
+      );
+    }
+
+    addZone(zone: Zone){
+
+      if(zone.id === undefined)
+      {
+        this.zoneService.addZone(zone).subscribe(
+          (zone) => {
+              this.zones.push(zone);
+          },
+          error => {
+              alert(error.error.errorMessage)
+          }
+        );
+      }
+      else{
+        this.zoneService.editZone(zone).subscribe(
+            (data) => {
+              for(let i=0; i < this.zones.length; i++){
+                if(this.zones[i].id === data.id){
+                  this.zones[i] = data;
+                }
+              }
+            }
+        );
+      }
+  }
 }
