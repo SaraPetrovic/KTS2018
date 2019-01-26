@@ -9,6 +9,9 @@
         <p class="card-text" *ngIf="ticket.startTime !== null && ticket.startTime !== undefined">Start time: {{ticket.startTime}}</p>
         <p class="card-text" *ngIf="ticket.endTime !== null && ticket.endTime !== undefined">End time: {{ticket.endTime}}</p>
         <p class="card-text" *ngIf="ticket.route !== null && ticket.route !== undefined">Start time: {{ticket.route.date}}</p>
+        <p class="card-text" *ngIf="ticket.route !== null && ticket.route !== undefined">Line: {{ticket.route.line.name}}</p>
+        <p class="card-text" *ngIf="ticket.zone !== null && ticket.zone !== undefined">Ticket Zone: {{ticket.zone.name}}</p>
+        <p class="card-text" *ngIf="ticket.line !== null && ticket.line !== undefined">Line: {{ticket.line.name}}</p>
         <p class="card-text">Transport type: {{ticket.transportType}}</p>
         <button *ngIf="ticket.ticketTemporal === 'ONE_HOUR_PASS' && ticket.active === 'NOT_ACTIVE' && ticket.endTime === null" class="btn btn-primary" 
                 (click)="activateTicket(ticket.id)">Activate ticket</button>

@@ -74,6 +74,31 @@ public class MyTicketDTO {
 		System.out.println("START DATE" + ticket.getStartTime() + " END DATE: " + ticket.getEndTime());
 	}
 	
+	public MyTicketDTO(Ticket ticket){
+		this.id = ticket.getId();
+		this.startTime = ticket.getStartTime();
+		this.endTime = ticket.getEndTime();
+		this.transportType = ticket.getTransportType();
+		this.ticketTemporal = ticket.getTicketTemporal();
+		this.price = ticket.getPrice();
+		this.active = ticket.getActive();
+		if(ticket instanceof RouteTicket) {
+			this.route = ((RouteTicket) ticket).getRoute();
+		}else {
+			this.route = null;
+		}
+		if(ticket instanceof ZoneTicket) {
+			this.zone = ((ZoneTicket) ticket).getZone();
+		}else {
+			this.zone = null;
+		}
+		if(ticket instanceof LineTicket) {
+			this.line = ((LineTicket) ticket).getLine();
+		}else {
+			this.line = null;
+		}
+	}
+	
 	public Long getId() {
 		return id;
 	}
