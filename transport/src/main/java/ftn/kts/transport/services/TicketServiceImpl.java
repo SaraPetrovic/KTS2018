@@ -1,5 +1,6 @@
 package ftn.kts.transport.services;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.google.common.io.BaseEncoding;
+
 import ftn.kts.transport.enums.TicketActivationType;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.exception.DAOException;
@@ -20,6 +23,8 @@ import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.repositories.TicketRepository;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 
 
 @Service
@@ -98,6 +103,7 @@ public class TicketServiceImpl implements TicketService{
 		return tickets;
 	}
 	
+	@Override
 	public Ticket checkTicket(Ticket t) {
 		Date currentTime = new Date();
 		if(t.getTicketTemporal().equals(TicketTypeTemporal.ONE_HOUR_PASS)) {
@@ -115,4 +121,27 @@ public class TicketServiceImpl implements TicketService{
 		}
 		return t;
 	}
+	
+	@Override
+    public File generateQrCode(Long id) {
+
+        String encodedID = BaseEncoding.base64()
+                .encode(("TicketID=" + id.toString()).getBytes());
+
+        File qrCode = QRCode.from(encodedID).to(ImageType.JPG).withSize(250, 250).file();
+
+        return qrCode;
+    }
+
+	@Override
+    public Long decodeId(String encodedID){
+
+	    byte[] decodedID = BaseEncoding.base64()
+                .decode(encodedID);
+
+	    String stringID = new String(decodedID);
+
+	    return Long.parseLong(stringID.substring(9));
+    }
+
 }

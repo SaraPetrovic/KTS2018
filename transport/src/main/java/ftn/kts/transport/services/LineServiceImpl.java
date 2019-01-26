@@ -2,8 +2,10 @@ package ftn.kts.transport.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +19,7 @@ import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.Station;
+import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.StationRepository;
 
@@ -144,6 +147,21 @@ public class LineServiceImpl implements LineService {
 	public Line addLineMethod(Line line, LineDTO lineDTO) {
 		Line ret = addLine(line);
 		ret = addStationsToLine(ret.getId(), lineDTO);
+		return ret;
+	}
+
+
+	@Override
+	public Set<Line> getAllLinesByZone(Zone zone) {
+		Set<Line> ret = new HashSet<Line>();
+		Collection<Line> lines = new ArrayList<Line>();
+		for (Station s : zone.getStations()) {
+			for (LineAndStation ls : s.getLineSet()) {
+				lines.add(ls.getLine());
+			}
+		}
+		
+		ret.addAll(lines);
 		return ret;
 	}
 	
