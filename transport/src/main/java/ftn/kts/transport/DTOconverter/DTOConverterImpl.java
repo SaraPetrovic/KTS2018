@@ -79,15 +79,16 @@ public class DTOConverterImpl implements DTOConverter{
 		// ========= CHECK DATA =============
 		
 		int ticketTemporal = ticketDTO.getTicketTemporal().ordinal();
-		int transportType = ticketDTO.getTransportType().ordinal();
+		//int transportType = ticketDTO.getTransportType().ordinal();
 		
-		if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
-			throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
-		}
+		// OVE PROVERE VISE NEMAJU SMISLA JER DTO PRIMA BAS ENUM ?? nzm kako to onda
+		//if (ticketTemporal != 0 && ticketTemporal != 1 && ticketTemporal != 2 && ticketTemporal != 3) {
+		//	throw new InvalidInputDataException("TicketTemporal = {ONE_HOUR_PASS (0), MONTHLY_PASS (1), YEARLY_PASS (2), ONE_TIME_PASS (3)} - bad request!");
+		//}
 		
-		if (transportType != 0 && transportType != 1 && transportType != 2) {
-			throw new InvalidInputDataException("TransportType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
-		}
+//		if (transportType != 0 && transportType != 1 && transportType != 2) {
+//			throw new InvalidInputDataException("TransportType = {BUS(0), TRAM(1), SUBWAY(2)} - bad request!");
+//		}
 		
 		// =========== CONVERT =============
 		

@@ -29,7 +29,7 @@ import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
-import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.UserService;
 
 @RestController
@@ -40,7 +40,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private JwtGeneratorService jwtService;
+    private JwtService jwtService;
 
     @PostMapping(consumes = {"application/json"} )
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
@@ -98,17 +98,6 @@ public class UserController {
     	return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
     
-    @GetMapping(path = "/rest/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String helloAdmin(){
-        return "Hello World";
-    }
-
-    @GetMapping(path = "/rest/user")
-    @PreAuthorize("hasRole('CLIENT')")
-    public String helloClient() {
-    	return "Hello World Client";
-    }
     
     @PostMapping(path = "/document")
     @Consumes("multipart/form-data")

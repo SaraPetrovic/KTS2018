@@ -3,7 +3,6 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +26,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.enums.VehicleType;
@@ -36,7 +34,6 @@ import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineAndStation;
 import ftn.kts.transport.model.RouteSchedule;
 import ftn.kts.transport.model.Station;
-import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.RouteScheduleRepository;
 import ftn.kts.transport.repositories.StationRepository;
@@ -293,38 +290,6 @@ public class LineServiceUnitTest {
 	}
 	
 	
-	@Transactional
-	@Test
-	public void getZoneForLine_PASS_Test() {
-		Zone z1 = new Zone();
-		Zone z2 = new Zone();
-		z1.setActive(true);
-		z1.setId(1L);
-		z1.setName("Zone I");
-		z1.setSubZone(null);
-		z2.setActive(true);
-		z2.setId(2L);
-		z2.setName("Zone II");
-		z2.setSubZone(z1);
-		Set<Zone> foundZones = new HashSet<Zone>();
-		foundZones.add(z1);
-		foundZones.add(z2);
-		
-		Mockito.when(zoneServiceMocked.getZonesByStations(Mockito.anyCollection())).thenReturn(foundZones);
-		
-		LineAndStation ls = new LineAndStation();
-		ls.addStation(this.l, this.s, 1);
-		Set<LineAndStation> stationSet = new HashSet<LineAndStation>();
-		stationSet.add(ls);
-		this.l.setStationSet(stationSet);
-		
-
-		Zone retParent = service.getZoneForLine(this.l);
-		assertNotNull(retParent);
-		assertSame(z2, retParent);
-		assertEquals(z2.getId(), retParent.getId());
-		assertEquals(z2.getSubZone().getId(), retParent.getSubZone().getId());
-	}
 	
 	@Test
 	public void addLineMethod_PASS_Test() {

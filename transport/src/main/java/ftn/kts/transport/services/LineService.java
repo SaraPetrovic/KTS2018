@@ -5,7 +5,6 @@ import java.util.List;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.Zone;
 
 public interface LineService {
 
@@ -18,8 +17,5 @@ public interface LineService {
 	Line deleteLine(long id) throws DAOException;
 	Line updateLineStations(long id, LineDTO lineDTO);
 	List<Line> getAllLines();
-	
-	
-	Zone getZoneForLine(Line line);
 	
 }

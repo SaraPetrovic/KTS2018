@@ -1,6 +1,5 @@
 package ftn.kts.transport.controllers;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +20,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.io.BaseEncoding;
-
 import ftn.kts.transport.DTOconverter.DTOConverter;
 import ftn.kts.transport.dtos.TicketDTO;
 import ftn.kts.transport.enums.TicketTypeTemporal;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
+import ftn.kts.transport.services.ConductorService;
 import ftn.kts.transport.services.TicketService;
-import net.glxn.qrgen.core.image.ImageType;
-import net.glxn.qrgen.javase.QRCode;
+import ftn.kts.transport.services.UserService;
 
 @RestController
 @RequestMapping(value = "rest/ticket")
@@ -40,6 +37,10 @@ public class TicketController {
 	private TicketService ticketService;
 	@Autowired
 	private DTOConverter dtoConverter;
+	@Autowired
+	private ConductorService conductorService;
+	@Autowired
+	private UserService userService;
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
 	@PutMapping(path = "/activate/{id}")
@@ -47,7 +48,7 @@ public class TicketController {
 	public ResponseEntity<TicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
 		Ticket rez = ticketService.activateTicket(ticket);
-		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
+		return new ResponseEntity<TicketDTO>(new TicketDTO(rez, conductorService.generateQrCode(rez.getId()).getPath()), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
@@ -78,7 +79,7 @@ public class TicketController {
     public ResponseEntity<Ticket> checkTicket(@PathVariable String id){
 
 	    try{
-            Ticket ret = this.ticketService.findById(decodeId(id));
+            Ticket ret = this.ticketService.findById(conductorService.decodeId(id));
 
             return ResponseEntity.ok(ret);
         }catch(Exception e){
@@ -93,13 +94,13 @@ public class TicketController {
 
 	    try {
             List<TicketDTO> ret = new ArrayList<>();
-            User user = this.ticketService.getUser(token);
+            User user = this.userService.getUser(token);
 
             List<Ticket> tickets = this.ticketService.getTickets(user);
             System.out.println(tickets.size());
             for (Ticket t : tickets) {
-            	System.out.println(generateQrCode(t.getId()));
-                ret.add(new TicketDTO(t, generateQrCode(t.getId()).getPath()));
+            	System.out.println(conductorService.generateQrCode(t.getId()));
+                ret.add(new TicketDTO(t, conductorService.generateQrCode(t.getId()).getPath()));
             }
 
             return ResponseEntity.ok(ret);
@@ -109,24 +110,5 @@ public class TicketController {
 	}
     
 
-    private File generateQrCode(Long id) {
-
-        String encodedID = BaseEncoding.base64()
-                .encode(("TicketID=" + id.toString()).getBytes());
-
-        File qrCode = QRCode.from(encodedID).to(ImageType.JPG).withSize(250, 250).file();
-
-        return qrCode;
-    }
-
-    private Long decodeId(String encodedID){
-
-	    byte[] decodedID = BaseEncoding.base64()
-                .decode(encodedID);
-
-	    String stringID = new String(decodedID);
-
-	    return Long.parseLong(stringID.substring(9));
-    }
 
 }

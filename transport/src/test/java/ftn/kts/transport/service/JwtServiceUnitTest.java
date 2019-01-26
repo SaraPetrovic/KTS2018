@@ -18,7 +18,7 @@ import ftn.kts.transport.exception.TokenValidationException;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.security.JwtGenerator;
 import ftn.kts.transport.security.JwtValidator;
-import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.JwtService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -26,7 +26,7 @@ import ftn.kts.transport.services.JwtGeneratorService;
 public class JwtServiceUnitTest {
 
 	@Autowired 
-	private JwtGeneratorService jwtService;
+	private JwtService jwtService;
 	
 	@MockBean
 	private JwtValidator jwtValidatorMocked;

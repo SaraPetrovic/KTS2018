@@ -30,14 +30,12 @@ public class TicketServiceImpl implements TicketService{
 	@Autowired
 	private PriceListService priceListService;
 	@Autowired
-	private JwtGeneratorService jwtService;
-	@Autowired
 	private UserService userService;
 	
 	@Override
 	public Ticket buyTicket(Ticket ticket, String token) {
 
-		User logged = getUser(token);
+		User logged = userService.getUser(token);
 		
 		// mesecne i godisnje karte mogu kupiti samo Useri kojima je approved verification document!
 		if (ticket.getTicketTemporal().ordinal() != 0 && ticket.getTicketTemporal().ordinal() != 3) {
@@ -88,13 +86,6 @@ public class TicketServiceImpl implements TicketService{
 		return checkTicket(t);
 	}
 
-	@Override
-	public User getUser(String token) {
-		User credentials = jwtService.validate(token.substring(7));
-		User ret = userService.findByUsername(credentials.getUsername());
-		return ret;
-	}
-
 
 	@Override
     public List<Ticket> getTickets(User user){
@@ -114,8 +105,7 @@ public class TicketServiceImpl implements TicketService{
 				t.setActive(TicketActivationType.EXPIRED);
 				ticketRepository.save(t);
 			}
-		}
-		if(t.getTicketTemporal().equals(TicketTypeTemporal.ONE_TIME_PASS)) {
+		} else if(t.getTicketTemporal().equals(TicketTypeTemporal.ONE_TIME_PASS)) {
 			int duration = ((RouteTicket) t).getRoute().getLine().getDuration();
 			Date endDateOfRoute = Date.from(((RouteTicket) t).getRoute().getDate().toInstant().plus(Duration.ofMinutes(duration)));
 			if(endDateOfRoute.before(currentTime)) {

@@ -9,7 +9,7 @@ import ftn.kts.transport.security.JwtGenerator;
 import ftn.kts.transport.security.JwtValidator;
 
 @Service
-public class JwtGeneratorServiceImpl implements JwtGeneratorService {
+public class JwtServiceImpl implements JwtService {
 
 	@Autowired
 	private JwtGenerator jwtGenerator;
