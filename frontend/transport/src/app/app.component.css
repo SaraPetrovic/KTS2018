@@ -1,6 +1,7 @@
 #app{
     min-height: 100%;
     position: relative;
+    background-color:  lightsteelblue;
 }
 
 app-footer{

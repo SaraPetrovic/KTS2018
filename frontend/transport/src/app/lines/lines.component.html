@@ -1,13 +1,19 @@
 <div id="wrapper">
-    <div id="lines-wrapper">
-      <ul>
-        <li *ngFor="let line of lines" (click)="LineClicked(line)">
-          {{line.name}}
-        </li>
-      </ul>
+
+    <ul>
+      <li [class.selected-transport-type]="currentTransportType==='bus'"><a (click)="changeTransportType('bus')">Bus</a></li>
+      <li [class.selected-transport-type]="currentTransportType==='metro'"><a (click)="changeTransportType('metro')">Subway</a></li>
+      <li [class.selected-transport-type]="currentTransportType==='tram'"><a (click)="changeTransportType('tram')">Tram</a></li>
+    </ul>
+
+    <div id="map-wrapper">
+      <app-map>
+        
+      </app-map>
     </div>
 
-    <app-map>
-      
-    </app-map>
+    <div id="lines-wrapper">
+      <app-line-table [lines]="lines" (lineClickedEvent)="lineClicked($event)"></app-line-table>
+    </div>
+    
 </div>

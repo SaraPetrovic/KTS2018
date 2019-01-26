@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     	User user = new User(username, password, first_name, last_name);
 
     	user.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+    	user.setDocument(null);
     	user.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	user.setTickets(new HashSet<Ticket>());
     	user.setRoles(Role.ROLE_CLIENT);
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public boolean verifyDocument(Long id) {
+	public boolean verifyDocument(Long id, DocumentVerification typeVerification) {
 		User toVerify = this.findById(id);
 		if (toVerify.getDocument() == null || toVerify.getDocumentVerified().ordinal() == 0) {
 			throw new DocumentVerificationException("User [username=" + toVerify.getUsername() + "] did not upload personal document!");
@@ -144,7 +145,7 @@ public class UserServiceImpl implements UserService {
 			throw new DocumentVerificationException("Document has already been approved!");
 		}
 		
-		toVerify.setDocumentVerified(DocumentVerification.APPROVED);
+		toVerify.setDocumentVerified(typeVerification);
 		this.save(toVerify);
 		return true;
 	}

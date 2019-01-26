@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AuthenticationService } from '../_services/authentication.service';
 
 @Component({
@@ -11,10 +10,7 @@ export class HeaderComponent implements OnInit {
 
   userLogged: boolean = false;
 
-  constructor(
-    public ngxSmartModalService: NgxSmartModalService,
-    private authenticationService: AuthenticationService
-  ) { }
+  constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
 
@@ -22,9 +18,5 @@ export class HeaderComponent implements OnInit {
       .subscribe(
         value => {value === null ? this.userLogged = false : this.userLogged = true;}
       );
-  }
-
-  closeLogin(){
-    this.ngxSmartModalService.closeLatestModal();
   }
 }

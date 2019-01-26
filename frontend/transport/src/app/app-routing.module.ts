@@ -6,16 +6,28 @@ import { AdministrationComponent } from './administration/administration.compone
 import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
+import { ConductorModule } from './modules/conductor/conductor.module';
+import { TicketComponent } from './ticket/ticket.component';
+import { HostComponent } from './host/host.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 
 const routes: Routes = [
   {
     path: '',
     component: RegistrationComponent,
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: HostComponent
+  },
+  {
+    path: 'ticket',
+    component: TicketComponent
   },
   {
     path: 'lines',
@@ -54,6 +66,10 @@ const routes: Routes = [
       {
         path: 'zones',
         component: AdministrationZoneComponent,
+      },
+      {
+        path: 'documents',
+        component: AdministrationDocumentAcceptanceComponent
       },
       {
         path: '',

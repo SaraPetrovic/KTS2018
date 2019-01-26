@@ -109,16 +109,26 @@ public class UserController {
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/verify")
+    @PutMapping(path = "/{id}/accept")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> verifyDocument(@PathVariable("id") long id) {
-    	boolean ret = userService.verifyDocument(id);
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> acceptDocument(@PathVariable("id") long id) {
+    	boolean ret = userService.verifyDocument(id, DocumentVerification.APPROVED);
+    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    }
+    
+    @PutMapping(path = "/{id}/decline")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CrossOrigin( origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> declineDocument(@PathVariable("id") long id) {
+    	boolean ret = userService.verifyDocument(id, DocumentVerification.REJECTED);
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
     @GetMapping(path = "/verify")
     @Produces("application/json")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<List<User>> getUsersForVerification() {
     	List<User> toVerify = userService.findUsersByDocumentVerified(DocumentVerification.PENDING);
     	return new ResponseEntity<>(toVerify, HttpStatus.OK);

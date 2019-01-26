@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { User } from '../model/user';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Ticket } from '../model/ticket';
 
 @Injectable({
@@ -17,7 +18,7 @@ export class AuthenticationService {
   private API_URL = 'localhost:9003';
   private headers = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private router: Router) { 
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -41,6 +42,7 @@ export class AuthenticationService {
   logout(){
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.router.navigateByUrl('/');
   }
 
   editProfile(user: User): Observable<User>{
@@ -54,5 +56,17 @@ export class AuthenticationService {
 
   activateTicket(ticketId: number): Observable<Ticket>{
     return this.http.put<Ticket>('http://localhost:9003/rest/ticket/activate/' + ticketId, this.headers);
+  }
+
+  getUsersForVerification(): Observable<User[]>{
+    return this.http.get<User[]>('http://localhost:9003/user/verify', this.headers);
+  }
+
+  accept(userId : number): Observable<boolean>{
+    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/accept", this.headers);
+  }
+
+  decline(userId : number): Observable<boolean>{
+    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/decline", this.headers);
   }
 }

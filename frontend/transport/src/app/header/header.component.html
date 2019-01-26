@@ -13,7 +13,7 @@
       <li><a routerLink="/conductor" routerLinkActive="active">Conductor</a></li>
 
       <li style="float:right">
-        <a *ngIf="!userLogged" (click)="ngxSmartModalService.getModal('myModal').open()">
+        <a *ngIf="!userLogged" routerLink="/login" routerLinkActive="active">
           Login
         </a>
         <a *ngIf="userLogged" (click)="authenticationService.logout()">

@@ -19,8 +19,6 @@ export class ZoneTableComponent implements OnInit {
   ngOnInit() {
   }
 
-  
-
   zoneEdit(zone : Zone) {
     this.zoneService.onZoneClick(zone.id);
   }

@@ -1,0 +1,20 @@
+#wrapper{
+    width: 80%;
+    margin-left: 10%;
+    min-height: 600px;
+    background: #eee2dc;
+    padding: 16px;
+    margin-top: -16px;
+    border-right: 2px solid #333;
+    border-left: 2px solid #333;
+    padding-bottom: 50px;
+    padding-top: 0;
+}
+
+mat-horizontal-stepper{
+    background: #eee2dc;
+}
+
+mat-form-field{
+    margin-right: 10px;
+}
