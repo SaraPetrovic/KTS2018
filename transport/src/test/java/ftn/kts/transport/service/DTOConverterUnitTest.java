@@ -3,7 +3,6 @@ package ftn.kts.transport.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -174,18 +173,18 @@ public class DTOConverterUnitTest {
 	}
 	
 	
-	@Transactional
-	@Test(expected = InvalidInputDataException.class)
-	public void convertToTicket_InvalidTemporal_Test() {
-		//ticketDTO.setTicketTemporal(-1);
-		converter.convertDTOtoTicket(ticketDTO);
-	}
+//	@Transactional
+//	@Test(expected = InvalidInputDataException.class)
+//	public void convertToTicket_InvalidTemporal_Test() {
+//		//ticketDTO.setTicketTemporal(-1);
+//		converter.convertDTOtoTicket(ticketDTO);
+//	}
 	
-	@Test(expected = InvalidInputDataException.class)
-	public void convertToTicket_InvalidTransport_Test() {
-		//ticketDTO.setTransportType(-1);
-		converter.convertDTOtoTicket(ticketDTO);
-	}
+//	@Test(expected = InvalidInputDataException.class)
+//	public void convertToTicket_InvalidTransport_Test() {
+//		//ticketDTO.setTransportType(-1);
+//		converter.convertDTOtoTicket(ticketDTO);
+//	}
 	
 	@Test(expected = DAOException.class)
 	public void convertToTicket_ZoneNotFound_Test() {

@@ -38,7 +38,7 @@ import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
 import ftn.kts.transport.model.ZoneTicket;
 import ftn.kts.transport.repositories.TicketRepository;
-import ftn.kts.transport.services.JwtGeneratorService;
+import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.PriceListService;
 import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
@@ -57,7 +57,7 @@ public class TicketServiceUnitTest {
 	@MockBean
 	private PriceListService priceListServiceMocked;
 	@MockBean
-	private JwtGeneratorService jwtServiceMocked;
+	private JwtService jwtServiceMocked;
 	
 	
 	private User user = new User();
@@ -90,21 +90,14 @@ public class TicketServiceUnitTest {
 		
 		Mockito.when(jwtServiceMocked.validate(TOKEN.substring(7))).thenReturn(user);
 		Mockito.when(userServiceMocked.findByUsername("user1")).thenReturn(user);
+		Mockito.when(userServiceMocked.getUser(TOKEN)).thenReturn(user);
 		Mockito.when(ticketRepositoryMocked.findById(1L)).thenReturn(Optional.of(zoneTicket));
 		Mockito.when(ticketRepositoryMocked.findById(2L)).thenReturn(Optional.of(lineTicket));
 		Mockito.when(ticketRepositoryMocked.findById(-1L)).thenThrow(new DAOException("Ticket [id=-1L] cannot be found!"));
 		Mockito.when(ticketRepositoryMocked.save(zoneTicket)).thenReturn(zoneTicket);
 	}
 
-	
-	// ovo ni ne treba da bude ovde nego u UserService
-	@Test
-	public void getUserByToken_PASS_Test() {
-		User found = ticketService.getUser(TOKEN);
-		assertNotNull(found);
-		assertEquals(user.getUsername(), found.getUsername());
-	}
-	
+		
 	@Test
 	public void getTicketById_PASS_Test() {
 		Ticket found = ticketService.findById(1L);

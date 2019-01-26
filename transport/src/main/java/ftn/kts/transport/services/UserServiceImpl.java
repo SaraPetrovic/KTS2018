@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.enums.UserTypeDemographic;
-import ftn.kts.transport.exception.AuthorizationException;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.DocumentUploadException;
 import ftn.kts.transport.exception.DocumentVerificationException;
@@ -28,7 +27,7 @@ import ftn.kts.transport.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
 	public final static String  DEFAULT_IMAGE_FOLDER = "src/main/webapp/images/";
 	@Autowired
-	private JwtGeneratorService jwtService;
+	private JwtService jwtService;
     @Autowired
     private UserRepository userRepository;
 
@@ -149,5 +148,13 @@ public class UserServiceImpl implements UserService {
 		this.save(toVerify);
 		return true;
 	}
+	
+	@Override
+	public User getUser(String token) {
+		User credentials = jwtService.validate(token.substring(7));
+		User ret = findByUsername(credentials.getUsername());
+		return ret;
+	}
+
 
 }

@@ -12,6 +12,5 @@ public interface TicketService {
 	Ticket findById(Long id);
 	Ticket activateTicket(Ticket ticket);
 	Ticket buyTicket(Ticket ticket, String token);
-	User getUser(String token);
 	List<Ticket> getTickets(User user);
 }

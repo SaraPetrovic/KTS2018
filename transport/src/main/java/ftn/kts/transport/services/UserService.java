@@ -21,4 +21,5 @@ public interface UserService  {
 	boolean saveDocumentImage(MultipartFile file, String token);
 	List<User> findUsersByDocumentVerified(DocumentVerification documentVerified);
 	boolean verifyDocument(Long id);
+	User getUser(String token);
 }

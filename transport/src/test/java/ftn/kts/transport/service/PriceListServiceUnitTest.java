@@ -118,7 +118,7 @@ public class PriceListServiceUnitTest {
 		route.setId(1L);
 		route.setLine(line);
 		
-		Mockito.when(lineServiceMocked.getZoneForLine(line)).thenReturn(zone);
+		Mockito.when(zoneServiceMocked.getZoneForLine(line)).thenReturn(zone);
 				
 		Mockito.when(plRepoMocked.findById(1L)).thenReturn(optValid);
 		Mockito.when(plRepoMocked.findById(2L)).thenThrow(new DAOException("Price List [id=2] not found!", HttpStatus.NOT_FOUND));
