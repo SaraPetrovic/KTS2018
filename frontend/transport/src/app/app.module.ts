@@ -2,8 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
-import { NgQrScannerModule } from 'angular2-qrscanner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +21,10 @@ import { AdministrationStationComponent } from './administration/administration-
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ZoneFormComponent } from './administration/administration-zone/zone-form.component';
 import { ZoneTableComponent } from './administration/administration-zone/zone-table.component';
-import { ConductorModule } from './modules/conductor/conductor.module';
+import { TicketComponent } from './ticket/ticket.component';
+import { MaterialModule } from './modules/shared/material.module';
+import { LineTableComponent } from './line-table/line-table.component';
+import { HostComponent } from './host/host.component';
 
 @NgModule({
   declarations: [
@@ -43,14 +45,23 @@ import { ConductorModule } from './modules/conductor/conductor.module';
     AdministrationLineComponent,
     AdministrationStationComponent,
     AdministrationZoneComponent,
+    TicketComponent,
+    LineTableComponent,
+    HostComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MaterialModule,
+    BrowserAnimationsModule,
     NgxSmartModalModule.forRoot(),
     AppRoutingModule,
+  ],
+  entryComponents:[
+    HostComponent,
+    LoginComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

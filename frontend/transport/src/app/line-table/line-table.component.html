@@ -1,0 +1,7 @@
+<div>
+  <mat-card *ngFor="let line of lines" (click)="lineClicked(line)">
+    <mat-card-content>
+      <mat-card-title>{{line.name}}&nbsp;&nbsp;&nbsp;{{line.description}}</mat-card-title>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -7,12 +7,22 @@ import { AdministrationLineComponent } from './administration/administration-lin
 import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
 import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
+import { TicketComponent } from './ticket/ticket.component';
+import { HostComponent } from './host/host.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: HostComponent
+  },
+  {
+    path: 'ticket',
+    component: TicketComponent
   },
   {
     path: 'lines',

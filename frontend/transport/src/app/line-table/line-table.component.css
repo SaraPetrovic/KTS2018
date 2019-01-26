@@ -1,0 +1,10 @@
+mat-card{
+    background-color: #123c69;
+    color: white;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+mat-card:hover{
+    cursor: pointer;
+}

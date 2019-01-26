@@ -1,0 +1,73 @@
+<div id="wrapper">
+    <mat-horizontal-stepper labelPosition="bottom" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Choose Transport Type</ng-template>
+            <mat-form-field>
+            <mat-select placeholder="Transport Type" [(value)]="selectedTransportType" formControlName="firstCtrl">
+                <mat-option *ngFor="let type of TransportType.values();" [value]="type">{{type}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperNext [disabled]="!firstFormGroup.valid">Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Choose Zone</ng-template>
+            <mat-form-field>
+                <mat-select placeholder="Zone" [(value)]="selectedZone" formControlName="secondCtrl">
+                    <mat-option *ngFor="let zone of zones" [value]="zone.id">{{zone.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext [disabled]="!secondFormGroup.valid">Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup">
+                <ng-template matStepLabel>Choose Line</ng-template>
+                <mat-form-field>
+                <mat-select placeholder="Line" [(value)]="selectedLine" formControlName="thirdCtrl">
+                    <mat-option value="all">All</mat-option>
+                    <mat-option *ngFor="let line of lines" [value]="line.id">{{line.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext [disabled]="!thirdFormGroup.valid">Next</button>
+                </div>
+            </form>
+    </mat-step>
+    <mat-step [stepControl]="forthFormGroup">
+            <form [formGroup]="forthFormGroup">
+                <ng-template matStepLabel>Choose Duration</ng-template>
+                <mat-form-field>
+                <mat-select placeholder="Duration" [(value)]="selectedDuration" formControlName="forthCtrl">
+                    <mat-option *ngFor="let duration of Duration.values()" [value]="duration">{{duration}}</mat-option>
+                </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="selectedDuration === 'OneTime'">
+                    <mat-select placeholder="Time" [(value)]="selectedRoute">
+                            <mat-option *ngFor="let route of routes" [value]="route.id">{{route.date | date:'hh:mm'}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext [disabled]="!forthFormGroup.valid">Next</button>
+                </div>
+            </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done.
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="reset(); stepper.reset()">Buy</button>
+        </div>
+    </mat-step>
+    </mat-horizontal-stepper>
+</div>

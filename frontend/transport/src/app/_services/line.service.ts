@@ -22,6 +22,18 @@ export class LineService {
     return this.http.get<Line[]>("http://localhost:9003/line");
   }
 
+  getBusLines(): Observable<Line[]>{
+    return this.http.get<Line[]>("http://localhost:9003/line/bus");
+  }
+
+  getMetroLines(): Observable<Line[]>{
+    return this.http.get<Line[]>("http://localhost:9003/line/metro");
+  }
+
+  getTramLines(): Observable<Line[]>{
+    return this.http.get<Line[]>("http://localhost:9003/line/tram");
+  }
+
   addLine(line: Line){
     line.name = "11";
     console.log("usao sam u service", line);
