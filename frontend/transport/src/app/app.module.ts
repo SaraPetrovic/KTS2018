@@ -26,6 +26,7 @@ import { EditProfileComponent } from './profile/edit-profile.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { UserTicketsComponent } from './profile/user-tickets.component';
     AdministrationZoneComponent,
     EditProfileComponent,
     ProfileComponent,
-    UserTicketsComponent
+    UserTicketsComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
