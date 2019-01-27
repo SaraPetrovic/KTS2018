@@ -45,6 +45,20 @@ public class LineController {
 	public ResponseEntity<List<Line>> getLines(){
 		return ResponseEntity.status(HttpStatus.OK).body(this.lineService.getAllLines());
 	}
+
+	@GetMapping(value = "/{type}")
+	@Produces("application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public ResponseEntity<List<Line>> getLinesByType(@PathVariable("type") String type){
+		VehicleType vt;
+		try{
+			vt = VehicleType.valueOf(type.toUpperCase());
+		}catch(Exception e){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+
+		return ResponseEntity.ok(this.lineService.getAllLinesByType(vt));
+	}
 	
 	@GetMapping(path = "/zone/{id}/{type}")
 	@Produces("application/json")
