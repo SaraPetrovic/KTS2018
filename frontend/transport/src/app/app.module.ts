@@ -65,7 +65,7 @@ import { AdministrationLineTableComponent } from './administration/administratio
     UserTicketsComponent,
     RegistrationComponent,
     AdministrationDocumentAcceptanceComponent,
-    PricelistComponent
+    PricelistComponent,
     FileUploadComponent,
     StationTableComponent,
     AdministrationLineTableComponent
