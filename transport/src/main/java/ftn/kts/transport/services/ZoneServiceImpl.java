@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
@@ -29,10 +30,15 @@ public class ZoneServiceImpl implements ZoneService{
 	@Override
 	public Zone addZone(Zone zone) {
 //		List<Zone> zones = findAll();
+		
+		List<Zone> zones = zoneRepository.findAll();
 
-		if((zoneRepository.findByName(zone.getName())) != null) {
-			throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
+		for(Zone z : zones) {
+			if(z.getName().equals(zone.getName()) && z.isActive()) {
+				throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
+			}
 		}
+		
 		Zone rez = zoneRepository.save(zone);
 		
 //		for(Zone z : zones) {
@@ -129,6 +135,27 @@ public class ZoneServiceImpl implements ZoneService{
 		}
 		
 		return parent;
+	}
+	
+	@Override
+	public Zone update(Zone zone, ZoneDTO dtoZone) {
+		
+		List<Zone> zones = zoneRepository.findAll();
+
+		for(Zone z : zones) {
+			if(z.getName().equals(dtoZone.getName()) && z.isActive()) {
+				throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
+			}
+		}
+
+		zone.setName(dtoZone.getName());
+		
+//		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
+//		zone.setSubZone(subZone);
+		
+		zoneRepository.save(zone);
+		
+		return zone;
 	}
 
 

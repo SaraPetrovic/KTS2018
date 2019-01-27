@@ -1,75 +1,116 @@
-<form [formGroup]="discountForm" (ngSubmit)="addPricelist()">
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="One-hour Coeffitient" formControlName="oneHourCoeffitient" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'oneHourCoeffitient')"> 
-            Please enter one-hour coeffitient
-        </mat-error>
-        <mat-error *ngIf="f.oneHourCoeffitient.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>
-        </mat-form-field>
-    </div>
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="Monthly Coeffitient" formControlName="monthlyCoeffitient" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'monthlyCoeffitient')">
-            Please enter monthly coeffitient
-        </mat-error>    
-        <mat-error *ngIf="f.monthlyCoeffitient.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>
-        </mat-form-field>
-    </div>
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="Yearly Coeffitient" formControlName="yearlyCoeffitient" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'yearlyCoeffitient')">
-            Please enter yearly coeffitient
-        </mat-error>
-        <mat-error *ngIf="f.yearlyCoeffitient.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>  
-        </mat-form-field>
-    </div>
+<div id="wrapper">
+    
+       <form name="priceForm" id="priceForm">
+            <div class="center-entry">
+            <table>
+                <tr>
+                    <th>Zone</th>
+                    <th>Price (RSD)</th>
+                </tr>
+                <tr *ngFor="let zone of zoneList">
+                    <td>{{zone.name}}</td>
+                    <td>
+                        <input type="number" name="{{zone.id}}" min="0" required/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    
+    <form [formGroup]="discountForm" (ngSubmit)="addPricelist()">
+        <div class="sub-entry">
+            <div class="center-entry">
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="1" matInput placeholder="One-hour Coeffitient" formControlName="oneHourCoeffitient"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'oneHourCoeffitient')">
+                            Please enter one-hour coeffitient
+                        </mat-error>
+                        <mat-error *ngIf="f.oneHourCoeffitient.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="1" matInput placeholder="Monthly Coeffitient" formControlName="monthlyCoeffitient"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'monthlyCoeffitient')">
+                            Please enter monthly coeffitient
+                        </mat-error>
+                        <mat-error *ngIf="f.monthlyCoeffitient.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="1" matInput placeholder="Yearly Coeffitient" formControlName="yearlyCoeffitient"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'yearlyCoeffitient')">
+                            Please enter yearly coeffitient
+                        </mat-error>
+                        <mat-error *ngIf="f.yearlyCoeffitient.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="sub-entry">
+            <div class="center-entry">
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="0.05" matInput placeholder="Line Discount" formControlName="lineDiscount"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'lineDiscount')">
+                            Please enter line discount
+                        </mat-error>
+                        <mat-error *ngIf="f.lineDiscount.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="0.05" matInput placeholder="Student Discount" formControlName="studentDiscount"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'studentDiscount')">
+                            Please enter student discount
+                        </mat-error>
+                        <mat-error *ngIf="f.studentDiscount.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div style="padding-top:17px;">
+                    <mat-form-field>
+                        <input type="number" step="0.05" matInput placeholder="Senior Discount" formControlName="seniorDiscount"
+                            required>
+                        <mat-error *ngIf="discountForm.hasError('required', 'seniorDiscount')">
+                            Please enter senior discount
+                        </mat-error>
+                        <mat-error *ngIf="f.seniorDiscount.hasError('min')">
+                            Coeffitients cannot be negative
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="center-entry">
+            <mat-form-field>
+                <input type="date" matInput placeholder="Active from" formControlName="startDate" required>
+                <mat-error *ngIf="discountForm.hasError('required','startDate')">
+                    Please pick activation date
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="center-entry">
 
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="Line Discount" formControlName="lineDiscount" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'lineDiscount')">
-            Please enter line discount
-        </mat-error>
-        <mat-error *ngIf="f.lineDiscount.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>
-        </mat-form-field>
-    </div>
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="Student Discount" formControlName="studentDiscount" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'studentDiscount')">
-            Please enter student discount
-        </mat-error>
-        <mat-error *ngIf="f.studentDiscount.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>
-        </mat-form-field>
-    </div>
-    <div style="padding-top:17px;">
-        <mat-form-field>
-        <input type="text" matInput placeholder="Senior Discount" formControlName="seniorDiscount" required>
-        <mat-error *ngIf="discountForm.hasError('required', 'seniorDiscount')">
-            Please enter senior discount
-        </mat-error>
-        <mat-error *ngIf="f.seniorDiscount.hasError('min')">
-            Coeffitients cannot be negative
-        </mat-error>
-        </mat-form-field>
-    </div>
-    <div>
+            <button class="btn btn-primary">Create</button>
 
-        <button class="btn btn-primary">Create</button>
-        
-    </div>
+        </div>
 
     </form>
+</div>

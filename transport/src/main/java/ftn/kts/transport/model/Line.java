@@ -50,6 +50,8 @@ public class Line implements Serializable {
 	private String description;
 	@Column
 	private int duration;
+	
+	
 
 	public Line(String name, VehicleType transportType, Set<LineAndStation> stationSet, Set<String> streetPath, boolean active, String description, int duration) {
 		this.name = name;
@@ -61,6 +63,12 @@ public class Line implements Serializable {
 		this.duration = duration;
 	}
 
+	public Line(Long id, String name, int duration) {
+		this.id = id;
+		this.name = name;
+		this.duration = duration;
+	}
+	
 	public String getDescription() {
 		return description;
 	}

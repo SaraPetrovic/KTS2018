@@ -1,6 +1,11 @@
 package ftn.kts.transport.model;
 
+import java.util.Date;
+
 import javax.persistence.*;
+
+import ftn.kts.transport.enums.TicketActivationType;
+import ftn.kts.transport.enums.TicketTypeTemporal;
 
 @Entity
 @DiscriminatorValue("route_ticket")
@@ -14,9 +19,13 @@ public class RouteTicket extends Ticket {
 	@ManyToOne(fetch = FetchType.LAZY)
     private Route route;
 
-
-    public RouteTicket() {
-        super();
+	public RouteTicket() {
+		super();
+	}
+	
+    public RouteTicket(Long id, Date date, TicketActivationType active, TicketTypeTemporal type, Route route) {
+        super(id, date, active, type);
+        this.route = route;
     }
 
     public RouteTicket(Route route) {

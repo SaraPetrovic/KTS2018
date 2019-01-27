@@ -187,12 +187,13 @@ public class DTOConverterImpl implements DTOConverter{
 	@Override
 	public PriceList convertDTOtoPriceList(PriceListDTO dto) {
 		// ========== CHECK DATA ==========
+		Date now = new Date();
 		for (Long zoneId : dto.getZonePrices().keySet()) {
 			zoneService.findById(zoneId);		// thorws DAO
 		}
 		if (dto.getLineDiscount() < 0 || dto.getMonthlyCoeff() < 0 ||
 				dto.getSeniorDiscount() < 0 || dto.getStudentDiscount() < 0 ||
-				dto.getYearlyCoeff() < 0) {
+				dto.getYearlyCoeff() < 0 || dto.getStartDate().before(now))  {
 			throw new InvalidInputDataException("Invalid input data for Price List!");
 		}
 		
@@ -205,6 +206,7 @@ public class DTOConverterImpl implements DTOConverter{
 		priceList.setYearlyCoeffitient(dto.getYearlyCoeff());
 		priceList.setOneTimePrices(dto.getZonePrices());
 		priceList.setLineDiscount(dto.getLineDiscount());
+		priceList.setStartDateTime(dto.getStartDate());
 		return priceList;
 	}
 

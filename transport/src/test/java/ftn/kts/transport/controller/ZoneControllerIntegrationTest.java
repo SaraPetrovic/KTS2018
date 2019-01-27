@@ -128,7 +128,7 @@ public class ZoneControllerIntegrationTest {
 	}
 	
 	@Test
-	public void addZoneTestZoneBadRequest() {
+	public void addZoneTestZoneConflict() {
 		
 		ZoneDTO entity= new ZoneDTO("Zona II", null, Long.valueOf(1));
 		
@@ -139,7 +139,7 @@ public class ZoneControllerIntegrationTest {
 	}
 	
 	@Test
-	public void addZoneTestConflict() {
+	public void addZoneTestBadRequest() {
 		
 		ZoneDTO entity= new ZoneDTO("", null, Long.valueOf(2));
 		
@@ -218,7 +218,7 @@ public class ZoneControllerIntegrationTest {
 		
 		Zone zone = zoneService.findById(Long.valueOf(2));
 		
-		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
+		ZoneDTO dto = new ZoneDTO(zone.getId(), "Druga zona", null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity =
 	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
@@ -226,5 +226,21 @@ public class ZoneControllerIntegrationTest {
 	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertEquals("Druga zona", responseEntity.getBody().getName());
+	}
+	
+	@Test
+	public void updateZoneTestCONFLICT() {
+		
+		Zone zone = zoneService.findById(Long.valueOf(2));
+		
+		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
+		
+		ResponseEntity<ZoneDTO> responseEntity =
+	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto),
+	            		ZoneDTO.class);
+
+		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 	}
 }
