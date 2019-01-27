@@ -21,7 +21,7 @@ export class ZoneFormComponent implements OnInit {
     @Input() zones : Zone[];
     private disabledOption = "";
     private zoneClickedSubscription : Subscription;
-    private formLabel: String = "Add zone"; 
+    @Input() formLabel: String; 
     @Output() addButton = new EventEmitter();
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }

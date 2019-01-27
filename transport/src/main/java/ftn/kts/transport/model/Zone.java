@@ -17,7 +17,7 @@ public class Zone implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true)
+	@Column()
 	private String name;
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Station> stations;

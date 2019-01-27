@@ -117,13 +117,9 @@ public class ZoneController {
 			throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
 		}
 		
-		zone.setName(dtoZone.getName());
+		Zone res = zoneService.update(zone, dtoZone);
 		
-//		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());
-//		zone.setSubZone(subZone);
-		
-		zoneService.save(zone);
-		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
+		return new ResponseEntity<>(new ZoneDTO(res), HttpStatus.OK);
 	}
 	
 	/*public Set<Station> checkStations(Set<StationDTO> dtoStations){
