@@ -33,8 +33,35 @@ public class Station implements Serializable {
 	private Set<LineAndStation> lineSet;
 	@Column
 	private boolean active;
+	@Column
+	private double x;
+	@Column
+	private double y;
 
-	
+	public Station(String address, String name, Set<LineAndStation> lineSet, boolean active, double x, double y) {
+		this.address = address;
+		this.name = name;
+		this.lineSet = lineSet;
+		this.active = active;
+		this.x = x;
+		this.y = y;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
 
 	public Station() {
 		

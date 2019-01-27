@@ -72,6 +72,8 @@ public class LineServiceImpl implements LineService {
 		
 		found.setName(line.getName());
 		found.setTransportType(VehicleType.values()[line.getVehicleType()]);
+		found.setDescription(line.getDescription());
+		found.setStreetPath(line.getStreetPath());
 		lineRepository.save(found);
 		return found;
 		
