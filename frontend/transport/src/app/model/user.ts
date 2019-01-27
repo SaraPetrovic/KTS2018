@@ -6,8 +6,7 @@ export class User{
     password: string;
     email: string;
     token?: string;
+    document: string;
+    
 
-    public constructor(init?: Partial<User>) {
-        Object.assign(this, init);
-    }
 }

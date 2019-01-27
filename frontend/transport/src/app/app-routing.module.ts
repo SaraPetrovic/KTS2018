@@ -15,6 +15,8 @@ import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
+import { FileUploadComponent } from './profile/file-upload.component';
+
 
 const routes: Routes = [
   {
@@ -57,6 +59,10 @@ const routes: Routes = [
       {
         path: 'tickets',
         component: UserTicketsComponent
+      },
+      {
+        path: 'upload',
+        component: FileUploadComponent
       }
     ]
   },

@@ -32,6 +32,10 @@ import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
+import { FileUploadComponent } from './profile/file-upload.component';
+import { StationTableComponent } from './administration/administration-station/station-table.component';
+import { AdministrationLineTableComponent } from './administration/administration-line/administration-line-table.component';
+
 
 
 @NgModule({
@@ -62,6 +66,9 @@ import { PricelistComponent } from './pricelist/pricelist.component';
     RegistrationComponent,
     AdministrationDocumentAcceptanceComponent,
     PricelistComponent
+    FileUploadComponent,
+    StationTableComponent,
+    AdministrationLineTableComponent
   ],
   imports: [
     BrowserModule,
