@@ -29,7 +29,6 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route getRoute(Long id){
-
         return this.routeRepository.findById(id).orElseThrow(() -> new DAOException("Route {id=" + id + "} can not be found", HttpStatus.NOT_FOUND));
     }
 

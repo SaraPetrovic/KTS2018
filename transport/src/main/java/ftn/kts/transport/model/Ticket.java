@@ -63,6 +63,15 @@ public abstract class Ticket implements Serializable {
 		
 	}
 
+	public Ticket(Long id, Date endTime, TicketActivationType active, TicketTypeTemporal type) {
+		super();
+		this.id = id;
+		this.endTime = endTime;
+		this.active = active;
+		this.ticketTemporal = type;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

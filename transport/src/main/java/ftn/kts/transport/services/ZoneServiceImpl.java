@@ -147,8 +147,7 @@ public class ZoneServiceImpl implements ZoneService{
 				throw new InvalidInputDataException("Zone with the same name already exists", HttpStatus.CONFLICT);
 			}
 		}
-		
-		
+
 		zone.setName(dtoZone.getName());
 		
 //		Zone subZone = zoneService.findById(dtoZone.getSubZoneId());

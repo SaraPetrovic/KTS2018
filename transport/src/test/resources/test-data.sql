@@ -3,7 +3,7 @@ insert into users(id, first_name, last_name, username, password, roles, user_typ
 insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (3, 'Marko', 'Balenovic', 'user2', '12345678', 1, 1)
 insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (4, 'Sara', 'Petrovic', 'user3', '12345678', 1, 1)
 insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '12345678', 1, 2)
- 
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
 
 insert into kts_lines(id, active, name, transport_type, duration) values (1, true, '7A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (2, true, '4A', 0, 1000)
