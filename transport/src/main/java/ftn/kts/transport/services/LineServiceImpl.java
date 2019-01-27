@@ -152,6 +152,11 @@ public class LineServiceImpl implements LineService {
 
 
 	@Override
+	public List<Line> getAllLinesByType(VehicleType type){
+		return this.lineRepository.findByTransportType(type);
+	}
+
+	@Override
 	public Set<Line> getAllLinesByZoneAndTransportType(Zone zone, VehicleType type) {
 		Set<Line> ret = new HashSet<Line>();
 		Collection<Line> lines = new ArrayList<Line>();

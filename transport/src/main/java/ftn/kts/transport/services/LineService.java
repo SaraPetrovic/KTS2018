@@ -21,5 +21,5 @@ public interface LineService {
 	Line updateLineStations(long id, LineDTO lineDTO);
 	List<Line> getAllLines();
 	Set<Line> getAllLinesByZoneAndTransportType(Zone zone, VehicleType type);
-	
+	List<Line> getAllLinesByType(VehicleType type);
 }
