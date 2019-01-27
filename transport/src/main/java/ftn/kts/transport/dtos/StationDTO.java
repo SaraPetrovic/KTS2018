@@ -4,6 +4,7 @@ import java.util.Set;
 
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineAndStation;
+import ftn.kts.transport.model.Point;
 import ftn.kts.transport.model.Station;
 
 public class StationDTO {
@@ -12,11 +13,28 @@ public class StationDTO {
 	private String address;
 	private String name;
 	private Set<LineAndStation> lines;
+	private Point location;
 	
 	public StationDTO() {
 		
 	}
-	
+
+	public StationDTO(Long id, String address, String name, Set<LineAndStation> lines, Point location) {
+		this.id = id;
+		this.address = address;
+		this.name = name;
+		this.lines = lines;
+		this.location = location;
+	}
+
+	public Point getLocation() {
+		return location;
+	}
+
+	public void setLocation(Point location) {
+		this.location = location;
+	}
+
 	public StationDTO(Long id, String address, String name, Set<LineAndStation> lines) {
 		this.id = id;
 		this.address = address;
@@ -40,6 +58,9 @@ public class StationDTO {
 		this.address = station.getAddress();
 		this.name = station.getName();
 		this.lines = station.getLineSet();
+		this.location = new Point();
+		this.location.setX(station.getX());
+		this.location.setY(station.getY());
 	}
 	
 	public String getAddress() {

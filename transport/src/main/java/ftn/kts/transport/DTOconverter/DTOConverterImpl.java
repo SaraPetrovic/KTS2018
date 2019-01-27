@@ -59,6 +59,7 @@ public class DTOConverterImpl implements DTOConverter{
 		l.setTransportType(VehicleType.values()[lineDTO.getVehicleType()]);
 		l.setStreetPath(lineDTO.getStreetPath());
 		l.setDuration(lineDTO.getDuration());
+		l.setDescription(lineDTO.getDescription());
 		return l;
 	}
 	
