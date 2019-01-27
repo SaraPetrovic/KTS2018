@@ -1,0 +1,15 @@
+<div id="wrapper"> 
+  
+  <div id="map-wrapper">  
+    <app-map (streetClick)="streetClicked($event)" (stationClick)="stationClicked($event)">
+    </app-map>
+  </div>
+
+  <div id="form-wrapper">
+    <app-administration-line-form (added)="onFormEvent($event)" (cancel)="onFormCancel()">  
+    </app-administration-line-form>
+  </div>
+
+  <app-administration-line-table (edited)="editLine($event)" (deleted)="deleteLine($event)">
+  </app-administration-line-table>
+</div>

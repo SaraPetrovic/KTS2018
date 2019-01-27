@@ -7,6 +7,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -31,8 +35,11 @@ import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
 import ftn.kts.transport.exception.TicketAlreadyActivatedException;
+import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.LineTicket;
 import ftn.kts.transport.model.Role;
+import ftn.kts.transport.model.Route;
+import ftn.kts.transport.model.RouteTicket;
 import ftn.kts.transport.model.Ticket;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.model.Zone;
@@ -183,4 +190,71 @@ public class TicketServiceUnitTest {
 		assertEquals(500.00 ,ticketToBuy.getPrice(), 0.0001);
 	}
 	
+	@Test
+	public void checkTicketTestOneHourPassExpired() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = sdf.parse("26/01/2019 10:10:00");
+		
+		Ticket ticket = new ZoneTicket(Long.valueOf(1),
+										date, 
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_HOUR_PASS,
+										new Zone(Long.valueOf(1), "Zona I", true));
+		
+		Ticket rez = ticketService.checkTicket(ticket);
+		
+		assertNotNull(rez);
+		assertEquals(TicketActivationType.EXPIRED, rez.getActive());
+	}
+	
+	@Test
+	public void checkTicketTestOneHourPassActive() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = sdf.parse("27/01/2020 10:10:00");
+		
+		Ticket ticket = new ZoneTicket(Long.valueOf(1),
+										date, 
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_HOUR_PASS,
+										new Zone(Long.valueOf(1), "Zona I", true));
+		
+		Ticket rez = ticketService.checkTicket(ticket);
+		
+		assertNotNull(rez);
+		assertEquals(TicketActivationType.ACTIVE, rez.getActive());
+	}
+	
+	@Test
+	public void checkTicketTestOneTimePassActive() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = sdf.parse("27/01/2019 10:10:00");
+		
+		Ticket ticket = new RouteTicket(Long.valueOf(1),
+											null, 
+											TicketActivationType.ACTIVE,
+											TicketTypeTemporal.ONE_TIME_PASS,
+											new Route(Long.valueOf(1), new Line(Long.valueOf(1), "1", 25), date));
+		
+		Ticket rez = ticketService.checkTicket(ticket);
+		
+		assertNotNull(rez);
+		assertEquals(TicketActivationType.EXPIRED, rez.getActive());
+	}
+	
+	@Test
+	public void checkTicketTestOneTimePassExpire() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = sdf.parse("27/01/2020 10:10:00");
+		
+		Ticket ticket = new RouteTicket(Long.valueOf(1),
+										null, 
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_TIME_PASS,
+										new Route(Long.valueOf(1), new Line(Long.valueOf(1), "1", 25), date));
+		
+		Ticket rez = ticketService.checkTicket(ticket);
+		
+		assertNotNull(rez);
+		assertEquals(TicketActivationType.ACTIVE, rez.getActive());
+	}
 }

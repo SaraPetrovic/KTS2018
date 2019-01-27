@@ -33,7 +33,6 @@ import ftn.kts.transport.services.JwtService;
 import ftn.kts.transport.services.UserService;
 
 @RestController
-@RequestMapping(value = "user")
 public class UserController {
 
     @Autowired
@@ -42,9 +41,8 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping(path = "/register")
+    @PostMapping(path = "/user/register")
     @Consumes("application/json")
-    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
     	if(userDTO.getUsername() == "" || userDTO.getPassword() == "" || userDTO.getFirstName() == "" || userDTO.getLastName() == ""
@@ -60,8 +58,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @PostMapping( path = "/login", consumes = {"application/json"} )
-    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PostMapping( path = "/user/login", consumes = {"application/json"} )
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Object> loginUser(@RequestBody UserDTO userDTO){
 
@@ -75,11 +72,11 @@ public class UserController {
         }
     }
     
-    @PutMapping(consumes = {"application/json"}, produces="application/json")
-    //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PutMapping(path = "/rest/user", consumes = {"application/json"}, produces="application/json")
+    @PreAuthorize("hasRole('CLIENT')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<UserDTO> update(@RequestHeader("Authorization") final String token, @RequestBody UserDTO userDto){
-		System.out.println("USAAAOO!!!!");
+		
     	User u = jwtService.validate(token.substring(7));
     	User user = userService.findByUsername(u.getUsername());
     	
@@ -101,7 +98,7 @@ public class UserController {
     }
     
     
-    @PostMapping(path = "/document")
+    @PostMapping(path = "rest/user/document")
     @Consumes("multipart/form-data")
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Boolean> uploadDocumentImage(@RequestParam("file") MultipartFile file, 
@@ -111,25 +108,25 @@ public class UserController {
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/accept")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(path = "rest/user/{id}/accept")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Boolean> acceptDocument(@PathVariable("id") long id) {
     	boolean ret = userService.verifyDocument(id, DocumentVerification.APPROVED);
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/decline")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(path = "rest/user/{id}/decline")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Boolean> declineDocument(@PathVariable("id") long id) {
     	boolean ret = userService.verifyDocument(id, DocumentVerification.REJECTED);
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/verify")
+    @GetMapping(path = "rest/user/verify")
     @Produces("application/json")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<List<User>> getUsersForVerification() {
     	List<User> toVerify = userService.findUsersByDocumentVerified(DocumentVerification.PENDING);

@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Line } from '../model/line';
-import { LineService } from '../_services/line.service';
-import { MapComponent } from '../map/map.component';
+import { LineService } from '../_services/line/line.service';
 import { map } from 'rxjs/operators';
-import { MapEventsService } from '../_services/map-events.service';
+import { MapComponent } from '../modules/shared/map/map.component';
 
 @Component({
   selector: 'app-lines',

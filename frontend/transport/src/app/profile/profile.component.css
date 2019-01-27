@@ -52,5 +52,7 @@ body {font-family: "Lato", sans-serif;}
   border: 1px solid #ccc;
   width: 85%;
   border-left: none;
+  max-height: 600px;
   min-height: 600px;
+  overflow-y:scroll;
 }

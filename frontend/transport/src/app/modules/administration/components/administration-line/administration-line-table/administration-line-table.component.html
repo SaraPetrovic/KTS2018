@@ -1,0 +1,31 @@
+<div id="wrapper">
+    <div class="table-responsive" *ngIf="lines">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+        <th><span>ID</span></th>
+        <th><span>Name</span></th>
+        <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let line of lines">
+            <td>{{line.id}}</td>
+            <td>{{line.name}}</td>
+            <td class="text-right">
+                <div class="btn-group flex-btn-group-container">
+                    <button type="submit" class="btn btn-primary btn-sm" (click)="edit(line)">
+                        <span class="fa fa-pencil"></span>
+                        <span class="d-none d-md-inline">Edit</span>
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-sm" (click)="delete(line)">
+                        <span class="fa fa-remove"></span>
+                        <span class="d-none d-md-inline">Delete</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>

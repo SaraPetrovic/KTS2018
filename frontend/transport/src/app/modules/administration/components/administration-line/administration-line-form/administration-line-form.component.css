@@ -1,0 +1,9 @@
+#form-wrapper{
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#add-btn{
+    float: right;
+}

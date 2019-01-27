@@ -25,6 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.InvalidInputDataException;
@@ -85,36 +86,27 @@ public class ZoneServiceUnitTest {
 	public void addZoneTestOK1() {
 		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
-		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(null);
-		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
+		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska2", null, zone2, true);
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+		Mockito.when(zoneRepository.save(zone3)).thenReturn(zone3);
 		
-		Zone rez = zoneService.save(zone2);
-		
-		assertNotNull(rez);
-		assertEquals(zone2, rez);
-	}
-	
-	@Test
-	public void addZoneTestOK2() {
-		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
-		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
-		Zone zone3 = new Zone(Long.valueOf(3), "Prigradska 2", null, zone2, true);
-		Zone zone4 = new Zone(Long.valueOf(4), "Prigradska 3", null, zone2, true);
-
-		Mockito.when(zoneRepository.findByName(zone4.getName())).thenReturn(null);
-		Mockito.when(zoneRepository.save(zone4)).thenReturn(zone4);
-		
-		Zone rez = zoneService.addZone(zone4);
+		Zone rez = zoneService.addZone(zone3);
 		
 		assertNotNull(rez);
-		assertEquals(zone4, rez);
+		assertEquals(zone3.getName(), rez.getName());
 	}
 	
 	@Test(expected=InvalidInputDataException.class)
 	public void addZoneTestConflict() {
 		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
 		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
-		Mockito.when(zoneRepository.findByName(zone2.getName())).thenReturn(zone2);
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
 
 		zoneService.addZone(zone2);
 	}
@@ -256,5 +248,49 @@ public class ZoneServiceUnitTest {
 		assertEquals(z2.getSubZone().getId(), retParent.getSubZone().getId());
 	}
 
+	@Test
+	public void updateZoneTestOK() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		ZoneDTO zone3 = new ZoneDTO(Long.valueOf(2), "Prigradska2", null, Long.valueOf(1));
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
+		
+		Zone zone = zoneService.update(zone2, zone3);
+		
+		assertEquals("Prigradska2", zone.getName());
+	}
 	
+	@Test
+	public void updateZoneTestOK2() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, false);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		ZoneDTO zone3 = new ZoneDTO(Long.valueOf(2), "Gradska", null, Long.valueOf(1));
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
+		
+		Zone zone = zoneService.update(zone2, zone3);
+		
+		assertEquals("Gradska", zone.getName());
+	}
+	
+	@Test(expected=InvalidInputDataException.class)
+	public void updateZoneTestConflict() {
+		Zone zone1 = new Zone(Long.valueOf(1), "Gradska", null, null, true);
+		Zone zone2 = new Zone(Long.valueOf(2), "Prigradska", null, zone1, true);
+		ZoneDTO zone3 = new ZoneDTO(Long.valueOf(2), "Gradska", null, Long.valueOf(1));
+		List<Zone> zones = new ArrayList<Zone>();
+		zones.add(zone1);
+		zones.add(zone2);
+		Mockito.when(zoneRepository.findAll()).thenReturn(zones);
+		Mockito.when(zoneRepository.save(zone2)).thenReturn(zone2);
+		
+		zoneService.update(zone2, zone3);
+	}
 }

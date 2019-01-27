@@ -1,0 +1,14 @@
+<div id="wrapper">
+    <div id="map-wrapper">
+        <app-map (streetEnter)="mouseEnter($event)">
+        </app-map>
+    </div>
+
+    <div id="form-wrapper">
+        <app-administration-station-form (added)="onFormEvent($event)" (cancel)="onFormCancel()">  
+        </app-administration-station-form>
+    </div>
+
+    <app-station-table (deleted)="deleteStation($event)">
+    </app-station-table>
+</div>

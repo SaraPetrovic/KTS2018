@@ -1,0 +1,27 @@
+<div id="wrapper">
+    <div class="table-responsive" *ngIf="stations">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+        <th><span>ID</span></th>
+        <th><span>Name</span></th>
+        <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let station of stations">
+            <td>{{station.id}}</td>
+            <td>{{station.name}}</td>
+            <td class="text-right">
+                <div class="btn-group flex-btn-group-container">
+                    <button type="submit" class="btn btn-danger btn-sm" (click)="delete(station)">
+                        <span class="fa fa-remove"></span>
+                        <span class="d-none d-md-inline">Delete</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, MinLengthValidator } from '@angular/forms';
 import { User } from '../model/user';
 import { Subscription } from 'rxjs';
-import { AuthenticationService } from '../_services/authentication.service';
+import { AuthenticationService } from '../_services/authentication/authentication.service';
 
 @Component({
   selector: 'app-edit-profile',

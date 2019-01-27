@@ -262,8 +262,8 @@ public class UserServiceUnitTest {
 		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
 		Mockito.when(userRepository.save(this.logged)).thenReturn(this.logged);
 		
-		//boolean ret = userService.verifyDocument(1L);
-		//assertTrue(ret);
+		boolean ret = userService.verifyDocument(1L, DocumentVerification.APPROVED);
+		assertTrue(ret);
 		
 		//Mockito.verify(userServiceSpy, Mockito.times(1)).findById(1L);
 	}
@@ -275,7 +275,7 @@ public class UserServiceUnitTest {
 		this.logged.setDocumentVerified(DocumentVerification.PENDING);
 		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
 		
-		//userService.verifyDocument(1L);
+		userService.verifyDocument(1L, DocumentVerification.APPROVED);
 	}
 	
 	@Transactional
@@ -285,13 +285,13 @@ public class UserServiceUnitTest {
 		this.logged.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
 		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
 		
-		//userService.verifyDocument(1L);
+		userService.verifyDocument(1L, DocumentVerification.APPROVED);
 	}
 	
 	@Transactional
 	@Test(expected = DAOException.class)
 	public void verifyDocument_UserNotFound_Test() {
-		//userService.verifyDocument(-1L);
+		userService.verifyDocument(-1L, DocumentVerification.APPROVED);
 	}
 	
 	@Transactional
@@ -301,7 +301,7 @@ public class UserServiceUnitTest {
 		this.logged.setDocumentVerified(DocumentVerification.REJECTED);
 		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
 		
-		//userService.verifyDocument(1L);
+		userService.verifyDocument(1L, DocumentVerification.APPROVED);
 	}
 	
 	@Transactional
@@ -311,7 +311,68 @@ public class UserServiceUnitTest {
 		this.logged.setDocumentVerified(DocumentVerification.APPROVED);
 		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
 		
-		//userService.verifyDocument(1L);
+		userService.verifyDocument(1L, DocumentVerification.APPROVED);
+	}
+	
+	@Transactional
+	@Test
+	public void verifyDocument_PASS_Test_Rejected() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.PENDING);
+		
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		Mockito.when(userRepository.save(this.logged)).thenReturn(this.logged);
+		
+		boolean ret = userService.verifyDocument(1L, DocumentVerification.REJECTED);
+		assertTrue(ret);
+		
+		//Mockito.verify(userServiceSpy, Mockito.times(1)).findById(1L);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentIsNull_Test_Rejected() {
+		this.logged.setDocument(null);
+		this.logged.setDocumentVerified(DocumentVerification.PENDING);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		userService.verifyDocument(1L, DocumentVerification.REJECTED);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumenVerificationEnumIsZero_Test_Rejected() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.NO_DOCUMENT);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		userService.verifyDocument(1L, DocumentVerification.REJECTED);
+	}
+	
+	@Transactional
+	@Test(expected = DAOException.class)
+	public void verifyDocument_UserNotFound_Test_Rejected() {
+		userService.verifyDocument(-1L, DocumentVerification.REJECTED);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentAlreadyRejected_Test_Rejected() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.REJECTED);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		userService.verifyDocument(1L, DocumentVerification.REJECTED);
+	}
+	
+	@Transactional
+	@Test(expected = DocumentVerificationException.class)
+	public void verifyDocument_DocumentAlreadyApproved_Rejected() {
+		this.logged.setDocument("user_document.jpg");
+		this.logged.setDocumentVerified(DocumentVerification.APPROVED);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(this.logged));
+		
+		userService.verifyDocument(1L, DocumentVerification.REJECTED);
 	}
 	
 	
