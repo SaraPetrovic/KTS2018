@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LineService } from 'src/app/_services/line.service';
+import { LineService } from 'src/app/_services/line/line.service';
 import { Line } from 'src/app/model/line';
 
 @Component({

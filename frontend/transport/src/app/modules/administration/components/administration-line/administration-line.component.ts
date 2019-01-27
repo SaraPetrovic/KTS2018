@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LineService } from '../../_services/line.service';
+import { LineService } from '../../../../_services/line/line.service';
 
-import { Line } from '../../model/line';
-import { MapComponent } from '../../map/map.component';
+import { Line } from '../../../../model/line';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MapComponent } from 'src/app/modules/shared/map/map.component';
 
 @Component({
   selector: 'app-administration-line',

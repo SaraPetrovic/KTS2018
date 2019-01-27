@@ -1,10 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Point } from '../model/point';
+import { Point } from '../../../../../model/point';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MapEventsService {
 
   public focusStreet: EventEmitter<string>;

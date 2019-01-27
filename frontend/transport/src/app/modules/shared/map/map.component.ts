@@ -1,6 +1,6 @@
 import { Component, OnInit, Directive, ElementRef, HostListener, Output, EventEmitter, AfterViewInit, Renderer2 } from '@angular/core';
-import { MapEventsService } from '../_services/map-events.service';
-import { Point } from '../model/point';
+import { MapEventsService } from './services/map-events/map-events.service';
+import { Point } from 'src/app/model/point';
 
 
 @Directive({

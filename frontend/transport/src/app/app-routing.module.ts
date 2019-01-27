@@ -2,10 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LinesComponent } from './lines/lines.component';
 import { HomeComponent } from './home/home.component';
-import { AdministrationComponent } from './administration/administration.component';
-import { AdministrationLineComponent } from './administration/administration-line/administration-line.component';
-import { AdministrationStationComponent } from './administration/administration-station/administration-station.component';
-import { AdministrationZoneComponent } from './administration/administration-zone/administration-zone.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
 import { TicketComponent } from './ticket/ticket.component';
 import { HostComponent } from './host/host.component';
@@ -13,7 +9,6 @@ import { EditProfileComponent } from './profile/edit-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
-import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { FileUploadComponent } from './profile/file-upload.component';
 
@@ -68,30 +63,7 @@ const routes: Routes = [
   },
   {
     path: 'administration',
-    component: AdministrationComponent,
-    children: [
-      {
-        path: 'lines',
-        component: AdministrationLineComponent
-      },
-      {
-        path: 'stations',
-        component: AdministrationStationComponent
-      },
-      {
-        path: 'zones',
-        component: AdministrationZoneComponent,
-      },
-      {
-        path: 'documents',
-        component: AdministrationDocumentAcceptanceComponent
-      },
-      {
-        path: '',
-        redirectTo: 'lines',
-        pathMatch: 'full'
-      }
-    ]
+    loadChildren: './modules/administration/administration.module#AdministrationModule'
   },
   {
     path: '**',

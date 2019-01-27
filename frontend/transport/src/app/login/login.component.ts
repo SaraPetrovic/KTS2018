@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 
-import { AuthenticationService } from '../_services/authentication.service'; 
+import { AuthenticationService } from '../_services/authentication/authentication.service'; 
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({

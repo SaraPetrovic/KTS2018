@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PricelistService } from '../_services/pricelist.service';
+import { PricelistService } from '../_services/pricelist/pricelist.service';
 
 @Component({
   selector: 'app-pricelist',

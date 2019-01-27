@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/model/user';
-import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { AuthenticationService } from 'src/app/_services/authentication/authentication.service';
 
 @Component({
   selector: 'app-administration-document-acceptance',

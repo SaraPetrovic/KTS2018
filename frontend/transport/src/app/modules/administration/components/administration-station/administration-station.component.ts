@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { StationService } from '../../_services/station.service';
-import { Station } from '../../model/station';
-import { MapComponent } from '../../map/map.component';
-import { Point } from '../../model/point';
+import { StationService } from '../../../../_services/station/station.service';
+import { Station } from '../../../../model/station';
+import { Point } from '../../../../model/point';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MapComponent } from 'src/app/modules/shared/map/map.component';
 
 @Component({
   selector: 'app-administration-station',

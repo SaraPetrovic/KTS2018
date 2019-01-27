@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { User } from '../model/user';
+import { User } from '../../model/user';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Ticket } from '../model/ticket';
+import { Ticket } from '../../model/ticket';
 
 @Injectable({
   providedIn: 'root'

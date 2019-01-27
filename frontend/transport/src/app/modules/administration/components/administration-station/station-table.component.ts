@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StationService } from 'src/app/_services/station.service';
-import { Station } from 'src/app/model/station';
+import { StationService } from '../../../../_services/station/station.service';
+import { Station } from '../../../../model/station';
 
 @Component({
   selector: 'app-station-table',
