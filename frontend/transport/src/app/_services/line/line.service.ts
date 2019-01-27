@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Line } from '../../model/line';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { identifierModuleUrl } from '@angular/compiler';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -35,19 +36,14 @@ export class LineService {
   }
 
   addLine(line: Line){
-    line.name = "11";
-    console.log("usao sam u service", line);
-    //this.http.post("http://localhost:9003/line", line, httpOptions).subscribe();
+    this.http.post("http://localhost:9003/line", line, httpOptions).subscribe();
   }
 
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-  
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-  
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  deleteLine(id: number){
+    this.http.delete("http://localhost:9003/line/" + id).subscribe();
+  }
+
+  updateLine(line: Line){
+    this.http.put("http://localhost:9003/line/" + line.id, line, httpOptions).subscribe();
   }
 }

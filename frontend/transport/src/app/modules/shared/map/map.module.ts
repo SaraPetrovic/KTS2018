@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { MapComponent, StreetClickedDirective, StreetEnterDirective, StreetEventDirective } from "./map.component";
+import { MapComponent, StreetClickedDirective, StreetEnterDirective, StreetEventDirective, DrowStationDirective, DrowTempStationDirective } from "./map.component";
 import { MapEventsService } from "./services/map-events/map-events.service";
 
 @NgModule({
@@ -7,7 +7,9 @@ import { MapEventsService } from "./services/map-events/map-events.service";
         MapComponent,
         StreetClickedDirective,
         StreetEnterDirective,
-        StreetEventDirective
+        StreetEventDirective,
+        DrowStationDirective,
+        DrowTempStationDirective,
     ],
     exports: [
         MapComponent

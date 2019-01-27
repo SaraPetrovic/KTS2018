@@ -8,10 +8,12 @@ import { AdministrationRoutingModule } from "./administration-routing.module";
 import { AdministrationDocumentAcceptanceComponent } from "./components/administration-document-acceptance/administration-document-acceptance.component";
 import { MapModule } from "../shared/map/map.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AdministrationLineTableComponent } from "./components/administration-line/administration-line-table.component";
-import { StationTableComponent } from "./components/administration-station/station-table.component";
+import { AdministrationLineTableComponent } from "./components/administration-line/administration-line-table/administration-line-table.component";
+import { StationTableComponent } from "./components/administration-station/station-table/station-table.component";
 import { ZoneFormComponent } from "./components/administration-zone/zone-form.component";
 import { ZoneTableComponent } from "./components/administration-zone/zone-table.component";
+import { AdministrationLineFormComponent } from './components/administration-line/administration-line-form/administration-line-form.component';
+import { AdministrationStationFormComponent } from './components/administration-station/administration-station-form/administration-station-form.component';
 
 @NgModule({
     declarations: [
@@ -23,7 +25,9 @@ import { ZoneTableComponent } from "./components/administration-zone/zone-table.
         AdministrationLineTableComponent,
         StationTableComponent,
         ZoneFormComponent,
-        ZoneTableComponent
+        ZoneTableComponent,
+        AdministrationLineFormComponent,
+        AdministrationStationFormComponent
     ],
     imports: [
         CommonModule,

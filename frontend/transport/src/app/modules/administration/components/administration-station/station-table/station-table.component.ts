@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { StationService } from '../../../../_services/station/station.service';
-import { Station } from '../../../../model/station';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { StationService } from '../../../../../_services/station/station.service';
+import { Station } from '../../../../../model/station';
 
 @Component({
   selector: 'app-station-table',
@@ -10,12 +10,19 @@ import { Station } from '../../../../model/station';
 export class StationTableComponent implements OnInit {
 
   private stations: Station[];
+
+  @Output() deleted = new EventEmitter<Station>();
   constructor(private stationService: StationService) { }
 
   ngOnInit() {
     this.stationService.getStations()
       .subscribe( data => this.stations = data );
 
+  }
+
+  
+  delete(station: Station){
+    this.deleted.emit(station);
   }
 
 }
