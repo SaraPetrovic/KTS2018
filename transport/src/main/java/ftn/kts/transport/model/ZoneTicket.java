@@ -2,7 +2,11 @@ package ftn.kts.transport.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ftn.kts.transport.enums.TicketActivationType;
+import ftn.kts.transport.enums.TicketTypeTemporal;
+
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -31,6 +35,10 @@ public class ZoneTicket extends Ticket implements Serializable {
 		this.zone = zone;
 	}
 
+	public ZoneTicket(Long id, Date date, TicketActivationType active, TicketTypeTemporal type, Zone zone) {
+		super(id, date, active, type);
+		this.zone = zone;
+	}
 
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	public Zone getZone() {
