@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div *ngIf="tickets">
   <div *ngFor="let ticket of tickets">
     <div class="card" style="margin-top: 1%">
@@ -21,34 +20,6 @@
             </div>
             <div class="col-6" >
                 <img src='http://localhost:9003/files/{{ticket.qrCode}}' style="width:250px;height:250px;">
-=======
-<div class="container">
-<div id="wrapper">
-  <div *ngIf="tickets">
-    <div *ngFor="let ticket of tickets">
-      <div class="container">
-        <div class="card" style="margin-top: 1%">
-          <div class="card-header">
-            Ticket type: {{ticket.ticketTemporal}}
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-6">
-                <p class="card-text">Active: {{ticket.active}}</p>
-                <p class="card-text" *ngIf="ticket.startTime !== null && ticket.startTime !== undefined">Start time: {{ticket.startTime}}</p>
-                <p class="card-text" *ngIf="ticket.endTime !== null && ticket.endTime !== undefined">End time: {{ticket.endTime}}</p>
-                <p class="card-text" *ngIf="ticket.route !== null && ticket.route !== undefined">Start time: {{ticket.route.date}}</p>
-                <p class="card-text" *ngIf="ticket.route !== null && ticket.route !== undefined">Line: {{ticket.route.line.name}}</p>
-                <p class="card-text" *ngIf="ticket.zone !== null && ticket.zone !== undefined">Ticket Zone: {{ticket.zone.name}}</p>
-                <p class="card-text" *ngIf="ticket.line !== null && ticket.line !== undefined">Line: {{ticket.line.name}}</p>
-                <p class="card-text">Transport type: {{ticket.transportType}}</p>
-                <button *ngIf="ticket.ticketTemporal === 'ONE_HOUR_PASS' && ticket.active === 'NOT_ACTIVE' && ticket.endTime === null" 
-                        class="btn btn-primary" (click)="activateTicket(ticket.id)">Activate ticket</button>
-              </div>
-              <div class="col-6" >
-                  <img src='http://localhost:9003/files/{{ticket.qrCode}}' style="width:250px;height:250px;">
-              </div>
->>>>>>> e65b42bb7f6aa453fedcfea6be5830a43ebab237
             </div>
           </div>
         </div>
