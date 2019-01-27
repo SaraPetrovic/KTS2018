@@ -15,4 +15,5 @@ export class Ticket{
     route: Route;
     line: Line;
     zone: Zone;
+    qrCode: String;
 }

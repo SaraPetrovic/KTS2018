@@ -9,10 +9,23 @@ public class UserDTO {
     private String password;
     private String firstName;
     private String lastName;
+    private String document;
 
     public UserDTO() {  }
+    
 
-    public UserDTO(Long id, String username, String password, String firstName, String lastName) {
+    public UserDTO(Long id, String username, String password, String firstName, String lastName, String document) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.document = document;
+	}
+
+
+	public UserDTO(Long id, String username, String password, String firstName, String lastName) {
         this.id = id;
     	this.username = username;
         this.password = password;
@@ -74,5 +87,15 @@ public class UserDTO {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+
+	public String getDocument() {
+		return document;
+	}
+
+
+	public void setDocument(String document) {
+		this.document = document;
+	}
 
 }

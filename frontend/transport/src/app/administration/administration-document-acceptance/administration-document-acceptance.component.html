@@ -5,11 +5,15 @@
         User: {{user.firstName}} {{user.lastName}}
       </div>
       <div class="card-body">
-        <p class="card-text"></p>
-        <button class="btn btn-primary" 
-                (click)="accept(user)">Accept</button>&nbsp;
-        <button class="btn btn-primary" 
-                (click)="decline(user)">Decline</button>
+        <div class="row">
+          <div class="col-6" >
+            <img src='http://localhost:9003/files/{{user.document}}' style="width:400px;height:200px;">
+          </div>
+          <div class="col-6">
+            <button class="btn btn-primary" (click)="accept(user)">Accept</button>&nbsp;
+            <button class="btn btn-primary" (click)="decline(user)">Decline</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

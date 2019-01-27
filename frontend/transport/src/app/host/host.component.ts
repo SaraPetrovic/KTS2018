@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RegistrationComponent } from '../registration/registration.component';
 
 @Component({
   selector: 'app-host',
@@ -12,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HostComponent implements OnDestroy {
 
-  currentDialog: MatDialogRef<LoginComponent> = null;
+  currentDialog: MatDialogRef<any> = null;
   destroy = new Subject<any>();
 
   constructor(matDialog: MatDialog, route: ActivatedRoute, router: Router) { 
@@ -27,7 +28,7 @@ export class HostComponent implements OnDestroy {
         if(route.snapshot.routeConfig.path === 'login'){
           this.currentDialog = matDialog.open(LoginComponent, {height: 'auto', width: '500px'});
         }else if(route.snapshot.routeConfig.path === 'registration'){
-          //this.currentDialog = matDialog.open(RegistrationComponent);
+          this.currentDialog = matDialog.open(RegistrationComponent);
         }
 
         this.currentDialog.afterClosed().subscribe(result => {

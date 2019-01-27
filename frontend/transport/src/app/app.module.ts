@@ -31,6 +31,11 @@ import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
+import { PricelistComponent } from './pricelist/pricelist.component';
+import { FileUploadComponent } from './profile/file-upload.component';
+import { StationTableComponent } from './administration/administration-station/station-table.component';
+import { AdministrationLineTableComponent } from './administration/administration-line/administration-line-table.component';
+
 
 
 @NgModule({
@@ -59,7 +64,11 @@ import { AdministrationDocumentAcceptanceComponent } from './administration/admi
     ProfileComponent,
     UserTicketsComponent,
     RegistrationComponent,
-    AdministrationDocumentAcceptanceComponent
+    AdministrationDocumentAcceptanceComponent,
+    PricelistComponent,
+    FileUploadComponent,
+    StationTableComponent,
+    AdministrationLineTableComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +82,8 @@ import { AdministrationDocumentAcceptanceComponent } from './administration/admi
   ],
   entryComponents:[
     HostComponent,
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
