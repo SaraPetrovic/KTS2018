@@ -42,8 +42,10 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping(consumes = {"application/json"} )
+    @PostMapping(path = "/register")
+    @Consumes("application/json")
     //@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
     	if(userDTO.getUsername() == "" || userDTO.getPassword() == "" || userDTO.getFirstName() == "" || userDTO.getLastName() == ""
     			|| userDTO.getUsername() == null || userDTO.getPassword() == null || userDTO.getFirstName() == null || userDTO.getLastName() == null) {

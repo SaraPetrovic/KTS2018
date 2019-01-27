@@ -31,6 +31,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AdministrationDocumentAcceptanceComponent } from './administration/administration-document-acceptance/administration-document-acceptance.component';
+import { PricelistComponent } from './pricelist/pricelist.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { AdministrationDocumentAcceptanceComponent } from './administration/admi
     ProfileComponent,
     UserTicketsComponent,
     RegistrationComponent,
-    AdministrationDocumentAcceptanceComponent
+    AdministrationDocumentAcceptanceComponent,
+    PricelistComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ import { AdministrationDocumentAcceptanceComponent } from './administration/admi
   ],
   entryComponents:[
     HostComponent,
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

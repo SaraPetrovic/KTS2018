@@ -1,6 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material';
+import { FormControl, FormGroupDirective, NgForm, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RegistrationService } from '../_services/registration.service';
+import { User } from '../model/user';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    //const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
+    //const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty);
+
+    //return (invalidCtrl || invalidParent);
+
+    return (control && control.parent.get('password').value !== control.parent.get('confirmPassword').value && control.dirty)
+  }
+}
+
 
 @Component({
   selector: 'app-registration',
@@ -9,37 +23,60 @@ import { RegistrationService } from '../_services/registration.service';
 })
 export class RegistrationComponent implements OnInit {
 
-  private registrationForm: FormGroup;
-  submitted = false;
-  error = '';
-  
-  constructor(private registrationService: RegistrationService, private formBuilder: FormBuilder) { }
+  myForm: FormGroup;
 
-  ngOnInit() {
-    this.registrationForm = this.formBuilder.group({
+  matcher = new MyErrorStateMatcher();
+
+  private newUser: User;
+
+  constructor(private formBuilder: FormBuilder, private registrationService: RegistrationService) {
+    this.myForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       username: ['', [Validators.required, Validators.minLength(4)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
-      email: ['', [Validators.required, Validators.email]],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
-    }, this.pwdMatchValidator);
+      confirmPassword: [''],
+      email: ['', [Validators.required, Validators.email]]
+    }, { validator: this.checkPasswords });
+
   }
 
-  onSubmit() {
-    this.submitted = true;
+  get f(){return this.myForm.controls;}
 
-    if(this.registrationForm.invalid){
+  registerUser() {
+    if (this.myForm.invalid) {
       return;
     }
 
-    this.submitted = false;
+    this.newUser = new User();
+    this.newUser.firstName = this.f.firstName.value;
+    this.newUser.lastName = this.f.lastName.value;
+    this.newUser.username = this.f.username.value;
+    this.newUser.password = this.f.password.value;
+    this.newUser.email = this.f.email.value;
+    
+    this.registrationService.registerUser(this.newUser).subscribe(
+      data => {
+        // redirect ili sta vec
+        console.log("uspeoo");
+      },
+      error => {
+        // ishendlaj exceptione
+        console.log(error);
+      }
+    )
   }
 
-  get f(){ return this.registrationForm.controls; }
+  ngOnInit() {
+    
+  }
 
-  pwdMatchValidator(frm: FormGroup) {
-    return frm.get('password').value === frm.get('confirmPassword').value
-       ? null : {'mismatch': true};
- }
+  checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+  let pass = group.controls.password.value;
+  let confirmPass = group.controls.confirmPassword.value;
+
+  return pass === confirmPass ? null : { notSame: true }
 }
+}
+
+
