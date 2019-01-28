@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { User } from '../../model/user';
 import { Observable, Subject, throwError } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class RegistrationService {
   private headers = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
   private subject = new Subject<any>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   registerUser(u: User): Observable<User> {
     return this.http.post<User>(`${this.registerUrl}`, u, this.headers);

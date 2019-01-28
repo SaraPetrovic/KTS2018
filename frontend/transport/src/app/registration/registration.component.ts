@@ -3,6 +3,8 @@ import { ErrorStateMatcher } from '@angular/material';
 import { FormControl, FormGroupDirective, Validators, FormGroup, FormBuilder, NgForm } from '@angular/forms';
 import { RegistrationService } from '../_services/registration/registration.service';
 import { User } from '../model/user';
+import { Route } from '../model/route';
+import { Router } from '@angular/router';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -29,7 +31,7 @@ export class RegistrationComponent implements OnInit {
 
   private newUser: User;
 
-  constructor(private formBuilder: FormBuilder, private registrationService: RegistrationService) {
+  constructor(private formBuilder: FormBuilder, private registrationService: RegistrationService, private router: Router) {
     this.myForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -57,7 +59,7 @@ export class RegistrationComponent implements OnInit {
     
     this.registrationService.registerUser(this.newUser).subscribe(
       data => {
-        // redirect ili sta vec
+        this.router.navigateByUrl("/");
         console.log("uspeoo");
       },
       error => {

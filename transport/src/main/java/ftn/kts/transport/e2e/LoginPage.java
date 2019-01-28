@@ -12,6 +12,9 @@ public class LoginPage {
 
     @FindBy(css = ".login-btn")
     private WebElement loginBtn;
+    
+    @FindBy(xpath = "//*[@id=\"wrapper\"]/form/div[3]/a")
+    private WebElement registerBtn;
 
     @FindBy(css = "input[formcontrolname='username']")
     private WebElement userNameInput;
@@ -43,6 +46,10 @@ public class LoginPage {
     public WebElement getLoginBtn() {
         return loginBtn;
     }
+    
+    public WebElement getRegisterBtn() {
+    	return registerBtn;
+    }
 
     public WebElement getUserNameInput() {
         return userNameInput;
@@ -63,6 +70,8 @@ public class LoginPage {
         el.clear();
         el.sendKeys(value);
     }
+    
+    
 
     public boolean isButtonEnabled() {
         try {
@@ -71,5 +80,15 @@ public class LoginPage {
         }catch(Exception e){
             return false;
         }
+    }
+    
+    public boolean isRegisterButtonEnabled() {
+        try {
+            (new WebDriverWait(driver, 3)).until(ExpectedConditions.elementToBeClickable(registerBtn));
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    	
     }
 }
