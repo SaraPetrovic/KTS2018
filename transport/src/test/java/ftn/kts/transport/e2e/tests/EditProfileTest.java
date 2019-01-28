@@ -1,5 +1,7 @@
 package ftn.kts.transport.e2e.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +36,7 @@ public class EditProfileTest {
 	 }
 	 
 	 @Test
-	 public void test() {
+	 public void test() throws InterruptedException {
 		 mainPage.getLoginBtn().click();
 		 
 		 loginPage.setUserNameInput("Sara");
@@ -45,7 +47,27 @@ public class EditProfileTest {
 	     editProfilePage.ensureIsDisplayed();
 	     
 	     editProfilePage.getProfileLink().click();
+	     assertEquals("http://localhost:4200/profile", browser.getCurrentUrl());
 	     
+	     Thread.sleep(1000);
+	     
+	     editProfilePage.getChangeProfileTab().click();
+	     assertEquals("http://localhost:4200/profile/edit", browser.getCurrentUrl());
+	     
+	     editProfilePage.setFirstName("Mila");
+	     editProfilePage.setPass("123456789");
+	     editProfilePage.setRepeatedPass("1234896");
+	     editProfilePage.getSaveButton().click();
+	     
+	     assertEquals("Repeated password is wrong", editProfilePage.getRepeatedPassWrong().getText());
+	     
+	     Thread.sleep(1000);
+	     
+	     editProfilePage.setPass("123456789");
+	     editProfilePage.setRepeatedPass("123456789");
+	     editProfilePage.getSaveButton().click();
+	     
+	     Thread.sleep(1000);
 	 }
 	 
 	 @After
