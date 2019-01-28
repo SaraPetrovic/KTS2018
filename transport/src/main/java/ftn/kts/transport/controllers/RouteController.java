@@ -24,7 +24,7 @@ import ftn.kts.transport.services.RouteService;
 import ftn.kts.transport.services.VehicleService;
 
 @RestController
-@RequestMapping(value = "/route")
+@RequestMapping(value = "/")
 public class RouteController {
 
 
@@ -41,7 +41,7 @@ public class RouteController {
     private RouteScheduleService routeScheduleService;
 
 
-    @GetMapping(path = "/line/{id}")
+    @GetMapping(path = "route/line/{id}")
     @Produces("application/json")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Set<Route>> getRoutesByLine(@PathVariable("id") Long id) {
@@ -49,7 +49,7 @@ public class RouteController {
     	return ResponseEntity.ok(this.routeService.findByLine(found));
     }
     
-    private Date getDate(Date date){
+    public Date getDate(Date date){
         Calendar calendar = Calendar.getInstance();
 
         calendar.set(Calendar.HOUR_OF_DAY, date.getHours());
@@ -59,8 +59,7 @@ public class RouteController {
     }
 
     @Scheduled(cron = "00 00 2 * * *")
-    private void generateRoutes(){
-        System.out.println("USAO SAM SVE JE DOBRO");
+    public void generateRoutes(){
         Calendar calendar = Calendar.getInstance();
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -96,7 +95,7 @@ public class RouteController {
         }
     }
 
-    private List<Date> sortDates(Set<Date> set){
+    public List<Date> sortDates(Set<Date> set){
         List<Date> dates = new ArrayList<>(set);
 
         Collections.sort(dates, (Date o1, Date o2) -> {

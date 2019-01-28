@@ -47,10 +47,8 @@ public class VehicleServiceImpl implements VehicleService{
 
 	@Override
 	public Vehicle updateVehicle(VehicleDTO vehicle, long id) {
-		Vehicle found = vehicleRepository.getOne(id);
-		if (found == null) {
-			return null;
-		}
+		Vehicle found = vehicleRepository.findById(id).orElseThrow(() -> new DAOException("Vehicle with that id does not exist", HttpStatus.NOT_FOUND));
+
 		found.setVehicleName(vehicle.getName());
 		vehicleRepository.save(found);
 		return found;

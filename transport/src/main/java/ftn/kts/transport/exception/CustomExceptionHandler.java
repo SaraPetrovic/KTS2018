@@ -24,7 +24,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<ExceptionResponse> handleAuthorizationException(AuthorizationException e) {
 		ExceptionResponse response = new ExceptionResponse(e.getMessage());
-		return new ResponseEntity<ExceptionResponse>(response, e.getHttpStatus());
+		return new ResponseEntity<ExceptionResponse>(response, HttpStatus.UNAUTHORIZED);
 	}
 	
 	@ExceptionHandler(DocumentUploadException.class)
