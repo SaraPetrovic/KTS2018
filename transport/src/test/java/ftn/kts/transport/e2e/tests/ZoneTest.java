@@ -8,19 +8,20 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import ftn.kts.transport.e2e.LoginPage;
 import ftn.kts.transport.e2e.MainPage;
 import ftn.kts.transport.e2e.UploadFilePage;
-import ftn.kts.transport.e2e.UserTicketsPage;
+import ftn.kts.transport.e2e.ZonePage;
 
-public class UploadFileTest {
+public class ZoneTest {
 
-	private WebDriver browser;
-	 
+	 private WebDriver browser;
+	
 	 private MainPage mainPage;
 	 private LoginPage loginPage;
-	 private UploadFilePage uploadPage;
+	 private ZonePage zonePage;
 	
 	@Before
 	 public void setUpSelenium(){
@@ -32,48 +33,71 @@ public class UploadFileTest {
 	
 	    mainPage = PageFactory.initElements(browser, MainPage.class);
 	    loginPage = PageFactory.initElements(browser, LoginPage.class);
-	    uploadPage = PageFactory.initElements(browser, UploadFilePage.class);
+	    zonePage = PageFactory.initElements(browser, ZonePage.class);
 	 }
 	
 	@Test
 	public void test() throws InterruptedException {
 		mainPage.getLoginBtn().click();
 		
-		loginPage.setUserNameInput("Sara");
-		loginPage.setPasswordInput("123");
+		loginPage.setUserNameInput("admin");
+		loginPage.setPasswordInput("admin");
  
 		loginPage.getLoginBtn().click();
 		
 		Thread.sleep(1000);
 		
-		uploadPage.ensureIsDisplayed();
- 
-		uploadPage.getProfileLink().click();
-		assertEquals("http://localhost:4200/profile", browser.getCurrentUrl());
+		zonePage.ensureIsDisplayed();
+		
+		zonePage.getAdministrationTab().click();
 		
 		Thread.sleep(1000);
 		
-		uploadPage.getUploadTab().click();
-		assertEquals("http://localhost:4200/profile/upload", browser.getCurrentUrl());
+		zonePage.getZonesTab().click();
+		assertEquals("http://localhost:4200/administration/zones", browser.getCurrentUrl());
 		
 		Thread.sleep(1000);
 		
-		uploadPage.getButtonUpload().click();
+		int size = zonePage.getSizeOfZones();
 		
-		Thread.sleep(1000);
-		
-		this.browser.switchTo().alert().accept();
-		
-		Thread.sleep(1000);
-		
-		uploadPage.getChooseFile().click();
+		zonePage.setName("gradska");		
 		
 		Thread.sleep(2000);
 		
+		zonePage.getSaveButton().click();
+		
+		Thread.sleep(2000);
+		
+		this.browser.switchTo().alert().accept();
+		assertEquals(size, zonePage.getSizeOfZones());
+		
+		Thread.sleep(2000);
+		
+		zonePage.setName("Petrovaradin");
+		Select select = zonePage.getSelect();
+        select.selectByVisibleText("gradska");
+        
+        Thread.sleep(2000);
+        
+        zonePage.getSaveButton().click();
+        
+        Thread.sleep(2000);
+        
+        assertEquals(size + 1, zonePage.getSizeOfZones());
+        
+        Thread.sleep(2000);
+        
+        zonePage.getDeleteButton().click();
+        
+        assertEquals(size, zonePage.getSizeOfZones());
+        
+        Thread.sleep(2000);
 	}
 	
+
 	@After
 	 public void closeSelenium() {
        browser.quit();
 	 }
+	
 }

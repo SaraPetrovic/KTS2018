@@ -20,6 +20,8 @@ export class AdministrationLineComponent implements OnInit {
   private addingLine: Line = null;
   private editingLine: Line = null;
   private edit = false;
+  private message: string;
+
   @ViewChild(MapComponent) map: MapComponent;
   @ViewChild(AdministrationLineFormComponent) form: AdministrationLineFormComponent;
 

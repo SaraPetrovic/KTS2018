@@ -41,10 +41,6 @@ public class UserTicketsPage {
 		return buttonAcceptTicket;
 	}
 	
-	public int getSizeOfTicketCards() {
-		return driver.findElements(By.cssSelector("div.tabcontent app-user-tickets:nth-child(2) div:nth-child(1) div:nth-child(1) > div.card")).size();
-	}
-	
 	public boolean isButtonEnabled() {
         try {
             (new WebDriverWait(driver, 4)).until(ExpectedConditions.elementToBeClickable(buttonAcceptTicket));

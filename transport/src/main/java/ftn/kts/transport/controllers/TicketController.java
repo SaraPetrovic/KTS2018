@@ -73,12 +73,12 @@ public class TicketController {
     @GetMapping(path = "/check/{id}")
     @Produces("application/json")
     @CrossOrigin( origins = "http://localhost:4200")
-	@PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_CLIENT') or hasRole('ROLE_CONDUCTER')")
     public ResponseEntity<Ticket> checkTicket(@PathVariable String id){
 
 	    try{
             Ticket ret = this.ticketService.findById(ticketService.decodeId(id));
-
+            ret = ticketService.checkTicket(ret);
             return ResponseEntity.ok(ret);
         }catch(Exception e){
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
