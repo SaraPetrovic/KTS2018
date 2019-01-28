@@ -17,4 +17,9 @@ export class PricelistService {
   addPriceList(priceList: Pricelist): Observable<Pricelist> {
     return this.http.post<Pricelist>(`${this.registerUrl}`, priceList, this.headers);
   }
+
+  getPriceList(): Observable<Pricelist> {
+    //return this.http.get(`${this.registerUrl}`)
+    return;
+  }
 }
