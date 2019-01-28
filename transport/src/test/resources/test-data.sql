@@ -8,6 +8,8 @@ insert into users(id, first_name, last_name, username, password, role) values (7
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (8, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0, null, 2)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (9, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (10, 'Mila', 'Manic', 'client2', 'client', 1, 0, 'dssd', 1)
+INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (11, 'Marko', 'Balenovic', 'administrator', 'administrator', 0) 
+
 
 
 insert into kts_lines(id, active, name, transport_type, duration) values (1, true, '7A', 0, 1000)

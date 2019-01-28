@@ -17,14 +17,22 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.exception.StorageException;
 import ftn.kts.transport.exception.StorageFileNotFoundException;
+import ftn.kts.transport.model.User;
 import ftn.kts.transport.properties.StorageProperties;
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
+    
+    @Autowired
+    private JwtService jwtService;
+    
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -48,6 +56,7 @@ public class FileSystemStorageService implements StorageService {
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                     StandardCopyOption.REPLACE_EXISTING);
             }
+            
         }
         catch (IOException e) {
             throw new StorageException("Failed to store file " + filename, e);
