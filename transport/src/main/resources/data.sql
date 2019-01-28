@@ -192,19 +192,18 @@ insert into zones(id, active, name, sub_zone_id) values (1, true, 'gradska', NUL
 insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 1)
 
 
-INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, role, user_type_demo) VALUES (1, 'document-test.jpg', 1, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
-INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0)
-insert into users(id, document, document_verified, first_name, last_name, password, role, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
-INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, role, user_type_demo) VALUES (4, 'document-test.jpg', 1, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)
-insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
-insert into users(id, first_name, last_name, username, password, role) values (7, 'Conducter', 'Conducter', 'conductor', '123', 2)
+INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (1, 'document-test.jpg', 1, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
+INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0) 
+insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
+INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (4, 'document-test.jpg', 1, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
 
 insert into zones_stations(zone_id, stations_id) values (1,1)
 insert into zones_stations(zone_id, stations_id) values (1,2)
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
 
-insert into kts_route(id, date, line_id, vehicle_id, active) values(1, '2019-02-02 00:00:00', 1, 1, true)
+insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-02-02 00:00:00', 1, 1)
 
 insert into route_schedule(id, active, active_from, line_id) values (1, true, '2019-02-01 00:00:00', 1)
 insert into weekday_schedule(route_schedule_id, weekday) values (1, '07:00:00')

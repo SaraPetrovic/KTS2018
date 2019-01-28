@@ -1,11 +1,15 @@
 package ftn.kts.transport.controllers;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,4 +47,17 @@ public class PriceListController {
 		boolean ret = priceListService.activatePriceList(id);
 		return new ResponseEntity<Boolean>(ret, HttpStatus.OK);
 	}
+	
+    @Scheduled(cron = "00 00 1 * * *")
+    public void activatePriceList() {
+    	Date now = new Date();
+    	List<PriceList> found = priceListService.findAll();
+    	for (PriceList priceList : found) {
+			if (priceList.getStartDateTime().getYear() == now.getYear() &&
+					priceList.getStartDateTime().getMonth() == now.getMonth() &&
+					priceList.getStartDateTime().getDay() == now.getDay()) {
+				priceListService.activatePriceList(priceList.getId());
+			}
+		}
+    }
 }

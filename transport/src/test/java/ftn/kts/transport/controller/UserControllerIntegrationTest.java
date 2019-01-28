@@ -20,12 +20,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import ftn.kts.transport.dtos.UserDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.services.JwtService;
+import ftn.kts.transport.services.JwtServiceImpl;
 import ftn.kts.transport.services.UserService;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +41,9 @@ public class UserControllerIntegrationTest {
 	
 	@Autowired
 	private UserService userService;
+	
+	 @Autowired
+	 private JwtService jwtService;
 	
 	@Test
 	public void addUserTestOK() {
@@ -92,6 +97,48 @@ public class UserControllerIntegrationTest {
 		assertEquals(size, userService.findAll().size());
 	}
 	
+	@Test
+	public void loginTestOK() {
+		UserDTO dtoUser = new UserDTO("user3", "12345678", "Sara", "Petrovic");
+		
+		ResponseEntity<Object> responseEntity =
+				restTemplate.postForEntity("/user/login", dtoUser, Object.class);
+		
+		assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());	
+	}
+	
+	@Test(expected=RestClientException.class)
+	public void loginTestBadRequestPassword() {
+		UserDTO dtoUser = new UserDTO("user3", "123", "Sara", "Petrovic");
+		
+		restTemplate.postForEntity("/user/login", dtoUser, Object.class);
+		
+	}
+	
+	@Test(expected=RestClientException.class)
+	public void loginTestBadRequestUsername() {
+		UserDTO dtoUser = new UserDTO("user", "12345678", "Sara", "Petrovic");
+		
+		restTemplate.postForEntity("/user/login", dtoUser, Object.class);
+	}
+	
+	@Test
+	public void acceptDocumentTestOK() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.IYLtD2Ov4x48c6gS9YeT1BGq1_h-xMTa7o_p0lmPa6K145mp0fqp52KSIx10zCVfcAFkFUjrUn02E3KkO1xlAQ";
+	
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+
+		HttpEntity<Void> entity = new HttpEntity<Void>(null, headers);
+
+		ResponseEntity<Void> responseEntity =
+				restTemplate.exchange("/rest/user/" + Long.valueOf(8) + "/accept", HttpMethod.PUT,
+						entity, Void.class);
+		
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
 	
 	@Test
 	public void updateTestInvalidToken() {

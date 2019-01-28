@@ -1,6 +1,7 @@
 package ftn.kts.transport.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,9 +48,7 @@ public class PriceListServiceImpl implements PriceListService {
 		
 		Date dateActivated = new Date();
 		
-		// aktiviraj ga i postavi START
-		toActivate.setActive(true);
-		toActivate.setStartDateTime(dateActivated);
+		
 		
 		
 		// ako postoji aktivan cenovnik:
@@ -64,6 +63,11 @@ public class PriceListServiceImpl implements PriceListService {
 			active.setActive(false);
 			priceListRepository.save(active);
 		}
+		
+		// aktiviraj ga i postavi START
+		toActivate.setActive(true);
+		toActivate.setStartDateTime(dateActivated);
+		
 		priceListRepository.save(toActivate);
 		return true;
 	}
@@ -133,6 +137,12 @@ public class PriceListServiceImpl implements PriceListService {
 			return activeOpt.get();
 		}
 		return null;
+	}
+
+
+	@Override
+	public List<PriceList> findAll() {
+		return this.priceListRepository.findAll();
 	}
 
 	
