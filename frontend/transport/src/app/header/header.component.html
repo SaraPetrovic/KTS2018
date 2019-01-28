@@ -9,21 +9,23 @@
       <li><a routerLink="/pricelist" routerLinkActive="active">Price List</a></li>
       <li><a routerLink="/ticket" routerLinkActive="active">Tickets</a></li>
       <li><a routerLink="/notifications" routerLinkActive="active">Notifications</a></li>
-      <li><a routerLink="/administration" routerLinkActive="active">Administration</a></li>
-      <li><a routerLink="/conductor" routerLinkActive="active">Conductor</a></li>
+      
+      <li *ngIf='userLogged !== null'><a *ngIf="userLogged.role === 'ROLE_ADMIN'" routerLink="/administration" routerLinkActive="active">Administration</a></li>
+      
+      <li *ngIf='userLogged !== null'><a *ngIf="userLogged.role === 'ROLE_CONDUCTER'" routerLink="/conductor" routerLinkActive="active">Conductor</a></li>
 
       <li style="float:right">
-        <a *ngIf="!userLogged" routerLink="/login" routerLinkActive="active">
+        <a *ngIf="userLogged === null" routerLink="/login" routerLinkActive="active">
           Login
         </a>
-        <a *ngIf="userLogged" (click)="authenticationService.logout()">
+        <a *ngIf="userLogged !== null" (click)="authenticationService.logout()">
           Logout
         </a>
       </li>
 
       
       <li style="float: right; margin-right: 20px;">
-        <a *ngIf="userLogged" routerLink="/profile" routerLinkActive="active">
+        <a *ngIf="userLogged !== null" routerLink="/profile" routerLinkActive="active">
           {{authenticationService.currentUserValue.username}}
         </a>
       </li>
