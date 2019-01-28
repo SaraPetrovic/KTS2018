@@ -1,5 +1,7 @@
 package ftn.kts.transport.dtos;
 
+import ftn.kts.transport.model.Role;
+
 public class LoginDTO {
 
     private String username;
@@ -7,19 +9,43 @@ public class LoginDTO {
     private String lastName;
     private String password;
     private String token;
+    private Role role;
 
     public LoginDTO() {
     }
+    
 
-    public LoginDTO(String username, String firstName, String lastName, String password, String token) {
+    public LoginDTO(String username, String firstName, String lastName, String password, String token, Role role) {
+		super();
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.token = token;
+		this.role = role;
+	}
+
+
+	public LoginDTO(String username, String firstName, String lastName, String password, String token) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.token = token;
     }
+	
 
-    public String getPassword() {
+    public Role getRole() {
+		return role;
+	}
+
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+
+	public String getPassword() {
 		return password;
 	}
 

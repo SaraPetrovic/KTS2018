@@ -64,7 +64,7 @@ public class UserController {
 
         try {
             User user = userService.login(userDTO.getUsername(), userDTO.getPassword());
-            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPassword(), jwtService.generate(user));
+            LoginDTO responseBody = new LoginDTO(user.getUsername(), user.getFirstName(), user.getLastName(), user.getPassword(), jwtService.generate(user), user.getRole());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseBody);
         }
         catch(DAOException e){

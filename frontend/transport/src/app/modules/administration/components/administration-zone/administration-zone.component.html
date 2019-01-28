@@ -1,2 +1,6 @@
-<app-zone-form [zone]="zone" [zones]="zones" (addButton)="addZone($event)"></app-zone-form>
-<app-zone-table [zones]="zones" (deleteButton)="deleteZone($event)"></app-zone-table>
+<div id="wrapper"> 
+    <div id="form-wrapper">
+        <app-zone-form [zone]="zone" [zones]="zones" (addButton)="addZone($event)"></app-zone-form>
+    </div>
+    <app-zone-table [zones]="zones" (deleteButton)="deleteZone($event)"></app-zone-table>
+</div>
