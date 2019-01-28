@@ -66,6 +66,15 @@ public class User implements Serializable {
 		this.tickets = tickets;
 	}
 
+	public User(Long id, String username, String password, Set<Ticket> tickets) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.tickets = tickets;
+	}
+
+
 	public Role getRole() {
 		return role;
 	}
