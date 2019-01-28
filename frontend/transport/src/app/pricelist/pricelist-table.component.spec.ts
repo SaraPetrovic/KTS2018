@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HostComponent } from './host.component';
+import { PricelistTableComponent } from './pricelist-table.component';
 
-describe('HostComponent', () => {
-  let component: HostComponent;
-  let fixture: ComponentFixture<HostComponent>;
+describe('PricelistTableComponent', () => {
+  let component: PricelistTableComponent;
+  let fixture: ComponentFixture<PricelistTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HostComponent ]
+      declarations: [ PricelistTableComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HostComponent);
+    fixture = TestBed.createComponent(PricelistTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

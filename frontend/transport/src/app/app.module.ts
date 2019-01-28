@@ -16,8 +16,6 @@ import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './_helper/jwt.interceptor';
 import { TicketComponent } from './ticket/ticket.component';
 import { MaterialModule } from './modules/shared/material.module';
-import { LineTableComponent } from './line-table/line-table.component';
-import { HostComponent } from './host/host.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
 import { ProfileComponent } from './profile/profile.component';
@@ -26,6 +24,9 @@ import { RegistrationComponent } from './registration/registration.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { FileUploadComponent } from './profile/file-upload.component';
 import { MapModule } from './modules/shared/map/map.module';
+import { LineTableComponent } from './lines/line-table/line-table.component';
+import { PricelistTableComponent } from './pricelist/pricelist-table.component';
+
 
 
 
@@ -39,13 +40,13 @@ import { MapModule } from './modules/shared/map/map.module';
     LoginComponent,
     TicketComponent,
     LineTableComponent,
-    HostComponent,
     EditProfileComponent,
     ProfileComponent,
     UserTicketsComponent,
     RegistrationComponent,
     PricelistComponent,
     FileUploadComponent,
+    PricelistTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +60,6 @@ import { MapModule } from './modules/shared/map/map.module';
     AppRoutingModule,
   ],
   entryComponents:[
-    HostComponent,
     LoginComponent,
     RegistrationComponent
   ],
