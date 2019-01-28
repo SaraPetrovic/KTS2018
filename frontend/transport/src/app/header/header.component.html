@@ -4,13 +4,13 @@
   </div>
   <ul>
       <li><a routerLink="/" routerLinkActive="active">Home</a></li>
-      <li><a routerLink="/lines" routerLinkActive="active">Lines</a></li>
+      <li><a routerLink="/lines" routerLinkActive="active" id="header-lines-btn">Lines</a></li>
       <li><a routerLink="/zones" routerLinkActive="active">Zones</a></li>
       <li><a routerLink="/pricelist" routerLinkActive="active">Price List</a></li>
       <li><a routerLink="/ticket" routerLinkActive="active">Tickets</a></li>
       <li><a routerLink="/notifications" routerLinkActive="active">Notifications</a></li>
       
-      <li *ngIf='userLogged !== null'><a *ngIf="userLogged.role === 'ROLE_ADMIN'" routerLink="/administration" routerLinkActive="active">Administration</a></li>
+      <li *ngIf='userLogged !== null'><a *ngIf="userLogged.role === 'ROLE_ADMIN'" routerLink="/administration" routerLinkActive="active" id="header-administration-btn">Administration</a></li>
       
       <li *ngIf='userLogged !== null'><a *ngIf="userLogged.role === 'ROLE_CONDUCTER'" routerLink="/conductor" routerLinkActive="active" id="conductor-btn">Conductor</a></li>
 
