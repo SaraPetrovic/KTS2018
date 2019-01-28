@@ -11,7 +11,25 @@ public class LineDTO {
 	private int vehicleType;
 	private Set<String> streetPath;
 	private int duration;
-	
+	private String description;
+
+	public LineDTO(String name, HashMap<Integer, Long> stations, int vehicleType, Set<String> streetPath, int duration, String description) {
+		this.name = name;
+		this.stations = stations;
+		this.vehicleType = vehicleType;
+		this.streetPath = streetPath;
+		this.duration = duration;
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public LineDTO() {
 		this.stations = new HashMap<Integer, Long>();
 		this.streetPath = new HashSet<String>();

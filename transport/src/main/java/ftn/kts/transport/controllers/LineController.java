@@ -93,6 +93,7 @@ public class LineController {
 	@PutMapping(path = "/{id}")
 	@Consumes("application/json")
 	@Produces("application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Line> updateLine(@RequestBody LineDTO updatedLine, @PathVariable("id") long id) {
 		Line ret = lineService.updateLine(updatedLine, id);
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);
@@ -100,6 +101,7 @@ public class LineController {
 
 	@DeleteMapping(path = "/{id}")
 	@Produces("application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Line> deleteLine(@PathVariable("id") long id) {
 		Line ret = lineService.deleteLine(id);
 		return new ResponseEntity<Line>(ret, HttpStatus.OK);

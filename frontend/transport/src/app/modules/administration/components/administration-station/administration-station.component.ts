@@ -4,6 +4,8 @@ import { Station } from '../../../../model/station';
 import { Point } from '../../../../model/point';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MapComponent } from 'src/app/modules/shared/map/map.component';
+import { TransportType } from 'src/app/model/enums/transportType';
+import { AdministrationStationFormComponent } from './administration-station-form/administration-station-form.component';
 
 @Component({
   selector: 'app-administration-station',
@@ -13,43 +15,29 @@ import { MapComponent } from 'src/app/modules/shared/map/map.component';
 export class AdministrationStationComponent implements OnInit {
 
   private addingStation: Station = null;
+  private editingStation: Station;
   private stations: Station[];
-  private addStationForm: FormGroup;
-  submitted = false;
+  private edit = false;
 
   @ViewChild(MapComponent) map: MapComponent;
+  @ViewChild(AdministrationStationFormComponent) form: AdministrationStationFormComponent;
 
   constructor(private stationService: StationService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.stationService.getStations()
       .subscribe( data => this.stations = data );
-
-    this.addStationForm = this.formBuilder.group({
-      stationName: ['', Validators.required]
-    });
+    
+    this.addStation();
   }
 
-  get f(){return this.addStationForm.controls;}
-
-  onSubmit(){
-    this.submitted = true;
-
-    if(this.addStationForm.invalid){
-      return;
-    }
-
-    this.addingStation.name = this.f.stationName.value;
-    console.log(this.addingStation);
-    this.submitted = false;
-  }
 
   mouseEnter(event: any){
-
+    
     if(this.addingStation === null){
       return;
     }
-
+    
     var svg: any = document.getElementById('novi-sad-map');
     var pt = svg.createSVGPoint();
 
@@ -61,12 +49,33 @@ export class AdministrationStationComponent implements OnInit {
     this.addingStation.location.x = svgP.x;
     this.addingStation.location.y = svgP.y;
 
-    this.map.drowStation(new Point({x:svgP.x, y:svgP.y}));
+    this.map.drowTempStation(new Point({x:svgP.x, y:svgP.y}));
+  }
+
+
+  deleteStation(station: Station){
+    this.stationService.deleteStation(station.id);
   }
 
   addStation(){
     this.addingStation = new Station();
     this.addingStation.location = new Point();
+  }
+
+  onFormEvent(formdata: any){
+    this.addingStation.address = formdata.stationAddress;
+    this.addingStation.name = formdata.stationName;
+    this.addingStation.vehicleType = TransportType[formdata.stationTransportType];
+
+    this.stationService.addStation(this.addingStation); 
+    
+    this.addStation();
+    this.form.restart();
+    this.map.closeTempStation();
+  }
+
+  onFormCancel(){
+    this.edit = false;
   }
 
 }

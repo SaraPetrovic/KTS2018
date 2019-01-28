@@ -1,22 +1,14 @@
-<app-map (streetEnter)="mouseEnter($event)">
-  
-</app-map>
+<div id="wrapper">
+    <div id="map-wrapper">
+        <app-map (streetEnter)="mouseEnter($event)">
+        </app-map>
+    </div>
 
-<div id="formWrapper">
-  <form [formGroup]="addStationForm" (ngSubmit)="onSubmit()">
-    <div class='form-group'>
-      <label>Station Name</label>
-      <input type="text" formControlName="stationName" class="form-control" [ngClass]="{'is-invalid': submitted && f.stationName}" />
-      <div *ngIf="submitted && f.stationName.errors" class="invalid-feedback">
-        <div *ngIf="f.stationName.errors.required">Station Name is required</div>
-      </div>
+    <div id="form-wrapper">
+        <app-administration-station-form (added)="onFormEvent($event)" (cancel)="onFormCancel()">  
+        </app-administration-station-form>
     </div>
-    <div class='form-group'>
-      <button class="btn btn-primary">Add Station</button>
-    </div>
-  </form>
+
+    <app-station-table (deleted)="deleteStation($event)">
+    </app-station-table>
 </div>
-
-<button (click)="addStation()">Create Station</button>
-
-<app-station-table></app-station-table>

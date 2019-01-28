@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { LineService } from 'src/app/_services/line/line.service';
 import { Line } from 'src/app/model/line';
 
@@ -10,6 +10,9 @@ import { Line } from 'src/app/model/line';
 export class AdministrationLineTableComponent implements OnInit {
 
   private lines: Line[];
+
+  @Output() edited = new EventEmitter<Line>();
+  @Output() deleted = new EventEmitter<Line>();
   
   constructor(private lineService: LineService) { }
 
@@ -20,6 +23,14 @@ export class AdministrationLineTableComponent implements OnInit {
           this.lines = data;
           console.log(data); 
         });
+  }
+
+  edit(line: Line){
+    this.edited.emit(line);
+  }
+
+  delete(line: Line){
+    this.deleted.emit(line);
   }
 
 }

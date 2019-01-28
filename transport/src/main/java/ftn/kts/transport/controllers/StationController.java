@@ -49,18 +49,20 @@ public class StationController {
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Produces("applications/json")
 	@Consumes("applications/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<StationDTO> addStation(@RequestBody StationDTO stationDTO) {
 		
-		if(stationDTO.getAddress() == null || stationDTO.getName() == null) {
+		if(stationDTO.getAddress() == null || stationDTO.getName() == null || stationDTO.getLocation().getX() == 0 || stationDTO.getLocation().getY() == 0 ) {
 			throw new InvalidInputDataException("You must entered required data", HttpStatus.BAD_REQUEST);
 		}
-		Station station = stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true));
+		Station station = stationService.save(new Station(stationDTO.getAddress(), stationDTO.getName(), new HashSet<LineAndStation>(), true, stationDTO.getLocation().getX(), stationDTO.getLocation().getY()));
 		return new ResponseEntity<>(new StationDTO(station), HttpStatus.OK);	
 		
 	}
 	
 	@DeleteMapping(path="/{id}")
 	//@PreAuthorize("hasRole('ADMIN')")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		stationService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -70,6 +72,7 @@ public class StationController {
 	//@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@Produces("applications/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<StationDTO> updateStation(@PathVariable Long id, @RequestBody StationDTO dtoStation){
 		
 		Station station = stationService.findById(id);

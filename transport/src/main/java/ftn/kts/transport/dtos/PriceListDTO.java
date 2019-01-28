@@ -1,5 +1,6 @@
 package ftn.kts.transport.dtos;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class PriceListDTO {
@@ -10,8 +11,8 @@ public class PriceListDTO {
 	private double onehourCoeff;
 	private double studentDiscount;
 	private double seniorDiscount;
-	// discount u odnosu na zonsku mesecnu/godisnju ako kupujes samo za jednu liniju
 	private double lineDiscount;
+	private Date startDate;
 	
 	public PriceListDTO() {
 		
@@ -93,6 +94,16 @@ public class PriceListDTO {
 	public void setLineDiscount(double lineDiscount) {
 		this.lineDiscount = lineDiscount;
 	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	
+	
 	
 	
 
