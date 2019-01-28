@@ -21,7 +21,7 @@ public class LoginTest {
 
     @Before
     public void setUpSelenium(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Balenko\\Desktop\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Sara\\Desktop\\chromedriver.exe");
 
         this.browser = new ChromeDriver();
         this.browser.manage().window().maximize();

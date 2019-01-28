@@ -194,7 +194,7 @@ public class DTOConverterImpl implements DTOConverter{
 		}
 		if (dto.getLineDiscount() < 0 || dto.getMonthlyCoeff() < 0 ||
 				dto.getSeniorDiscount() < 0 || dto.getStudentDiscount() < 0 ||
-				dto.getYearlyCoeff() < 0 || dto.getStartDate().before(now))  {
+				dto.getYearlyCoeff() < 0 || dto.getOnehourCoeff() < 0)  {
 			throw new InvalidInputDataException("Invalid input data for Price List!");
 		}
 		
@@ -208,6 +208,7 @@ public class DTOConverterImpl implements DTOConverter{
 		priceList.setOneTimePrices(dto.getZonePrices());
 		priceList.setLineDiscount(dto.getLineDiscount());
 		priceList.setStartDateTime(dto.getStartDate());
+		priceList.setOneHourCoeffitient(dto.getOnehourCoeff());
 		return priceList;
 	}
 

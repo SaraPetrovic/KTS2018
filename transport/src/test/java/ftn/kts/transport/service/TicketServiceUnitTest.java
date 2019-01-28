@@ -313,7 +313,7 @@ public class TicketServiceUnitTest {
 		
 		List<Ticket> rez = ticketService.getTickets(user);
 		assertEquals(2, rez.size());
-		assertEquals("EXPIRED", rez.get(1).getActive());
+		assertEquals("EXPIRED", rez.get(1).getActive().toString());
 	}
 	
 }

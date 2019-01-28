@@ -23,7 +23,10 @@ export class FileUploadComponent implements OnInit {
     const fd = new FormData();
     fd.append('file', this.selectedFile, this.selectedFile.name);
     this.http.post('http://localhost:9003/files/upload', fd).subscribe(
-      res => { console.log(res);}
+      res => { 
+        console.log(res);
+        alert("Successfully upload");
+      }
     );
   }
 }
