@@ -31,7 +31,6 @@ import ftn.kts.transport.services.TicketService;
 import ftn.kts.transport.services.UserService;
 
 @RestController
-@RequestMapping(value = "rest/ticket")
 public class TicketController {
 
 	@Autowired
@@ -42,7 +41,7 @@ public class TicketController {
 	private UserService userService;
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
-	@PutMapping(path = "/activate/{id}")
+	@PutMapping(path = "/rest/ticket/activate/{id}")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<MyTicketDTO> activateTicket(@PathVariable Long id){
 		Ticket ticket = ticketService.findById(id);
@@ -51,7 +50,7 @@ public class TicketController {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CLIENT')")
-	@PostMapping(path = "/buy")
+	@PostMapping(path = "/rest/ticket/buy")
 	@Produces("application/json")
 	@Consumes("application/json")
 	public ResponseEntity<Ticket> buyTicket(@RequestBody TicketDTO ticketDTO, @RequestHeader("Authorization") String token){
@@ -60,7 +59,7 @@ public class TicketController {
 		return new ResponseEntity<>(ret, HttpStatus.CREATED);
 	}
 	
-	@GetMapping(path = "/types")
+	@GetMapping(path = "/ticket/types")
 	public ResponseEntity<List<String>> getAllTicketTypes(){
 		List<String> types = new ArrayList<String>();
 		for(TicketTypeTemporal type : TicketTypeTemporal.values()) {
@@ -86,10 +85,11 @@ public class TicketController {
         }
 	}
 
-    @GetMapping(path = "/me")
+    @GetMapping(path = "rest/ticket/me")
     @Produces("application/json")
     @CrossOrigin( origins = "http://localhost:4200")
-	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token, HttpServletRequest request){
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
+	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") String token){
 
 	    try {
 
