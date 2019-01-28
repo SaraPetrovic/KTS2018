@@ -16,10 +16,21 @@ public class MainPage {
     @FindBy(css = "#header-lines-btn")
     private WebElement linesBtn;
 
+    @FindBy(css = "#header-administration-btn")
+    private WebElement administrationBtn;
+
     public MainPage(WebDriver driver){this.driver = driver;}
 
     public void ensureIsDisplayed(){
         (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(loginBtn));
+    }
+
+    public void ensureAdminBtnIsDisplayed(){
+        (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(administrationBtn));
+    }
+
+    public WebElement getAdministrationBtn() {
+        return administrationBtn;
     }
 
     public WebElement getLinesBtn() {
