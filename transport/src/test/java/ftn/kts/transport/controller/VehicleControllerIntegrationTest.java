@@ -80,6 +80,23 @@ public class VehicleControllerIntegrationTest {
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
 
+
+    @Test
+    public void addVehicleTest_VehicleWithNameAlreadyExist() throws Exception{
+        headers.add("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImFkbWluIiwicm9sZSI6IlJPTEVfQURNSU4ifQ.6PHB8kL0X0cg6b8W0XXwYOUg6MfJvxBjqGAXvBlu75mSdmCezOFv_dx-BOOHi0Hz4zB36GHtq-9RwRPUuLUKew");
+        VehicleDTO v = new VehicleDTO();
+        v.setName("vozilo broj 1");
+        HttpEntity<VehicleDTO> entity = new HttpEntity<>(v, headers);
+        ResponseEntity<String> response = this.restTemplate.exchange(
+                createURLWithPort("/rest/vehicle"),
+                HttpMethod.POST, entity, String.class);
+        System.out.println(response);
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        String expected = "{\"errorMessage\":\"Vehicle with that name already exist\"}";
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+    }
+
     @Test
     public void addVehicleTest_InvalidAuthorization() throws Exception{
         headers.add("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImp0aSI6IjEyMzQiLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.tG95HDEtuVXC70WwAwcVX53tYFBaovEMzgs2p02lWrJgK_3V5mCIPVbL2hEpCQ3xW2qhI80UkZKIhqWpbxncfw");

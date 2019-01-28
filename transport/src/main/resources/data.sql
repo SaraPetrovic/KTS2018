@@ -193,7 +193,7 @@ insert into zones(id, active, name, sub_zone_id) values (2, true, 'prigradska', 
 
 
 
-INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, role, user_type_demo) VALUES (1, 'document-test.jpg', 1, 'Jovan', 'Lakovic', 'user1', '1234', 1, 1)
+INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, role, user_type_demo) VALUES (1, 'document-test.jpg', 1, 'Jovan', 'Lakovic', 'user1', '12345678', 1, 1)
 INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (2, 'Marko', 'Markovic', 'admin', 'admin', 0) 
 insert into users(id, document, document_verified, first_name, last_name, password, role, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
 INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, role, user_type_demo) VALUES (4, 'document-test.jpg', 1, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)

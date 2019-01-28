@@ -48,9 +48,7 @@ public class VehicleController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Vehicle> addVehicle(@RequestBody VehicleDTO newVehicle) {
 		Vehicle ret = vehicleService.addVehicle(newVehicle);
-		if (ret == null) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
+
 		return new ResponseEntity<Vehicle>(ret, HttpStatus.CREATED);
 	}
 	

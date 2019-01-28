@@ -36,7 +36,7 @@ public class VehicleServiceImpl implements VehicleService{
 	@Override
 	public Vehicle addVehicle(VehicleDTO vehicle) {
 		if (vehicleRepository.findByVehicleName(vehicle.getName()) != null) {
-			return null;
+			throw new DAOException("Vehicle with that name already exist", HttpStatus.BAD_REQUEST);
 		}
 		Vehicle newVehicle = new Vehicle();
 		newVehicle.setVehicleName(vehicle.getName());
