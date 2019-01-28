@@ -33,6 +33,7 @@ export class AuthenticationService {
       if(user && user.token){
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
+        this.router.navigateByUrl('/');
       }
       console.log(user);
       return user;
@@ -42,7 +43,7 @@ export class AuthenticationService {
   logout(){
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
-    this.router.navigateByUrl('/');
+    this.router.navigate(['/']);
   }
 
   editProfile(user: User): Observable<User>{
