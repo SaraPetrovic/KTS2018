@@ -243,4 +243,42 @@ public class UserControllerIntegrationTest {
 
 	}
 	
+	@Test
+	public void updateTestBadPassword() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXJhMTIzIiwianRpIjoiMTIzNDU2NzgiLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.GYth_fjbs7f7GoWJR-OiY7S_Qaz_xSBnGJbfo0b1egjEn-_JU001BcFdVG7hRO1xkhoCw7xZmMGKIbeUQPVV0A";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+		HttpEntity<UserDTO> entity = new HttpEntity<UserDTO>(new UserDTO(Long.valueOf(2), "sara123", "56789", "Sara", "Petrovic"), headers);
+
+		ResponseEntity<UserDTO> responseEntity =
+				restTemplate.exchange("/rest/user", HttpMethod.PUT,
+						entity, UserDTO.class);
+		
+		UserDTO rez = responseEntity.getBody();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+	}
+
+	@Test
+	public void getUsersForVerificationTest() {
+
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+
+		HttpEntity<Void> entity = new HttpEntity<Void>(null, headers);
+
+		ResponseEntity<User[]> responseEntity =
+				restTemplate.exchange("/rest/user/verify", HttpMethod.GET,
+						entity, User[].class);
+		
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
 }

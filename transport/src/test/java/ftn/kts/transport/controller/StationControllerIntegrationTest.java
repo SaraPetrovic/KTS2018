@@ -92,7 +92,7 @@ public class StationControllerIntegrationTest {
 
 		assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void addTestBadRequest1() {
 		
@@ -112,7 +112,7 @@ public class StationControllerIntegrationTest {
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void addTestBadRequest2() {
 		
@@ -132,7 +132,7 @@ public class StationControllerIntegrationTest {
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
-	@Ignore
+
 	@Test
 	public void addTestBadRequest3() {
 		
@@ -152,7 +152,7 @@ public class StationControllerIntegrationTest {
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
-	@Ignore
+
 	@Test
 	public void deleteStationTestOK() {
 		
