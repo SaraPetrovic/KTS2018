@@ -35,7 +35,6 @@ import ftn.kts.transport.services.StationService;
 import ftn.kts.transport.services.ZoneService;
 
 @RestController
-@RequestMapping(value = "/zone")
 public class ZoneController {
 	
 	@Autowired
@@ -45,9 +44,7 @@ public class ZoneController {
 	
 
 	
-	@GetMapping("/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
-	@Produces("application/json")
+	@GetMapping("/zone/{id}")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> getZone(@PathVariable Long id) {
 		Zone zone = zoneService.findById(id);
@@ -55,9 +52,7 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.OK);
 	}
 	
-	@GetMapping
-	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
-	@Produces("application/json")
+	@GetMapping("/zone")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<ZoneDTO>> getAllZones() {
 		List<Zone> zones = zoneService.findAll();
@@ -70,8 +65,7 @@ public class ZoneController {
 		return new ResponseEntity<>(dtoZones, HttpStatus.OK);
 	}
 	
-	@PostMapping()
-	//@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/zone")
 	@Consumes("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
@@ -92,8 +86,8 @@ public class ZoneController {
 		return new ResponseEntity<>(new ZoneDTO(zone), HttpStatus.CREATED);	
 	}
 	
-	@DeleteMapping("/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/rest/zone/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<Boolean> deleteZone(@PathVariable Long id) {
 		zoneService.deleteZone(id);	
@@ -101,8 +95,8 @@ public class ZoneController {
 		return new ResponseEntity<>(true, HttpStatus.OK);	
 	}
 	
-	@PutMapping("/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/rest/zone/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> updateZone(@PathVariable Long id, @RequestBody ZoneDTO dtoZone){

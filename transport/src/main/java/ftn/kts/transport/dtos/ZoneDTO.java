@@ -13,7 +13,9 @@ public class ZoneDTO {
 	private Set<StationDTO> stations;
 	private Long subZoneId;
 	
-	public ZoneDTO() {	}
+	public ZoneDTO() {
+		
+	}
 	
 	public ZoneDTO(Long id, String name, Set<StationDTO> stations, Long subZoneId) {
 		this.id = id;
@@ -32,10 +34,7 @@ public class ZoneDTO {
 		this.id = zone.getId();
 		this.name = zone.getName();
 		this.stations = new HashSet<StationDTO>();
-		for(Station s : zone.getStations()) {
-			StationDTO dto = new StationDTO(s);
-			this.stations.add(dto);
-		}
+		
 		if(zone.getSubZone() != null) {
 			this.subZoneId = zone.getSubZone().getId();
 		}else {

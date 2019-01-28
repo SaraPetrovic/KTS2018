@@ -12,7 +12,7 @@ import { Http } from '@angular/http';
 })
 export class ZoneService {
 
-  private zoneUrl : String ="http://localhost:9003/zone";
+  private zoneUrl : String ="http://localhost:9003/rest/zone";
   private headers = {headers: new HttpHeaders({'Content-Type':  'application/json'})};
   private subject = new Subject<any>();
   

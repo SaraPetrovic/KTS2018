@@ -30,7 +30,7 @@ insert into zones(id, name, sub_zone_id, active) values (3, 'Zona III', 2, true)
 insert into zones(id, name, sub_zone_id, active) values (4, 'Zona IV', 3, true)
 insert into zones(id, name, sub_zone_id, active) values (5, 'Zona V', 4, true)
 insert into zones(id, name, sub_zone_id, active) values (6, 'Zona VI', 5, true)
-insert into zones(id, name, sub_zone_id, active) values (7, 'Zona VII', 6, true)
+insert into zones(id, name, sub_zone_id, active) values (7, 'Zona VII', 6, false)
 
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 2")
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 1")
