@@ -9,13 +9,17 @@ insert into users(id, first_name, last_name, username, password, role, user_type
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (9, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (10, 'Mila', 'Manic', 'client2', 'client', 1, 0, 'dssd', 1)
 INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (11, 'Marko', 'Balenovic', 'administrator', 'administrator', 0) 
-
+INSERT INTO users(id, first_name, last_name, username, password, ROLE, document, document_verified, user_type_demo) VALUES (12, 'Ime', 'Prezime', 'userNoDocument', '12345678', 1, NULL, 0, 0)
 
 
 insert into kts_lines(id, active, name, transport_type, duration) values (1, true, '7A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (2, true, '4A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (3, true, '76A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (4, true, '64A', 0, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (5, true, 'T9A', 1, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (6, true, 'T10C', 1, 1000)
+insert into kts_lines(id, active, name, transport_type, duration) values (7, true, 'S11B', 2, 1000)
+
 
 insert into stations(id, address, name, active, x, y) values (1, 'Bul. Oslobodjenja 1', 'Gl. stanica', true, 0, 0)
 insert into stations(id, address, name, active, x, y) values (2, 'Bul. Oslobodjenja 20', 'Bul. Oslobodjenja - Kralja Petra I', true, 0, 0)
@@ -164,8 +168,8 @@ insert into weekday_schedule(route_schedule_id, weekday) values (4, '12:00:00')
 insert into saturday_schedule(route_schedule_id, saturday) values (4, '13:00:00')
 insert into sunday_schedule(route_schedule_id, sunday) values (4, '17:00:00')
 
-insert into price_list(id, active, start_date_time, end_date_time, line_discount, student_discount, senior_discount, monthly_coeffitient, yearly_coeffitient) values (1, true, '2019-02-06 19:00:00', '2019-02-06 20:00:00', 0.5, 0.8, 0.7, 17, 170)
-insert into price_list(id, active, start_date_time, end_date_time, line_discount, student_discount, senior_discount, monthly_coeffitient, yearly_coeffitient) values (2, false, null, null, 0.55, 0.85, 0.75, 15, 150)
+insert into price_list(id, active, start_date_time, end_date_time, line_discount, student_discount, senior_discount, monthly_coeffitient, yearly_coeffitient, one_hour_coeffitient) values (1, true, '2019-02-06 19:00:00', '2019-02-06 20:00:00', 0.5, 0.8, 0.7, 17, 170, 3)
+insert into price_list(id, active, start_date_time, end_date_time, line_discount, student_discount, senior_discount, monthly_coeffitient, yearly_coeffitient, one_hour_coeffitient) values (2, false, null, null, 0.55, 0.85, 0.75, 15, 150, 2)
 
 insert into one_time_prices(price_list_id, price, zone_id) values (1, 100.00, 1)
 insert into one_time_prices(price_list_id, price, zone_id) values (1, 200.00, 2)
