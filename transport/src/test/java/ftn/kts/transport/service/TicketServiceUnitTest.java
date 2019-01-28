@@ -1,7 +1,6 @@
 package ftn.kts.transport.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -10,8 +9,10 @@ import static org.junit.Assert.assertTrue;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -257,4 +258,62 @@ public class TicketServiceUnitTest {
 		assertNotNull(rez);
 		assertEquals(TicketActivationType.ACTIVE, rez.getActive());
 	}
+	
+	@Test
+	public void getTicketsTest() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date1 = sdf.parse("27/01/2020 10:10:00");
+		Date date2 = sdf.parse("27/01/2020 10:10:00");
+		
+		Ticket ticket1 = new RouteTicket(Long.valueOf(1),
+										null,
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_TIME_PASS,
+										new Route(Long.valueOf(1), new Line(Long.valueOf(1), "1", 25), date1));
+		Ticket ticket2 = new ZoneTicket(Long.valueOf(1),
+										date2, 
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_HOUR_PASS,
+										new Zone(Long.valueOf(1), "Zona I", true));
+		
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		tickets.add(ticket1);
+		tickets.add(ticket2);
+		User user = new User(Long.valueOf(1), "user1", "123", new HashSet<Ticket>(tickets));
+		
+		Mockito.when(ticketRepositoryMocked.findByUser(user)).thenReturn(tickets);
+		
+		List<Ticket> rez = ticketService.getTickets(user);
+		assertEquals(2, rez.size());
+	}
+	
+	@Test
+	public void getTicketsTest2() throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date1 = sdf.parse("27/01/2020 10:10:00");
+		Date date2 = sdf.parse("27/01/2019 10:10:00");
+		
+		Ticket ticket1 = new RouteTicket(Long.valueOf(1),
+										null,
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_TIME_PASS,
+										new Route(Long.valueOf(1), new Line(Long.valueOf(1), "1", 25), date1));
+		Ticket ticket2 = new RouteTicket(Long.valueOf(2),
+										null, 
+										TicketActivationType.ACTIVE,
+										TicketTypeTemporal.ONE_TIME_PASS,
+										new Route(Long.valueOf(1), new Line(Long.valueOf(1), "1", 25), date2));
+		
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		tickets.add(ticket1);
+		tickets.add(ticket2);
+		User user = new User(Long.valueOf(1), "user1", "123", new HashSet<Ticket>(tickets));
+		
+		Mockito.when(ticketRepositoryMocked.findByUser(user)).thenReturn(tickets);
+		
+		List<Ticket> rez = ticketService.getTickets(user);
+		assertEquals(2, rez.size());
+		assertEquals("EXPIRED", rez.get(1).getActive());
+	}
+	
 }
