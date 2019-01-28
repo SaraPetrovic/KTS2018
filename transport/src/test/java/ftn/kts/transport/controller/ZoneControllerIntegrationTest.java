@@ -74,7 +74,7 @@ public class ZoneControllerIntegrationTest {
 	
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
-	@Ignore
+
 	@Test
 	public void getAllTest() {
 		ResponseEntity<ZoneDTO[]> responseEntity = 
@@ -94,8 +94,7 @@ public class ZoneControllerIntegrationTest {
 	public void addZoneTestOK() {
 		int size =zoneService.findAll().size();
 		
-		String token = "eyJhiOiJIUzUxMiJ9.eyJzdWIiOiJzYXJhMTIzIiwianRpIjoiMTIzNDU2NzgiLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.GYth_fjbs7f7GoWJR-OiY7S_Qaz_xSBnGJbfo0b1egjEn-_JU001BcFdVG7hRO1xkhoCw7xZmMGKIbeUQPVV0A";
-		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.add("User-Agent", "Spring's RestTemplate" );
@@ -113,13 +112,12 @@ public class ZoneControllerIntegrationTest {
 		assertEquals(size + 1, zoneService.findAll().size());
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void addZoneTestOK2() {
 		int size =zoneService.findAll().size();
 		
-		String token = "eyJhiOiJIUzUxMiJ9.eyJzdWIiOiJzYXJhMTIzIiwianRpIjoiMTIzNDU2NzgiLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.GYth_fjbs7f7GoWJR-OiY7S_Qaz_xSBnGJbfo0b1egjEn-_JU001BcFdVG7hRO1xkhoCw7xZmMGKIbeUQPVV0A";
-		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.add("User-Agent", "Spring's RestTemplate" );
@@ -138,52 +136,76 @@ public class ZoneControllerIntegrationTest {
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 	
 	}
-	@Ignore
+
 	@Test
 	public void addZoneTestZoneNotFoundSubZone() {
 		
-		ZoneDTO entity= new ZoneDTO("Zona55", null, Long.valueOf(88));
-		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+		HttpEntity<ZoneDTO> entity = new HttpEntity<ZoneDTO>(new ZoneDTO("Zona55", null, Long.valueOf(88)), headers);
+
+		ResponseEntity<ZoneDTO> responseEntity =
+				restTemplate.exchange("/rest/zone", HttpMethod.POST,
+						entity, ZoneDTO.class);
 		
 		responseEntity.getBody();
 
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
-	@Ignore
+
 	@Test
 	public void addZoneTestZoneConflict() {
 		
-		ZoneDTO entity= new ZoneDTO("Zona II", null, Long.valueOf(1));
-		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+		HttpEntity<ZoneDTO> entity = new HttpEntity<ZoneDTO>( new ZoneDTO("Zona II", null, Long.valueOf(1)), headers);
+
+		ResponseEntity<ZoneDTO> responseEntity =
+				restTemplate.exchange("/rest/zone", HttpMethod.POST,
+						entity, ZoneDTO.class);
 		
 		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void addZoneTestBadRequest() {
 		
-		ZoneDTO entity= new ZoneDTO("", null, Long.valueOf(2));
-		
-		ResponseEntity<ZoneDTO> responseEntity = 
-				restTemplate.postForEntity("/zone", entity, ZoneDTO.class);
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+		HttpEntity<ZoneDTO> entity = new HttpEntity<ZoneDTO>(new ZoneDTO("", null, Long.valueOf(2)), headers);
+
+		ResponseEntity<ZoneDTO> responseEntity =
+				restTemplate.exchange("/rest/zone", HttpMethod.POST,
+						entity, ZoneDTO.class);
 		
 		responseEntity.getBody();
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void deleteZoneTestOK() {
 		
 		int size = zoneService.findAll().size();
 		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/zone/" + Long.valueOf(4),
-						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
+				restTemplate.exchange("/rest/zone/" + Long.valueOf(4),
+						HttpMethod.DELETE, new HttpEntity<Object>(null, headers), Void.class);
 	
 		Zone z5 = zoneService.findById(Long.valueOf(5));
 		
@@ -191,9 +213,15 @@ public class ZoneControllerIntegrationTest {
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(size - 1, zoneService.findAll().size());
 	}
-	@Ignore
+	
 	@Test
 	public void deleteZoneTestBadRequest() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
 		
 		Set<Station> stations = new HashSet<Station>();
 		stations.add(stationService.findById(Long.valueOf(5)));
@@ -201,16 +229,21 @@ public class ZoneControllerIntegrationTest {
 		Zone zone = zoneService.save(new Zone(Long.valueOf(45), "Naziv", stations, null, true));
 		
 		ResponseEntity<Void> responseEntity = 
-				restTemplate.exchange("/zone/" + zone.getId(),
-						HttpMethod.DELETE, new HttpEntity<Object>(null), Void.class);
+				restTemplate.exchange("/rest/zone/" + zone.getId(),
+						HttpMethod.DELETE, new HttpEntity<Void>(null, headers), Void.class);
 	
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
 	
-	
-	@Ignore
+
 	@Test
 	public void updateZoneTestBadRequest() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
 		
 		Zone zone = zoneService.findById(Long.valueOf(2));
 		zone.setName(null);
@@ -218,52 +251,70 @@ public class ZoneControllerIntegrationTest {
 		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
 
 		ResponseEntity<ZoneDTO> responseEntity =
-	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
-	            		new HttpEntity<ZoneDTO>(dto),
+	            restTemplate.exchange("/rest/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto, headers),
 	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void updateZoneTestNotFound() {
+
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
 		
 		ZoneDTO dto = new ZoneDTO(Long.valueOf(99), null, null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity =
-	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
-	            		new HttpEntity<ZoneDTO>(dto),
+	            restTemplate.exchange("/rest/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto, headers),
 	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 	}
-	@Ignore
+	
 	@Test
 	public void updateZoneTestOK() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
 		
 		Zone zone = zoneService.findById(Long.valueOf(2));
 		
 		ZoneDTO dto = new ZoneDTO(zone.getId(), "Druga zona", null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity =
-	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
-	            		new HttpEntity<ZoneDTO>(dto),
+	            restTemplate.exchange("/rest/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto, headers),
 	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Druga zona", responseEntity.getBody().getName());
 	}
-	@Ignore
+
 	@Test
 	public void updateZoneTestCONFLICT() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
 		
 		Zone zone = zoneService.findById(Long.valueOf(2));
 		
 		ZoneDTO dto = new ZoneDTO(zone.getId(), zone.getName(), null, null);
 		
 		ResponseEntity<ZoneDTO> responseEntity =
-	            restTemplate.exchange("/zone/" + dto.getId(), HttpMethod.PUT, 
-	            		new HttpEntity<ZoneDTO>(dto),
+	            restTemplate.exchange("/rest/zone/" + dto.getId(), HttpMethod.PUT, 
+	            		new HttpEntity<ZoneDTO>(dto, headers),
 	            		ZoneDTO.class);
 
 		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());

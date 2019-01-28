@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +28,12 @@ import ftn.kts.transport.model.Station;
 import ftn.kts.transport.services.StationService;
 
 @RestController
-@RequestMapping(value = "/station")
 public class StationController {
 
 	@Autowired
 	private StationService stationService;
 	
 	@GetMapping()
-	//@PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
 	@Produces("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<StationDTO>> getAll(){
@@ -45,8 +44,8 @@ public class StationController {
 		return new ResponseEntity<>(dtoStations, HttpStatus.OK);
 	}
 	
-	@PostMapping()
-	//@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/rest/station")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Produces("applications/json")
 	@Consumes("applications/json")
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -60,16 +59,16 @@ public class StationController {
 		
 	}
 	
-	@DeleteMapping(path="/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping(path="/rest/station/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		stationService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}		
 	
-	@PutMapping(path="/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping(path="/rest/station/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("applications/json")
 	@Produces("applications/json")
 	@CrossOrigin(origins = "http://localhost:4200")

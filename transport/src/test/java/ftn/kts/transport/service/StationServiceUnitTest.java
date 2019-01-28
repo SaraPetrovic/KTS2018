@@ -1,7 +1,6 @@
 package ftn.kts.transport.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -16,8 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ftn.kts.transport.dtos.StationDTO;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.LineAndStation;
+import ftn.kts.transport.model.Point;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.StationRepository;
 import ftn.kts.transport.services.StationService;
@@ -44,7 +42,7 @@ public class StationServiceUnitTest {
 	@Test
 	public void fromDtoToStationTestOK1() {
 		Station station = new Station(Long.valueOf(1), "Jevrejska 13", "Centar", true);
-		StationDTO dtoStation = new StationDTO(Long.valueOf(1), "Jevrejska 13", "Centar");
+		StationDTO dtoStation = new StationDTO(Long.valueOf(1), "Jevrejska 13", "Centar", new Point(10,10));
 		Mockito.when(stationRepository.findById(dtoStation.getId())).thenReturn(Optional.of(station));
 	
 		Station rez = stationService.fromDtoToStation(dtoStation);

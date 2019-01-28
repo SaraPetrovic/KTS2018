@@ -26,10 +26,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ftn.kts.transport.dtos.StationDTO;
-import ftn.kts.transport.dtos.ZoneDTO;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.exception.StationNotFoundException;
 import ftn.kts.transport.model.LineAndStation;
+import ftn.kts.transport.model.Point;
 import ftn.kts.transport.model.Station;
 import ftn.kts.transport.services.StationService;
 
@@ -101,7 +101,7 @@ public class StationControllerUnitTest {
 	
 	@Test
 	public void addTestBadRequest() {
-		StationDTO dto = new StationDTO(Long.valueOf(5), null, null, null);
+		StationDTO dto = new StationDTO(Long.valueOf(5), null, null, null, new Point(10,10));
 		
 		ResponseEntity<StationDTO> responseEntity = 
 				restTemplate.postForEntity("/station", dto, StationDTO.class);
@@ -144,7 +144,7 @@ public class StationControllerUnitTest {
 		
 		ResponseEntity<StationDTO> responseEntity =
 	            restTemplate.exchange("/station/" + Long.valueOf(3), HttpMethod.PUT, 
-	            		new HttpEntity<StationDTO>(new StationDTO(Long.valueOf(3), "Bul. Oslobodjenja 56", "Bul. Oslobodjenja - Al zgrada", null)),
+	            		new HttpEntity<StationDTO>(new StationDTO(Long.valueOf(3), "Bul. Oslobodjenja 56", "Bul. Oslobodjenja - Al zgrada", null, new Point(10,10))),
 	            		StationDTO.class);
 		
 		StationDTO rez = responseEntity.getBody();

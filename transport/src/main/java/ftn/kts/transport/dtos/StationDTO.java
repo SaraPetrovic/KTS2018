@@ -42,10 +42,11 @@ public class StationDTO {
 		this.lines = lines;
 	}
 	
-	public StationDTO(Long id, String address, String name) {
+	public StationDTO(Long id, String address, String name, Point location) {
 		this.id = id;
 		this.address = address;
 		this.name = name;
+		this.location = location;
 	}
 	
 	public StationDTO(String address, String name) {

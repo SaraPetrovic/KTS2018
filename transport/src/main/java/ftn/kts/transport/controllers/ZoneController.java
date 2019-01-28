@@ -65,7 +65,8 @@ public class ZoneController {
 		return new ResponseEntity<>(dtoZones, HttpStatus.OK);
 	}
 	
-	@PostMapping("/zone")
+	@PostMapping("/rest/zone")
+	@PreAuthorize("hasRole('ADMIN')")
 	@Consumes("application/json")
 	@CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<ZoneDTO> addZone(@RequestBody ZoneDTO zoneDTO) {
