@@ -12,13 +12,16 @@ import { PricelistComponent } from './pricelist/pricelist.component';
 import { FileUploadComponent } from './profile/file-upload.component';
 import { LoginComponent } from './login/login.component';
 import { PricelistTableComponent } from './pricelist/pricelist-table.component';
+import { RoleGuard } from './_helper/roleGuard';
+import { CanActivate } from '@angular/router/src/utils/preactivation';
 
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivate: [RoleGuard]
   },
   {
     path: 'login',
@@ -46,7 +49,9 @@ const routes: Routes = [
   },
   {
     path: 'conductor',
-    loadChildren: './modules/conductor/conductor.module#ConductorModule'
+    loadChildren: './modules/conductor/conductor.module#ConductorModule',
+    canActivate: [RoleGuard],
+    data: { roles: ["ROLE_CONDUCTER"] }
   },
   {
     path: 'profile',
@@ -68,7 +73,9 @@ const routes: Routes = [
   },
   {
     path: 'administration',
-    loadChildren: './modules/administration/administration.module#AdministrationModule'
+    loadChildren: './modules/administration/administration.module#AdministrationModule',
+    canActivate: [RoleGuard],
+    data: { roles: ["ROLE_ADMIN"] }
   },
   {
     path: '**',
