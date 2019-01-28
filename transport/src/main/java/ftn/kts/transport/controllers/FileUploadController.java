@@ -54,7 +54,8 @@ public class FileUploadController {
             RedirectAttributes redirectAttributes, @RequestHeader("Authorization") final String token) {
 
         storageService.store(file);
-        User credentials = jwtService.validate(token.substring(7));
+
+    	User credentials = jwtService.validate(token.substring(7));
         User found = userService.findByUsername(credentials.getUsername());
         found.setDocument(file.getOriginalFilename());
         userService.save(found);
