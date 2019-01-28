@@ -47,7 +47,7 @@ export class AuthenticationService {
 
   editProfile(user: User): Observable<User>{
     console.log(this.currentUserValue);
-    return this.http.put<User>('http://localhost:9003/user', this.currentUserValue, this.headers);
+    return this.http.put<User>('http://localhost:9003/rest/user', this.currentUserValue, this.headers);
   }
 
   getTickets(): Observable<Ticket[]>{
@@ -59,14 +59,14 @@ export class AuthenticationService {
   }
 
   getUsersForVerification(): Observable<User[]>{
-    return this.http.get<User[]>('http://localhost:9003/user/verify', this.headers);
+    return this.http.get<User[]>('http://localhost:9003/rest/user/verify', this.headers);
   }
 
-  accept(userId : number): Observable<boolean>{
-    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/accept", this.headers);
+  accept(userId : number): Observable<void>{
+    return this.http.put<void>('http://localhost:9003/rest/user/' + userId + "/accept", this.headers);
   }
 
   decline(userId : number): Observable<boolean>{
-    return this.http.put<boolean>('http://localhost:9003/user/' + userId + "/decline", this.headers);
+    return this.http.put<boolean>('http://localhost:9003/rest/user/' + userId + "/decline", this.headers);
   }
 }

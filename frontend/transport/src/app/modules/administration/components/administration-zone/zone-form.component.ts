@@ -17,11 +17,11 @@ export class ZoneFormComponent implements OnInit {
 
     private addZoneForm : FormGroup;
     submitError = false;
-    private zone: Zone = new Zone();
+    @Input() zone: Zone;
     @Input() zones : Zone[];
     private disabledOption = "";
     private zoneClickedSubscription : Subscription;
-    @Input() formLabel: String; 
+    private formLabel: String = "Add Zone";
     @Output() addButton = new EventEmitter();
 
     constructor(private zoneService: ZoneService, private formBuilder: FormBuilder) { }

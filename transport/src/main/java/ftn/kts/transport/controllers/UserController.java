@@ -108,23 +108,23 @@ public class UserController {
     	return new ResponseEntity<>(ret, HttpStatus.OK);
     }
     
-    @PutMapping(path = "rest/user/{id}/accept")
+    @PutMapping(path = "/rest/user/{id}/accept")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
-    public ResponseEntity<Boolean> acceptDocument(@PathVariable("id") long id) {
+    public ResponseEntity<Void> acceptDocument(@PathVariable("id") long id) {
     	boolean ret = userService.verifyDocument(id, DocumentVerification.APPROVED);
-    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    	return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @PutMapping(path = "rest/user/{id}/decline")
+    @PutMapping(path = "/rest/user/{id}/decline")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
-    public ResponseEntity<Boolean> declineDocument(@PathVariable("id") long id) {
+    public ResponseEntity<Void> declineDocument(@PathVariable("id") long id) {
     	boolean ret = userService.verifyDocument(id, DocumentVerification.REJECTED);
-    	return new ResponseEntity<>(ret, HttpStatus.OK);
+    	return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @GetMapping(path = "rest/user/verify")
+    @GetMapping(path = "/rest/user/verify")
     @Produces("application/json")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin( origins = "http://localhost:4200")
