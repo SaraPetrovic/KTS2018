@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import ftn.kts.transport.model.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +32,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ftn.kts.transport.dtos.LineDTO;
 import ftn.kts.transport.enums.VehicleType;
 import ftn.kts.transport.exception.DAOException;
-import ftn.kts.transport.model.Line;
-import ftn.kts.transport.model.LineAndStation;
-import ftn.kts.transport.model.RouteSchedule;
-import ftn.kts.transport.model.Station;
 import ftn.kts.transport.repositories.LineRepository;
 import ftn.kts.transport.repositories.RouteScheduleRepository;
 import ftn.kts.transport.repositories.StationRepository;
@@ -66,6 +64,8 @@ public class LineServiceUnitTest {
 	private Line l, l2;
 	private RouteSchedule sch;
 	private Station s;
+	private Zone zone1;
+	private Line line1, line2;
 	
 	@Before
 	public void setUp() {
@@ -118,6 +118,45 @@ public class LineServiceUnitTest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+
+		zone1 = new Zone();
+		zone1.setName("Zona 1");
+		zone1.setActive(true);
+		zone1.setId(1L);
+		zone1.setSubZone(null);
+		Set<Station> stationSet = new HashSet<>();
+		Station station1 = new Station();
+		station1.setName("Stanica 1");
+		station1.setId(1L);
+		station1.setAddress("Adresa 1");
+		stationSet.add(station1);
+		Station station2 = new Station();
+		station2.setName("Stanica 2");
+		station2.setId(2L);
+		station2.setAddress("Adresa 2");
+		stationSet.add(station2);
+		Station station3 = new Station();
+		station3.setName("Stanica 3");
+		station3.setId(2L);
+		station3.setAddress("Adresa 3");
+
+		line2 = new Line();
+		line2.setTransportType(VehicleType.BUS);
+		Set<LineAndStation> lineAndStationSet2 = new HashSet<>();
+		lineAndStationSet2.add(new LineAndStation(line2, station1, 1));
+		lineAndStationSet2.add(new LineAndStation(line2, station3, 2));
+
+		line1 = new Line();
+		line1.setTransportType(VehicleType.BUS);
+		Set<LineAndStation> lineAndStationSet1 = new HashSet<>();
+		lineAndStationSet1.add(new LineAndStation(line1, station1, 1));
+		lineAndStationSet1.add(new LineAndStation(line1, station2, 2));
+		station1.setLineSet(lineAndStationSet1);
+		station2.setLineSet(lineAndStationSet1);
+		station3.setLineSet(lineAndStationSet2);
+
+		zone1.setStations(stationSet);
+
 		
 		Mockito.when(routeRepoMocked.findById(1L)).thenReturn(Optional.of(sch));
 		Mockito.when(routeRepoMocked.findById(-1L)).thenThrow(new DAOException("Schedule not found"));
@@ -289,8 +328,6 @@ public class LineServiceUnitTest {
 		assertEquals(this.l.getStationSet().size(), ret.getStationSet().size());
 	}
 	
-	
-	
 	@Test
 	public void addLineMethod_PASS_Test() {
 		LineAndStation ls = new LineAndStation();
@@ -319,5 +356,13 @@ public class LineServiceUnitTest {
 		assertEquals(stations.size(), ret.getStationSet().size());
 		
 	}
-	
+
+
+	@Test
+	public void getAllLinesByZoneAndTransportType_OK(){
+		Set<Line> set = this.service.getAllLinesByZoneAndTransportType(this.zone1, VehicleType.BUS);
+		Assert.assertEquals(1,set.size());
+		Assert.assertTrue(set.contains(line1));
+		Assert.assertFalse(set.contains(line2));
+	}
 }

@@ -77,7 +77,7 @@ public class TicketServiceUnitTest {
 	public void setUp() {
 		user.setUsername("user1");
 		user.setPassword("1234");
-		user.setRoles(Role.ROLE_CLIENT);
+		user.setRole(Role.ROLE_CLIENT);
 		user.setUserTypeDemo(UserTypeDemographic.STUDENT);
 		
 		zoneTicket.setId(1L);
