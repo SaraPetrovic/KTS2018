@@ -4,6 +4,7 @@ package ftn.kts.transport.e2e.tests;
 import ftn.kts.transport.e2e.LoginPage;
 import ftn.kts.transport.e2e.MainPage;
 import org.h2.store.Page;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,5 +65,10 @@ public class LoginTest {
         loginPage.getLoginBtn().click();
 
         //Assert.assertEquals("http://localhost:4200", browser.getCurrentUrl());
+    }
+
+    @After
+    public void closeSelenium(){
+        browser.quit();
     }
 }
