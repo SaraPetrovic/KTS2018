@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
 
+import javax.transaction.Transactional;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestClientException;
@@ -125,9 +128,29 @@ public class UserControllerIntegrationTest {
 	@Test
 	public void acceptDocumentTestOK() {
 		
-		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9DTElFTlQifQ.IYLtD2Ov4x48c6gS9YeT1BGq1_h-xMTa7o_p0lmPa6K145mp0fqp52KSIx10zCVfcAFkFUjrUn02E3KkO1xlAQ";
-	
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
 		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+
+		HttpEntity<Void> entity = new HttpEntity<Void>(null, headers);
+
+		ResponseEntity<Void> responseEntity =
+				restTemplate.exchange("/rest/user/" + Long.valueOf(9) + "/accept", HttpMethod.PUT,
+						entity, Void.class);
+		
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
+	
+	@Transactional
+	@Rollback
+	@Test
+	public void acceptDocumentTestConflict() {
+		
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.add("User-Agent", "Spring's RestTemplate" );
 		headers.add("Authorization", "Bearer "+ token);
 
@@ -137,7 +160,47 @@ public class UserControllerIntegrationTest {
 				restTemplate.exchange("/rest/user/" + Long.valueOf(8) + "/accept", HttpMethod.PUT,
 						entity, Void.class);
 		
+		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+	}
+	
+	@Transactional
+	@Rollback
+	@Test
+	public void declineDocumentTestOK() {
+
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+
+		HttpEntity<Void> entity = new HttpEntity<Void>(null, headers);
+
+		ResponseEntity<Void> responseEntity =
+				restTemplate.exchange("/rest/user/" + Long.valueOf(10) + "/decline", HttpMethod.PUT,
+						entity, Void.class);
+		
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	}
+	
+	@Transactional
+	@Rollback
+	@Test
+	public void declineDocumentTestConflict() {
+
+		String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEyMyIsImp0aSI6ImFkbWluYWRtaW4iLCJyb2xlIjoiUk9MRV9BRE1JTiJ9.ImjRRRG8261xMw9Tf74FjURd2vxpWxJF4ALnMDmftCezVWWs-rwG-eOXA0cvHKv-neHbGycSFs0dj1h0up1g9w";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("User-Agent", "Spring's RestTemplate" );
+		headers.add("Authorization", "Bearer "+ token);
+
+		HttpEntity<Void> entity = new HttpEntity<Void>(null, headers);
+
+		ResponseEntity<Void> responseEntity =
+				restTemplate.exchange("/rest/user/" + Long.valueOf(8) + "/decline", HttpMethod.PUT,
+						entity, Void.class);
+		
+		assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
 	}
 	
 	@Test

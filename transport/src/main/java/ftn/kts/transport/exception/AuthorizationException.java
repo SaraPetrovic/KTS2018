@@ -8,7 +8,7 @@ public class AuthorizationException extends RuntimeException {
 	
 	public AuthorizationException(String message, HttpStatus httpStatus) {
 		super(message);
-		this.httpStatus = httpStatus;
+		this.httpStatus = HttpStatus.UNAUTHORIZED;
 	}
 	
 	public AuthorizationException(String message) {

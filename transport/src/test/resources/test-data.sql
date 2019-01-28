@@ -5,9 +5,11 @@ insert into users(id, first_name, last_name, username, password, role, user_type
 insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '12345678', 1, 2)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
 insert into users(id, first_name, last_name, username, password, role) values (7, 'Conducter', 'Conducter', 'conductor', '123', 2)
-insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (8, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (8, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0, null, 2)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (9, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
-INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (10, 'Marko', 'Balenovic', 'administrator', 'administrator', 0) 
+insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (10, 'Mila', 'Manic', 'client2', 'client', 1, 0, 'dssd', 1)
+INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (11, 'Marko', 'Balenovic', 'administrator', 'administrator', 0) 
+
 
 
 insert into kts_lines(id, active, name, transport_type, duration) values (1, true, '7A', 0, 1000)
@@ -15,16 +17,16 @@ insert into kts_lines(id, active, name, transport_type, duration) values (2, tru
 insert into kts_lines(id, active, name, transport_type, duration) values (3, true, '76A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (4, true, '64A', 0, 1000)
 
-insert into stations(id, address, name, active) values (1, 'Bul. Oslobodjenja 1', 'Gl. stanica', true)
-insert into stations(id, address, name, active) values (2, 'Bul. Oslobodjenja 20', 'Bul. Oslobodjenja - Kralja Petra I', true)
-insert into stations(id, address, name, active) values (4, 'Jevrejska 2', 'Jevrejska - Bul. Oslobodjenja', true)
-insert into stations(id, address, name, active) values (8, 'Bul. Mihaila Pupina 50', 'Bul. Mihaila Pupina - Pothodnik', true)
-insert into stations(id, address, name, active) values (3, 'Bul. Oslobodjenja 56', 'Bul. Oslobodjenja - Futoska', true)
-insert into stations(id, address, name, active) values (5, 'Bul. Oslobodjenja 130', 'Bul. Oslobodjenja - Bul. Cara Lazara', true)
-insert into stations(id, address, name, active) values (6, 'Narodnog fronta 20', 'Narodnog Fronta - Sekspirova', true)
-insert into stations(id, address, name, active) values (7, 'Maksima Gorkog 2', 'Maksima Gorkog - Bul. Oslobodjenja', true)
-insert into stations(id, address, name, active) values (9, 'Bukovacki put', 'Bukovac - Vinogradi', true)
-insert into stations(id, address, name, active) values (10, 'Vuka Karadzica 4', 'Ledinci - Vuka Karadzica 4', true)
+insert into stations(id, address, name, active, x, y) values (1, 'Bul. Oslobodjenja 1', 'Gl. stanica', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (2, 'Bul. Oslobodjenja 20', 'Bul. Oslobodjenja - Kralja Petra I', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (4, 'Jevrejska 2', 'Jevrejska - Bul. Oslobodjenja', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (8, 'Bul. Mihaila Pupina 50', 'Bul. Mihaila Pupina - Pothodnik', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (3, 'Bul. Oslobodjenja 56', 'Bul. Oslobodjenja - Futoska', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (5, 'Bul. Oslobodjenja 130', 'Bul. Oslobodjenja - Bul. Cara Lazara', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (6, 'Narodnog fronta 20', 'Narodnog Fronta - Sekspirova', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (7, 'Maksima Gorkog 2', 'Maksima Gorkog - Bul. Oslobodjenja', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (9, 'Bukovacki put', 'Bukovac - Vinogradi', true, 0, 0)
+insert into stations(id, address, name, active, x, y) values (10, 'Vuka Karadzica 4', 'Ledinci - Vuka Karadzica 4', true, 0, 0)
 
 insert into zones(id, name, sub_zone_id, active) values (1, 'Zona I', null, true)
 insert into zones(id, name, sub_zone_id, active) values (2, 'Zona II', 1, true)
@@ -32,7 +34,7 @@ insert into zones(id, name, sub_zone_id, active) values (3, 'Zona III', 2, true)
 insert into zones(id, name, sub_zone_id, active) values (4, 'Zona IV', 3, true)
 insert into zones(id, name, sub_zone_id, active) values (5, 'Zona V', 4, true)
 insert into zones(id, name, sub_zone_id, active) values (6, 'Zona VI', 5, true)
-insert into zones(id, name, sub_zone_id, active) values (7, 'Zona VII', 6, true)
+insert into zones(id, name, sub_zone_id, active) values (7, 'Zona VII', 6, false)
 
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 2")
 insert into street_path(line_id, street_path) values (1, "Sentandrejski Put 1")
@@ -174,6 +176,7 @@ insert into one_time_prices(price_list_id, price, zone_id) values (2, 320.00, 3)
 
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
+insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (2, true, 'vozilo broj 2', 0, true, '2019-01-01 00:00:00')
 
 insert into kts_route(id, date, line_id, vehicle_id, active) values(1, '2019-02-01 00:00:00', 1, 1, true)
 
