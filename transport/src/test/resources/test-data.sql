@@ -170,6 +170,7 @@ insert into one_time_prices(price_list_id, price, zone_id) values (2, 320.00, 3)
 
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
+insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (2, true, 'vozilo broj 2', 0, true, '2019-01-01 00:00:00')
 
 insert into kts_route(id, date, line_id, vehicle_id, active) values(1, '2019-02-01 00:00:00', 1, 1, true)
 
