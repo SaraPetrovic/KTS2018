@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Line } from '../model/line';
+import { Line } from 'src/app/model/line';
+
 
 @Component({
   selector: 'app-line-table',

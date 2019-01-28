@@ -58,7 +58,7 @@ public class RouteController {
         return calendar.getTime();
     }
 
-    @Scheduled(cron = "00 34 * * * *")
+    @Scheduled(cron = "00 00 2 * * *")
     private void generateRoutes(){
         System.out.println("USAO SAM SVE JE DOBRO");
         Calendar calendar = Calendar.getInstance();

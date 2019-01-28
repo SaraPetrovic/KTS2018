@@ -1,0 +1,27 @@
+#wrapper{
+    width: 80%;
+    margin-left: 10%;
+    min-height: 600px;
+    background: #eee2dc;
+    padding: 16px;
+    margin-top: -16px;
+    border-right: 2px solid #123c69;
+    border-left: 2px solid #123c69;
+    padding-bottom: 50px;
+    padding-top: 0;
+}
+
+.sub-entry {
+    width: 50%;
+    float: left;
+}
+
+.center-entry {
+    text-align: center;
+    padding-top: 20px;
+    clear: both;
+}
+
+table {
+    margin: 0 auto;
+}

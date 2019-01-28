@@ -4,13 +4,14 @@ import { LinesComponent } from './lines/lines.component';
 import { HomeComponent } from './home/home.component';
 import { ConductorModule } from './modules/conductor/conductor.module';
 import { TicketComponent } from './ticket/ticket.component';
-import { HostComponent } from './host/host.component';
 import { EditProfileComponent } from './profile/edit-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserTicketsComponent } from './profile/user-tickets.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { PricelistComponent } from './pricelist/pricelist.component';
 import { FileUploadComponent } from './profile/file-upload.component';
+import { LoginComponent } from './login/login.component';
+import { PricelistTableComponent } from './pricelist/pricelist-table.component';
 
 
 const routes: Routes = [
@@ -21,11 +22,11 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: HostComponent
+    component: LoginComponent
   },
   {
     path: 'registration',
-    component: HostComponent
+    component: RegistrationComponent
   },
   {
     path: 'pricelist',
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'ticket',
     component: TicketComponent
+  },
+  {
+    path: 'notifications',
+    component: PricelistTableComponent
   },
   {
     path: 'lines',

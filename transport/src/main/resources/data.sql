@@ -182,8 +182,8 @@ insert into street_path(line_id, street_path) values (9, "Preradoviceva 1")
 insert into street_path(line_id, street_path) values (9, "Preradoviceva 2")
 insert into street_path(line_id, street_path) values (9, "Preradoviceva 3")
 
-insert into stations(id, active, address, name) values (1, 1, 'Bulevar Oslobodjenja 14', 'Bul. Oslobodjenja - Lutrija')
-insert into stations(id, active, address, name) values (2, 1, 'Bulevar Oslobodjenja 50', 'Aleksandar zgrada')
+insert into stations(id, active, address, name, x, y) values (1, 1, 'Bulevar Oslobodjenja 14', 'Bul. Oslobodjenja - Lutrija', 0, 0)
+insert into stations(id, active, address, name, x, y) values (2, 1, 'Bulevar Oslobodjenja 50', 'Aleksandar zgrada', 0, 0)
 
 insert into line_and_station(line_id, station_id, station_order) values (1, 1, 1)
 insert into line_and_station(line_id, station_id, station_order) values (1, 2, 2)
