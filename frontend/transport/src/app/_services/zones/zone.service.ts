@@ -19,11 +19,11 @@ export class ZoneService {
   constructor(private http: HttpClient) { }
 
   getZones(): Observable<Zone[]>{
-    return this.http.get<Zone[]>(`${this.zoneUrl}`);
+    return this.http.get<Zone[]>("http://localhost:9003/zone");
   }
 
   getZone(id: number): Observable<Zone>{
-    return this.http.get<Zone>(`${this.zoneUrl}/${id}`);
+    return this.http.get<Zone>("http://localhost:9003/zone" + id);
   }
 
   deleteZone(zoneId: number): Observable<boolean>{
