@@ -36,14 +36,14 @@ export class LineService {
   }
 
   addLine(line: Line){
-    this.http.post("http://localhost:9003/line", line, httpOptions).subscribe();
+    this.http.post("http://localhost:9003/rest/line", line, httpOptions).subscribe();
   }
 
   deleteLine(id: number){
-    this.http.delete("http://localhost:9003/line/" + id).subscribe();
+    this.http.delete("http://localhost:9003/rest/line/" + id).subscribe();
   }
 
   updateLine(line: Line){
-    this.http.put("http://localhost:9003/line/" + line.id, line, httpOptions).subscribe();
+    this.http.put("http://localhost:9003/rest/line/" + line.id, line, httpOptions).subscribe();
   }
 }
