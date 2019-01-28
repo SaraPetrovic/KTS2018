@@ -1,9 +1,10 @@
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (1, 'Marko', 'Markovic', 'admin', 'adminadmin', 0, 0)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (2, 'Jovan', 'Lakovic', 'user1', '12345678', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (3, 'Marko', 'Balenovic', 'user2', '12345678', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (4, 'Sara', 'Petrovic', 'user3', '12345678', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '12345678', 1, 2)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (1, 'Marko', 'Markovic', 'admin', 'adminadmin', 0, 0)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (2, 'Jovan', 'Lakovic', 'user1', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (3, 'Marko', 'Balenovic', 'user2', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (4, 'Sara', 'Petrovic', 'user3', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (5, 'Nikola', 'Nikic', 'user4', '12345678', 1, 2)
+insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, role) values (7, 'Conducter', 'Conducter', 'conductor', '123', 2)
 
 insert into kts_lines(id, active, name, transport_type, duration) values (1, true, '7A', 0, 1000)
 insert into kts_lines(id, active, name, transport_type, duration) values (2, true, '4A', 0, 1000)
@@ -170,7 +171,7 @@ insert into one_time_prices(price_list_id, price, zone_id) values (2, 320.00, 3)
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
 
-insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-02-01 00:00:00', 1, 1)
+insert into kts_route(id, date, line_id, vehicle_id, active) values(1, '2019-02-01 00:00:00', 1, 1, true)
 
 
 insert into ticket(id, active, start_time, end_time, price, ticket_type, ticket_temporal, transport_type, user_id, line_id, zone_id) values (1, false, null, null, 80, 'zone_ticket', 0, 0, 2, null, 1)

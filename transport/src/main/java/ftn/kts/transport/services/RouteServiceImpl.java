@@ -3,6 +3,7 @@ package ftn.kts.transport.services;
 import ftn.kts.transport.exception.DAOException;
 import ftn.kts.transport.model.Line;
 import ftn.kts.transport.model.Route;
+import ftn.kts.transport.model.Vehicle;
 import ftn.kts.transport.repositories.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,11 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Route getRoute(Long id){
         return this.routeRepository.findById(id).orElseThrow(() -> new DAOException("Route {id=" + id + "} can not be found", HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public Route getRouteByVehicle(Vehicle vehicle){
+        return this.routeRepository.findByVehicleAndActive(vehicle, true);
     }
 
 	@Override
