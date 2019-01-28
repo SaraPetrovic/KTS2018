@@ -88,6 +88,7 @@ public class TicketController {
 
     @GetMapping(path = "/me")
     @Produces("application/json")
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @CrossOrigin( origins = "http://localhost:4200")
 	public ResponseEntity<List<MyTicketDTO>> getMyTickets(@RequestHeader("Authorization") final String token, HttpServletRequest request){
 

@@ -23,7 +23,7 @@ export class ZoneService {
   }
 
   getZone(id: number): Observable<Zone>{
-    return this.http.get<Zone>("http://localhost:9003/zone" + id);
+    return this.http.get<Zone>("http://localhost:9003/zone/" + id);
   }
 
   deleteZone(zoneId: number): Observable<boolean>{
