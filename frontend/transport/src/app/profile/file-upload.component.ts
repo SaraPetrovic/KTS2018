@@ -26,7 +26,11 @@ export class FileUploadComponent implements OnInit {
       res => { 
         console.log(res);
         alert("Successfully upload");
+      },
+      error => {
+        alert("You must first select document");
       }
+
     );
   }
 }

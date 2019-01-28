@@ -31,6 +31,17 @@ public class UserEditProfilePage {
 	@FindBy(xpath = "//a[contains(text(),'Sara')]")
 	private WebElement profileLink;
 	
+	@FindBy(xpath = "//button[@id='defaultOpen']")
+	private WebElement changeProfileTab;
+	
+	@FindBy(xpath = "//label[contains(text(),'Repeated password is wrong')]")
+	private WebElement repeatedPassWrong;
+	
+	@FindBy(xpath = "//div[contains(text(),'Password must be at least 8 characters long.')]")
+	private WebElement passwordLengthMessage;
+	
+	@FindBy(xpath = "//div[@class='container']//div[6]//div[1]//div[1]//div[1]//div[1]")
+	private WebElement repeatedPassLengthMessage;
 	
 	public UserEditProfilePage(WebDriver driver) {
 		this.driver = driver;
@@ -40,10 +51,26 @@ public class UserEditProfilePage {
         (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOf(profileLink));
     }
 	
+	public WebElement getPasswordLengthMessage(){
+		return passwordLengthMessage;
+	}
+	
+	public WebElement getRepeatedPassLengthMessage(){
+		return repeatedPassLengthMessage;
+	}
+	
 	public WebElement getFirstName() {
 		return firstName;
 	}
 
+	public WebElement getRepeatedPassWrong() {
+		return repeatedPassWrong;
+	}
+	
+	public WebElement getChangeProfileTab() {
+		return changeProfileTab;
+	}
+	
 	public WebElement getProfileLink() {
 		return profileLink;
 	}
@@ -100,7 +127,7 @@ public class UserEditProfilePage {
 	
 	public boolean isButtonEnabled() {
         try {
-            (new WebDriverWait(driver, 3)).until(ExpectedConditions.elementToBeClickable(saveButton));
+            (new WebDriverWait(driver, 4)).until(ExpectedConditions.elementToBeClickable(saveButton));
             return true;
         }catch(Exception e){
             return false;
