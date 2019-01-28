@@ -45,10 +45,6 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        return new JwtFailureHandler();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

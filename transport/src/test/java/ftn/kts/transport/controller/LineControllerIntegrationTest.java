@@ -61,6 +61,13 @@ public class LineControllerIntegrationTest {
 		assertEquals(DB_LINES_COUNT, found.size());
 	}
 	
+	
+	@Test
+	public void getLinesByType_PASS_Test() {
+		//lineService.getAllLinesByType(V)
+	}
+	
+	
 	@Test
 	public void addLine_PASS_Test() {
 		

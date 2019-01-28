@@ -13,7 +13,10 @@ public class LineConstants {
 	public static final int DB_LINES_COUNT = 4;
 	
 	public static final int DB_TRANSPORT_TYPE = 0;
-	public static final int DB_TRANSPORT_TYPE_INVALID = -1;
+	public static final int DB_TRANSPORT_TYPE_INVALID = 1;
+	
+	public static final String DB_TRANSPORT_TYPE_STRING = "BUS";
+	public static final String DB_TRANSPORT_TYPE_INVALID_STRING = "INVALID";
 	
 	public static final Long DB_STATIONID1 = 1L;
 	public static final Long DB_STATIONID2 = 2L;

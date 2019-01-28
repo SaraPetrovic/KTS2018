@@ -293,6 +293,7 @@ public class DTOConverterUnitTest {
 	
 	@Test
 	public void convertToPriceList_PASS_Test() {
+		plDTO.setStartDate(new Date());
 		PriceList ret = converter.convertDTOtoPriceList(plDTO);
 		assertNotNull(ret);
 		assertEquals(plDTO.getLineDiscount(), ret.getLineDiscount(), 0.0001);
