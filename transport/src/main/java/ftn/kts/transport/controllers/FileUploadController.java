@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import ftn.kts.transport.enums.DocumentVerification;
 import ftn.kts.transport.exception.StorageFileNotFoundException;
 import ftn.kts.transport.model.User;
 import ftn.kts.transport.services.JwtService;
@@ -52,12 +52,14 @@ public class FileUploadController {
     @CrossOrigin( origins = "http://localhost:4200")
     public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes, @RequestHeader("Authorization") final String token) {
+    	
 
         storageService.store(file);
 
     	User credentials = jwtService.validate(token.substring(7));
         User found = userService.findByUsername(credentials.getUsername());
         found.setDocument(file.getOriginalFilename());
+        found.setDocumentVerified(DocumentVerification.PENDING);
         userService.save(found);
         
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);

@@ -20,6 +20,10 @@ export class FileUploadComponent implements OnInit {
   }
 
   onUpload(){
+    if(this.selectedFile == null){
+      alert("You must first select document");
+      return;
+    }
     const fd = new FormData();
     fd.append('file', this.selectedFile, this.selectedFile.name);
     this.http.post('http://localhost:9003/files/upload', fd).subscribe(

@@ -201,6 +201,7 @@ insert into users(id, first_name, last_name, username, password, role, user_type
 INSERT INTO users(id, first_name, last_name, username, password, role) VALUES (9, 'Marko', 'Balenovic', 'administrator', 'administrator', 0) 
 insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (7, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0)
 insert into users(id, first_name, last_name, username, password, role, user_type_demo, document, document_verified) values (8, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
+INSERT INTO users(id, first_name, last_name, username, password, ROLE, document, document_verified, user_type_demo) VALUES (12, 'Ime', 'Prezime', 'userNoDocument', '12345678', 1, NULL, 0, 0)
 
 insert into users(id, first_name, last_name, username, password, role, user_type_demo) values (10, 'Marko', 'Markovic', 'conductor', 'conductor', 2, 0)
 
@@ -209,7 +210,7 @@ insert into zones_stations(zone_id, stations_id) values (1,2)
 
 insert into vehicles(id, active, vehicle_name, vehicle_type, free, free_from) values (1, true, 'vozilo broj 1', 0, true, '2019-01-01 00:00:00')
 
-insert into kts_route(id, date, line_id, vehicle_id, active) values(1, '2019-02-02 00:00:00', 1, 1, 1)
+insert into kts_route(id, date, line_id, vehicle_id) values(1, '2019-02-02 00:00:00', 1, 1)
 
 insert into route_schedule(id, active, active_from, line_id) values (1, true, '2019-02-01 00:00:00', 1)
 insert into weekday_schedule(route_schedule_id, weekday) values (1, '07:00:00')

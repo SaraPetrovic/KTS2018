@@ -144,7 +144,9 @@ public class UserServiceImpl implements UserService {
 		} else if (toVerify.getDocumentVerified().ordinal() == 3) {
 			throw new DocumentVerificationException("Document has already been approved!");
 		}
-		
+		if(typeVerification.equals(DocumentVerification.APPROVED)) {
+			toVerify.setUserTypeDemo(UserTypeDemographic.STUDENT);
+		}
 		toVerify.setDocumentVerified(typeVerification);
 		this.save(toVerify);
 		return true;

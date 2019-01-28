@@ -13,10 +13,17 @@ public class MainPage {
     @FindBy(css = "#header-login-btn")
     private WebElement loginBtn;
 
+    @FindBy(css = "#header-lines-btn")
+    private WebElement linesBtn;
+
     public MainPage(WebDriver driver){this.driver = driver;}
 
     public void ensureIsDisplayed(){
         (new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(loginBtn));
+    }
+
+    public WebElement getLinesBtn() {
+        return linesBtn;
     }
 
     public WebElement getLoginBtn() {
