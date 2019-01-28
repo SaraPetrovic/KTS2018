@@ -4,7 +4,7 @@
             <div class="col-6 col-md-4">
                 <div class="form-group">
                     <h4>
-                        <label class="form-control-label" [(ngModel)]="formLabel" for="field_name">{{formLabel}}</label>
+                        <label [(ngModel)]="formLabel" for="field_name">{{formLabel}}</label>
                     </h4>
                     <input type="text" placeholder="Name" class="form-control" formControlName="zoneName" 
                             [(ngModel)]="zone.name"  [ngClass]="{'is-invalid': submitError && f.zoneName.errors}"/>
@@ -30,7 +30,7 @@
         <div class="row">
             <div class="form-group" style="margin-left: 19%">
                 <button class="btn btn-primary" type="submit"
-                        (click)="addButton.emit(zone)">
+                        (click)="addButton.emit(zone); formLabel = 'Add zone'">
                     <span class="fa fa-save"></span>&nbsp;<span>Save</span>
                 </button>
             </div>

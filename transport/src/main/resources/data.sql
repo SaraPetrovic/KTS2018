@@ -197,6 +197,8 @@ INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (
 insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
 INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (4, 'document-test.jpg', 1, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)
 insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (7, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0)
+insert into users(id, first_name, last_name, username, password, roles, user_type_demo, document, document_verified) values (8, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
 
 insert into zones_stations(zone_id, stations_id) values (1,1)
 insert into zones_stations(zone_id, stations_id) values (1,2)

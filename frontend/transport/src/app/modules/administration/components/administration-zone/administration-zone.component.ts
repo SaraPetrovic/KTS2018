@@ -11,7 +11,9 @@ import { ZoneService } from 'src/app/_services/zones/zone.service';
 export class AdministrationZoneComponent implements OnInit {
   
     private zones : Zone[];
-    private formLabel: String = "Add zone";
+    
+    private zone: Zone = new Zone();
+
     constructor(private zoneService : ZoneService) { }
 
     ngOnInit() {
@@ -36,6 +38,7 @@ export class AdministrationZoneComponent implements OnInit {
       );
     }
 
+    
     addZone(zone: Zone){
 
       if(zone.id === undefined)
@@ -49,16 +52,16 @@ export class AdministrationZoneComponent implements OnInit {
           }
         );
       }
-      else{
+      else
+      {
         this.zoneService.editZone(zone).subscribe(
             (data) => {
-              this.formLabel = "Add zone";
-              console.log(this.formLabel);
               for(let i=0; i < this.zones.length; i++){
                 if(this.zones[i].id === data.id){
                   this.zones[i] = data;
                 }
               }
+              this.zone = new Zone();
             },
             error => {
               alert(error.error.errorMessage)
