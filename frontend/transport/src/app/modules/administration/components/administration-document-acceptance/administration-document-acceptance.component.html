@@ -1,17 +1,19 @@
-<div *ngIf="users">
-  <div *ngFor="let user of users">
-    <div class="card" style="margin-top: 1%">
-      <div class="card-header">
-        User: {{user.firstName}} {{user.lastName}}
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-6" >
-            <img src='http://localhost:9003/files/{{user.document}}' style="width:400px;height:200px;">
-          </div>
-          <div class="col-6">
-            <button class="btn btn-primary" (click)="accept(user)">Accept</button>&nbsp;
-            <button class="btn btn-primary" (click)="decline(user)">Decline</button>
+<div id="wrapper">
+  <div *ngIf="users">
+    <div *ngFor="let user of users">
+      <div class="card" style="margin-top: 1%">
+        <div class="card-header">
+          User: {{user.firstName}} {{user.lastName}}
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6" >
+              <img src='http://localhost:9003/files/{{user.document}}' style="width:400px;height:200px;">
+            </div>
+            <div class="col-6">
+              <button class="btn btn-primary" (click)="accept(user)">Accept</button>&nbsp;
+              <button class="btn btn-primary" (click)="decline(user)">Decline</button>
+            </div>
           </div>
         </div>
       </div>
