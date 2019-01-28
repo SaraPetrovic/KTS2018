@@ -22,8 +22,34 @@ public class Route {
     @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
 
+    @Column
+    private boolean active;
+
     public Route(){
 
+    }
+
+    public Route(Line line, Date date, Vehicle vehicle, boolean active) {
+        this.line = line;
+        this.date = date;
+        this.vehicle = vehicle;
+        this.active = active;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Route(Line line, Date date, Vehicle vehicle) {

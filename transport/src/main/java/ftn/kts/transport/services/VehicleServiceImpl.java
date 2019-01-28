@@ -27,6 +27,11 @@ public class VehicleServiceImpl implements VehicleService{
 		return vehicles;
 	}
 
+	@Override
+	public Vehicle findById(Long id){
+		return this.vehicleRepository.findById(id).orElseThrow(() -> new DAOException("Vehicle not found!", HttpStatus.NOT_FOUND));
+	}
+
 
 	@Override
 	public Vehicle addVehicle(VehicleDTO vehicle) {
@@ -35,7 +40,8 @@ public class VehicleServiceImpl implements VehicleService{
 		}
 		Vehicle newVehicle = new Vehicle();
 		newVehicle.setVehicleName(vehicle.getName());
-		return vehicleRepository.save(newVehicle);	
+		vehicleRepository.save(newVehicle);
+		return newVehicle;
 	}
 
 

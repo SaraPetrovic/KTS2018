@@ -39,7 +39,7 @@ public class User implements Serializable {
 	@Column
 	private String lastName;
 	@Column
-	private Role roles;
+	private Role role;
 	@Enumerated
 	private UserTypeDemographic userTypeDemo;
 	@Column
@@ -52,24 +52,27 @@ public class User implements Serializable {
     public User() {
     	
     }
-	
 
-	public User(Long id, String username, String password, String firstName, String lastName, Role roles,
-			UserTypeDemographic userTypeDemo, String document, DocumentVerification documentVerified,
-			Set<Ticket> tickets) {
-		super();
-		this.id = id;
+
+	public User(String username, String password, String firstName, String lastName, Role role, UserTypeDemographic userTypeDemo, String document, DocumentVerification documentVerified, Set<Ticket> tickets) {
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.roles = roles;
+		this.role = role;
 		this.userTypeDemo = userTypeDemo;
 		this.document = document;
 		this.documentVerified = documentVerified;
 		this.tickets = tickets;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 	public User(String username, String password, String firstName, String lastName) {
 		super();
@@ -122,12 +125,8 @@ public class User implements Serializable {
 
 	public List<Role> getRoles() {
     	List<Role> roles = new ArrayList<>();
-    	roles.add(this.roles);
+    	roles.add(this.role);
 		return roles;
-	}
-
-	public void setRoles(Role roles) {
-		this.roles = roles;
 	}
 
 	public String getDocument() {

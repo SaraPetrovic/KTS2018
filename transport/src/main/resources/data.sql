@@ -182,8 +182,8 @@ insert into street_path(line_id, street_path) values (9, "Preradoviceva 1")
 insert into street_path(line_id, street_path) values (9, "Preradoviceva 2")
 insert into street_path(line_id, street_path) values (9, "Preradoviceva 3")
 
-insert into stations(id, active, address, name, x, y) values (1, 1, 'Bulevar Oslobodjenja 14', 'Bul. Oslobodjenja - Lutrija', 0, 0)
-insert into stations(id, active, address, name, x, y) values (2, 1, 'Bulevar Oslobodjenja 50', 'Aleksandar zgrada', 0, 0)
+insert into stations(id, active, address, name) values (1, 1, 'Bulevar Oslobodjenja 14', 'Bul. Oslobodjenja - Lutrija')
+insert into stations(id, active, address, name) values (2, 1, 'Bulevar Oslobodjenja 50', 'Aleksandar zgrada')
 
 insert into line_and_station(line_id, station_id, station_order) values (1, 1, 1)
 insert into line_and_station(line_id, station_id, station_order) values (1, 2, 2)
@@ -197,8 +197,6 @@ INSERT INTO users(id, first_name, last_name, username, password, roles) VALUES (
 insert into users(id, document, document_verified, first_name, last_name, password, roles, user_type_demo, username) values (3, null, 0, 'Sara', 'Petrovic', '123', 1, 1, 'Sara')
 INSERT INTO users(id, document, document_verified, first_name, last_name, username, password, roles, user_type_demo) VALUES (4, 'document-test.jpg', 1, 'Nemanja', 'Nemanjic', 'user2', '1234', 1, 0)
 insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (6, 'Sara', 'Petrovic', 'sara123', '12345678', 1, 1)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo) values (7, 'Marko', 'Markovic', 'admin123', 'adminadmin', 0, 0)
-insert into users(id, first_name, last_name, username, password, roles, user_type_demo, document, document_verified) values (8, 'Milan', 'Markovic', 'client', 'client', 1, 0, 'dssd', 1)
 
 insert into zones_stations(zone_id, stations_id) values (1,1)
 insert into zones_stations(zone_id, stations_id) values (1,2)

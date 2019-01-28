@@ -40,6 +40,11 @@ public class LineAndStation {
 		this.stationOrder = stationOrder;
 	}
 
+	public LineAndStation(Line line, Station station, int stationOrder) {
+		this.line = line;
+		this.station = station;
+		this.stationOrder = stationOrder;
+	}
 
 	public int getStationOrder() {
 		return stationOrder;

@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     	user.setDocument(null);
     	user.setUserTypeDemo(UserTypeDemographic.NORMAL);
     	user.setTickets(new HashSet<Ticket>());
-    	user.setRoles(Role.ROLE_CLIENT);
+    	user.setRole(Role.ROLE_CLIENT);
     	userRepository.save(user);
     }
 
@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserService {
         	throw new DAOException("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
 		//TO DO
-		user.setRoles(Role.ROLE_CLIENT);
-		userRepository.save(user);
+		//user.setRoles(Role.ROLE_CONDUCTER);
+		//userRepository.save(user);
 
 		//HttpSession session = request.getSession();
 		//session.setAttribute("user", user);
